@@ -32,7 +32,7 @@ obtenerTiposMaterial(): void {
         // Cuando la petición es exitosa, los datos llegan aquí
         this.tiposMaterial = data;
         this.isLoading = false; // Terminamos de cargar
-      },
+      },//VER ESTO Q ES LO Q HACE Q NO CARGUE BIEN EL FRONT
       error: (error) => {
         // Si ocurre un error, se maneja aquí
         console.error('Error al obtener los tipos de material:', error);
