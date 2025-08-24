@@ -1,0 +1,41 @@
+<div class="d-flex flex-column justify-content-center align-items-center min-vh-100 bg-gradient-login p-3">
+
+  <!-- Título de la app -->
+  <div class="text-center text-white mb-4">
+    <h1 class="display-4 fw-bolder">App</h1>
+    <p class="lead mb-0">Bienvenido, por favor inicia sesión</p>
+  </div>
+
+  <!-- Card del login -->
+  <div class="card shadow-sm p-4 w-100" style="max-width: 400px; border-radius: 12px;">
+    <h2 class="text-center fw-bold mb-4">Inicio de Sesión</h2>
+
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input formControlName="email" type="email" class="form-control" id="email">
+
+        <div *ngIf="email.invalid && (email.touched || email.dirty)" class="text-danger small mt-1">
+          <div *ngIf="email.errors?.['required']">El email es obligatorio</div>
+          <div *ngIf="email.errors?.['email']">Formato de email incorrecto</div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Contraseña</label>
+        <input formControlName="password" type="password" class="form-control" id="password">
+
+        <div *ngIf="password.invalid && (password.touched || password.dirty)" class="text-danger small mt-1">
+          <div *ngIf="password.errors?.['required']">La contraseña es obligatoria</div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 mb-3">Iniciar Sesión</button>
+
+      <div class="text-center small">
+        <span>¿No estás registrado? </span>
+        <a routerLink="/registro" class="text-primary text-decoration-none">Regístrate aquí</a>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+.bg-gradient-registro {
+  background: linear-gradient(#082567, #4682B4);
+}
+
+.card {
+  font-family: 'Arial', sans-serif;
+}
+
+.text-primary:hover {
+  text-decoration: underline;
+}

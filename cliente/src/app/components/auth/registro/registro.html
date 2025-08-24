@@ -1,0 +1,57 @@
+<div class="d-flex justify-content-center align-items-center min-vh-100 bg-gradient-registro p-3">
+
+  <div class="card shadow-sm p-4 w-100" style="max-width: 400px; border-radius: 12px;">
+    <h2 class="text-center fw-bold mb-4">Regístrate</h2>
+
+    <form [formGroup]="registroForm" (ngSubmit)="registrar()">
+
+      <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre completo</label>
+        <input id="nombre" formControlName="nombreCompleto" type="text" class="form-control">
+        <div *ngIf="nombreCompleto.invalid && (nombreCompleto.touched || nombreCompleto.dirty)"
+          class="text-danger small mt-1">
+          <div *ngIf="nombreCompleto.errors?.['required']">El nombre es obligatorio</div>
+          <div *ngIf="nombreCompleto.errors?.['minlength']">Debe tener al menos 6 caracteres</div>
+        </div>
+      </div>
+      
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input id="email" formControlName="email" type="email" class="form-control">
+        <div *ngIf="email.invalid && (email.touched || email.dirty)" class="text-danger small mt-1">
+          <div *ngIf="email.errors?.['required']">El email es obligatorio</div>
+          <div *ngIf="email.errors?.['email']">Formato de email incorrecto</div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Contraseña</label>
+        <input id="password" formControlName="password" type="password" class="form-control">
+        <div *ngIf="password.invalid && (password.touched || password.dirty)" class="text-danger small mt-1">
+          <div *ngIf="password.errors?.['required']">La contraseña es obligatoria</div>
+        </div>
+      </div>
+      <!--
+      <div class="mb-3">
+        <label for="rol" class="form-label">Tipo de usuario</label>
+        <select id="rol" formControlName="rol" class="form-select">
+          <option value="" disabled>Seleccione...</option>
+          <option value="alumno">Alumno</option>
+          <option value="docente">Docente</option>
+        </select>
+        <div *ngIf="rol.invalid && (rol.touched || rol.dirty)" class="text-danger small mt-1">
+          <div *ngIf="rol.errors?.['required']">Debe seleccionar un tipo de usuario</div>
+        </div>
+      </div>
+      -->
+      <button type="submit" class="btn btn-primary w-100 mb-3">Registrarse</button>
+
+      <div class="text-center small">
+        <span>¿Ya estás registrado? </span>
+        <a routerLink="/login" class="text-primary text-decoration-none">Inicia sesión aquí</a>
+      </div>
+
+    </form>
+  </div>
+</div>
