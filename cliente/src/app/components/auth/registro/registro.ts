@@ -49,8 +49,8 @@ export class RegistroComponent implements OnInit {
       next: (res) => {
         console.log('Usuario registrado:', res);
         this.loading = false;
-        this.router.navigate(['/inicio']); // después de registrarse va al inicio
-      },
+        this.router.navigate(['/login']); 
+      }, 
       error: (err) => {
         console.error('Error al registrar usuario:', err);
         this.errorMessage = 'No se pudo registrar el usuario. ' + (err.error?.message || '');
