@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { ClaseService } from '../../../services/clase.service'; // Importa el servicio que creaste
 import { Clase } from '../../../models/clase-interface';
 import { RouterLink } from '@angular/router';
+import { EncabezadoComponent } from '../../encabezado/encabezado.component';
 
 @Component({
   selector: 'app-create-class-form',
@@ -14,6 +15,7 @@ import { RouterLink } from '@angular/router';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    EncabezadoComponent,
     //RouterLink
 ],
   templateUrl: './create-class-form.html',

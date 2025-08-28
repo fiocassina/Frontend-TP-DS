@@ -1,0 +1,21 @@
+.encabezado {
+  background-color: #1A2B5B;
+  color: #ffffff;
+}
+
+.logo-img {
+  height: 65px;
+  /* o el tamaño que prefieras */
+  width: auto;
+}
+
+.texto-header h1 {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-weight: bold;
+}
+
+.subtitulo {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  font-style: italic;
+}
