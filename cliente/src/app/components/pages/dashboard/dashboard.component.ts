@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EncabezadoComponent } from '../../encabezado/encabezado.component';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { ClasesListComponent } from '../../clases-list/clases-list';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,7 +10,8 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   imports: [
     CommonModule,
     EncabezadoComponent,
-    RouterLink
+    RouterLink,
+    ClasesListComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'

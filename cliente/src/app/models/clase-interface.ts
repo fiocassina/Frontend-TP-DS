@@ -4,4 +4,6 @@ export interface Clase {
   materia: string; 
   descripcion?: string; 
   clave: string; 
+  profesor: string;
+  //alumnos: string[];
 }

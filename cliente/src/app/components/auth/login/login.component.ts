@@ -35,7 +35,9 @@ export class LoginComponent implements OnInit {
   
     this.loginService.login(credentials).subscribe({
       next: (res) => {
-        localStorage.setItem('token', res.token); // si tu backend devuelve un token
+        if (typeof window !== 'undefined') {  
+          localStorage.setItem('token', res.token);
+        }
         this.router.navigate(['/inicio']);
       },
       error: (err) => {
@@ -43,6 +45,7 @@ export class LoginComponent implements OnInit {
         console.error(err);
       }
     });
+    
   }
   
   get email() {

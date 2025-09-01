@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -12,10 +11,23 @@ export class ClaseService {
 
   constructor(private http: HttpClient) { }
 
-
+  private getToken(): string | null {
+    // ✅ The fix is here: get the token from localStorage
+    if (typeof window !== 'undefined') {
+        return localStorage.getItem('token');
+        }
+      return null;
+      }
+  
   crearClase(clase: Omit<Clase, '_id' | 'clave'>): Observable<Clase> {
-    return this.http.post<Clase>(this.apiUrl, clase);
+    const token = this.getToken(); // <-- Correctly use the safe method
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.post<Clase>(this.apiUrl, clase, { headers });
   }
-
-  // Aquí agregarás más métodos en el futuro, como getClases() para la lista.
+  
+  getMisClases(): Observable<Clase[]> {
+    const token = this.getToken(); // <-- Correctly use the safe method
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.get<Clase[]>(`${this.apiUrl}/`, { headers });
+  }
 }
