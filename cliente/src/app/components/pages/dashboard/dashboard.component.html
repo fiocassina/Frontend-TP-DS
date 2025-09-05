@@ -6,17 +6,21 @@
     <div class="col-3 col-md-2 bg-light vh-100 p-3">
       <nav class="nav flex-column">
         <a class="nav-link active" routerLink="/inicio">Inicio</a>
-        <a class="nav-link" routerLink="/mis-clases">Mis clases</a>
+        <a class="nav-link" routerLink="/lista-clases">Mis clases</a>
         <a class="nav-link" routerLink="/perfil">Perfil</a>
       </nav>
     </div>
 
     <!-- Contenido -->
     <div class="col-9 col-md-10 p-4">
-      <!-- Botones -->
-      <div class="mb-4">
-        <button routerLink="/crear-clase" class="btn btn-secondary">Crear clase</button>
-        <button class="btn btn-primary mx-2">Unirme a una clase</button>
+      <!-- Botones centrados -->
+      <div class="d-flex justify-content-center mb-4 gap-3">
+        <button routerLink="/crear-clase" class="btn btn-outline-secondary btn-lg shadow-sm">
+          Crear clase
+        </button>
+        <button routerLink="/inscripcion" class="btn btn-primary btn-lg shadow-sm">
+          Unirme a una clase
+        </button>
       </div>
 
       <!-- Componente modular de clases -->

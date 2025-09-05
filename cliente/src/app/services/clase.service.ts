@@ -3,6 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Clase } from '../models/clase-interface'; 
 
+interface ClasesResponse {
+  clasesComoProfe: Clase[];
+  clasesComoAlumno: Clase[];
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -19,14 +23,25 @@ export class ClaseService {
       return null;
       }
   
+inscribirse(clave: string): Observable<any> {
+  const token = this.getToken();
+  const headers = { Authorization: `Bearer ${token}` };
+  return this.http.post<any>(`${this.apiUrl}/inscribir`, { clave }, { headers });
+}
+      
+
 crearClase(clase: Omit<Clase, '_id' | 'clave'>): Observable<any> {
   const token = this.getToken();
   const headers = { Authorization: `Bearer ${token}` };
   return this.http.post<any>(this.apiUrl, clase, { headers });
 }
-  getMisClases(): Observable<Clase[]> {
-    const token = this.getToken(); // <-- Correctly use the safe method
-    const headers = { Authorization: `Bearer ${token}` };
-    return this.http.get<Clase[]>(`${this.apiUrl}/`, { headers });
-  }
+getMisClases(): Observable<ClasesResponse> {
+  const token = this.getToken(); // obtenemos el token
+  console.log("Token enviado:", token); // 🔹 aquí vemos qué token se está usando
+  const headers = { Authorization: `Bearer ${token}` };
+
+  return this.http.get<ClasesResponse>(`${this.apiUrl}/`, { headers });
 }
+
+}
+

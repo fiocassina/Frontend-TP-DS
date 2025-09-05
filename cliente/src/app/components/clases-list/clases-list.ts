@@ -1,8 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClaseService } from '../../services/clase.service';
 import { Clase } from '../../models/clase-interface';
 import { RouterLink } from '@angular/router';
+
+interface ClasesResponse {
+  clasesComoProfe: Clase[];
+  clasesComoAlumno: Clase[];
+}
 
 @Component({
   selector: 'app-clases-list',
@@ -13,32 +18,30 @@ import { RouterLink } from '@angular/router';
 })
 export class ClasesListComponent implements OnInit {
 
-  clases: Clase[] = [];
-  isLoading = true;
+  clasesComoProfe: Clase[] = [];
+  clasesComoAlumno: Clase[] = [];
   errorMessage: string | null = null;
 
-  constructor(private claseService: ClaseService) {}
+  constructor(
+    private claseService: ClaseService,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    if (typeof window !== 'undefined' && localStorage.getItem('token')) {
-      this.loadClases();
-    } else {
-      this.isLoading = false;
-      this.errorMessage = 'No se ha encontrado un token de autenticación. Por favor, inicie sesión.';
-    }
+    this.loadClases();
   }
 
   loadClases(): void {
     this.claseService.getMisClases().subscribe({
-      next: (data) => {
-        console.log("Datos recibidos:", data); // ✅ Para debug
-        this.clases = data;
-        this.isLoading = false;
+      next: (data: ClasesResponse) => {
+        this.clasesComoProfe = data.clasesComoProfe || [];
+        this.clasesComoAlumno = data.clasesComoAlumno || [];
+        this.cd.detectChanges(); // fuerza Angular a refrescar la vista
       },
       error: (err) => {
         console.error('Error al cargar clases:', err);
         this.errorMessage = 'No se pudieron cargar las clases.';
-        this.isLoading = false;
+        this.cd.detectChanges();
       }
     });
   }
