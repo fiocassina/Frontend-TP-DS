@@ -19,12 +19,11 @@ export class ClaseService {
       return null;
       }
   
-  crearClase(clase: Omit<Clase, '_id' | 'clave'>): Observable<Clase> {
-    const token = this.getToken(); // <-- Correctly use the safe method
-    const headers = { Authorization: `Bearer ${token}` };
-    return this.http.post<Clase>(this.apiUrl, clase, { headers });
-  }
-  
+crearClase(clase: Omit<Clase, '_id' | 'clave'>): Observable<any> {
+  const token = this.getToken();
+  const headers = { Authorization: `Bearer ${token}` };
+  return this.http.post<any>(this.apiUrl, clase, { headers });
+}
   getMisClases(): Observable<Clase[]> {
     const token = this.getToken(); // <-- Correctly use the safe method
     const headers = { Authorization: `Bearer ${token}` };

@@ -6,6 +6,7 @@ import { DashboardComponent } from './components/pages/dashboard/dashboard.compo
 import { RegistroComponent } from './components/auth/registro/registro.js';
 import { CreateClassForm } from './components/pages/create-class-form/create-class-form.js';
 import { authGuard } from './guards/auth-guard.js';
+import { ClasesListComponent } from './components/clases-list/clases-list.js';
 // voy a importar las rutas de los componentes que voy a crear
 export const routes: Routes = [
     { path: 'tipo-material-list', component: TipoMaterialList },
@@ -16,6 +17,7 @@ export const routes: Routes = [
     { path: 'inicio', component: DashboardComponent, canActivate: [authGuard] },
     { path: 'registro', component: RegistroComponent },
     { path: 'crear-clase', component: CreateClassForm },
+    { path: 'lista-clases', component: ClasesListComponent },
     //{ path: 'unirme-a-clase', component: CreateClassForm }
 
     //{ path: '**', redirectTo: '/login' }

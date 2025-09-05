@@ -3,10 +3,11 @@ import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 
+
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule], // todos los componentes que se usan en la plantilla deben estar importados aquí
+  imports: [RouterOutlet, CommonModule, ], // todos los componentes que se usan en la plantilla deben estar importados aquí
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
