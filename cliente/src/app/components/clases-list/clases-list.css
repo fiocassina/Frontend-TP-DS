@@ -1,0 +1,105 @@
+/* Contenedor principal para las clases */
+.main-classes-container {
+  background-color: #e0e8f7;
+  border-radius: 15px;
+  padding: 30px;
+  margin: 30px auto;
+  max-width: 1200px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+/* Encabezado de la sección */
+.section-header h2 {
+  font-size: 2em;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+/* Cuadrícula para las tarjetas de clase */
+.classes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+/* Estilos de cada tarjeta de clase */
+.class-card {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.class-card:hover {
+  transform: translateY(-5px);
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card-header-content h3 {
+  font-size: 1.3em;
+  font-weight: bold;
+  margin: 0;
+  color: #333;
+}
+
+.materia {
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 5px;
+  display: block;
+}
+
+.card-info {
+  margin-top: auto;
+  /* Empuja el contenido hacia abajo */
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+  margin-top: 20px;
+}
+
+.profesor,
+.rol-usuario {
+  font-size: 0.9em;
+  color: #555;
+  margin: 5px 0;
+}
+
+.btn-enter {
+  margin-top: 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+
+/* Estilos para el botón flotante de agregar */
+.add-class-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #007bff;
+  color: white;
+  font-size: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}

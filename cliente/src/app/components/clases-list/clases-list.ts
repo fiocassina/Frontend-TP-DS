@@ -20,6 +20,10 @@ export class ClasesListComponent implements OnInit {
 
   clasesComoProfe: Clase[] = [];
   clasesComoAlumno: Clase[] = [];
+  
+  clasesAMostrar: Clase[] = []; 
+  esVistaProfesor: boolean = false; 
+  
   errorMessage: string | null = null;
 
   constructor(
@@ -36,7 +40,16 @@ export class ClasesListComponent implements OnInit {
       next: (data: ClasesResponse) => {
         this.clasesComoProfe = data.clasesComoProfe || [];
         this.clasesComoAlumno = data.clasesComoAlumno || [];
-        this.cd.detectChanges(); // fuerza Angular a refrescar la vista
+        
+        if (this.clasesComoProfe.length > 0) {
+          this.clasesAMostrar = this.clasesComoProfe;
+          this.esVistaProfesor = true;
+        } else {
+          this.clasesAMostrar = this.clasesComoAlumno;
+          this.esVistaProfesor = false;
+        }
+
+        this.cd.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar clases:', err);
@@ -44,5 +57,11 @@ export class ClasesListComponent implements OnInit {
         this.cd.detectChanges();
       }
     });
+  }
+  
+  cambiarVista(): void {
+    this.esVistaProfesor = !this.esVistaProfesor;
+    this.clasesAMostrar = this.esVistaProfesor ? this.clasesComoProfe : this.clasesComoAlumno;
+    this.cd.detectChanges();
   }
 }

@@ -1,26 +1,49 @@
-<div class="d-flex justify-content-between">
-  <!-- Clases como profesor -->
-  <div class="col-6 me-2">
-    <h4>Clases como profesor</h4>
-    <div *ngFor="let clase of clasesComoProfe" class="mb-3 p-2 border rounded">
-      <h5>{{ clase.nombre }}</h5>
-      <p>Materia: {{ clase.materia }}</p>
-      <p>Clave: {{ clase.clave }}</p>
-      <button [routerLink]="['/clase', clase._id]" class="btn btn-outline-primary btn-sm">
-        Entrar
-      </button>
+<div class="main-container">
+  <div *ngIf="clasesComoProfe.length > 0 || clasesComoAlumno.length > 0">
+    <div class="classes-wrapper">
+      <ul *ngIf="clasesComoProfe.length > 0 && clasesComoAlumno.length > 0" class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link" [class.active]="!esVistaProfesor" (click)="cambiarVista()">Alumno</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [class.active]="esVistaProfesor" (click)="cambiarVista()">Profesor</a>
+        </li>
+      </ul>
+
+      <h4 *ngIf="esVistaProfesor" class="mt-3">Clases dictadas por usted</h4>
+      <h4 *ngIf="!esVistaProfesor" class="mt-3">Clases en las que estás inscrito</h4>
+
+      <div class="classes-grid">
+        <div *ngFor="let clase of clasesAMostrar" class="class-card">
+          <div class="card-content">
+            <h3>{{ clase.nombre }}</h3>
+            <p class="materia">Materia: {{ clase.materia }}</p>
+
+            <p *ngIf="esVistaProfesor" class="clave">Clave: {{ clase.clave }}</p>
+            <p *ngIf="!esVistaProfesor" class="profesor">
+              Profesor: {{ clase.profesorId.nombreCompleto }}
+            </p>
+
+            <button [routerLink]="['/clase', clase._id]" class="btn-enter">Entrar</button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="clasesAMostrar.length === 0" class="empty-message">
+        <p *ngIf="esVistaProfesor">No dictas ninguna clase todavía.</p>
+        <p *ngIf="!esVistaProfesor">No estás inscripto en ninguna clase todavía.</p>
+      </div>
     </div>
   </div>
 
-  <!-- Clases como alumno -->
-  <div class="col-6 ms-2">
-    <h4>Clases como alumno</h4>
-    <div *ngFor="let clase of clasesComoAlumno" class="mb-3 p-2 border rounded">
-      <h5>{{ clase.nombre }}</h5>
-      <p>Materia: {{ clase.materia }}</p>
-      <p>Clave: {{ clase.clave }}</p>
-      <button [routerLink]="['/clase', clase._id]" class="btn btn-outline-primary btn-sm">
-        Entrar
+  <div *ngIf="clasesComoProfe.length === 0 && clasesComoAlumno.length === 0" class="no-classes-container">
+    <div class="no-classes-content">
+      <h4 class="mb-4">¡Bienvenido!</h4>
+      <button [routerLink]="['/crear-clase']" class="btn btn-primary btn-lg me-3">
+        Crear clase
+      </button>
+      <button [routerLink]="['/unirse-clase']" class="btn btn-outline-primary btn-lg">
+        Unirse a una clase
       </button>
     </div>
   </div>

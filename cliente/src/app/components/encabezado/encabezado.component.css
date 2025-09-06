@@ -1,11 +1,18 @@
+
 .encabezado {
   background-color: #1A2B5B;
   color: #ffffff;
+  /* Código nuevo */
+  display: flex;
+  justify-content: space-between;
+  /* Empuja el contenido a los extremos */
+  align-items: center;
+  padding: 15px 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .logo-img {
   height: 65px;
-  /* o el tamaño que prefieras */
   width: auto;
 }
 
@@ -18,4 +25,23 @@
   font-size: 0.85rem;
   opacity: 0.9;
   font-style: italic;
+}
+
+/* Nuevas clases para los elementos del encabezado */
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  /* Espacio entre los íconos */
+}
+
+.menu-icon,
+.profile-icon {
+  font-size: 24px;
+  cursor: pointer;
 }
