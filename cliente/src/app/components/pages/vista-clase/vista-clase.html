@@ -1,0 +1,100 @@
+<app-encabezado></app-encabezado>
+
+<div class="container-fluid">
+  <div class="row flex-nowrap">
+
+    <!-- Sidebar -->
+    <div class="col-auto col-md-3 col-xl-2 bg-light min-vh-100 d-flex flex-column p-3">
+      <nav class="nav flex-column">
+        <a class="nav-link text-dark active" routerLink="/inicio">
+          <i class="bi bi-house-door-fill me-2"></i>Inicio
+        </a>
+        <a class="nav-link text-dark" routerLink="/lista-clases">
+          <i class="bi bi-journals me-2"></i>Mis clases
+        </a>
+        <a class="nav-link text-dark" routerLink="/perfil">
+          <i class="bi bi-person-circle me-2"></i>Perfil
+        </a>
+      </nav>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="col-auto col-md-9 col-xl-10 py-3">
+
+      <!-- Cargando -->
+      <div *ngIf="cargando" class="text-center my-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-3">Cargando clase...</p>
+      </div>
+
+      <!-- Error -->
+      <div *ngIf="errorMessage && !cargando" class="alert alert-danger text-center">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Contenido de la clase -->
+      <div *ngIf="!cargando && !errorMessage">
+
+        <!-- Encabezado de la clase -->
+        <div
+          class="d-flex justify-content-between align-items-center mb-4 p-4 rounded-bottom-4 bg-primary text-white shadow">
+          <div>
+            <h1 class="display-5 fw-bold">{{ clase?.nombre }}</h1>
+            <h2 class="lead">{{ clase?.materia }}</h2>
+          </div>
+        </div>
+
+        <div class="row">
+
+          <!-- Columna izquierda -->
+          <div class="col-lg-4 mb-4">
+
+            <!-- Clave de la clase -->
+            <div class="card border-0 shadow-sm mb-4 rounded-4">
+              <div class="card-body">
+                <h5 class="card-title text-muted">CLAVE DE LA CLASE</h5>
+                <p class="h1 text-center fw-bold text-primary">{{ clase?.clave }}</p>
+              </div>
+            </div>
+
+            <!-- Información de la clase -->
+            <div class="card border-0 shadow-sm mb-4 rounded-4">
+              <div class="card-body">
+                <h5 class="card-title text-muted">INFORMACION DE CLASE</h5>
+                <div class="mb-3">
+                  <p class="mb-1"><strong>Profesor:</strong> {{ clase?.profesorId?.nombreCompleto || 'No asignado' }}
+                  </p>
+                  <p class="mb-1"><strong>Alumnos:</strong> {{ clase?.alumnos?.length || 0 }}</p>
+                </div>
+                <div>
+                  <h6 class="fw-bold">Descripción:</h6>
+                  <p>{{ clase?.descripcion || 'Sin descripción' }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Lista de materiales -->
+            <app-material [claseId]="clase?._id || ''" [esProfesor]="esProfesor"></app-material>
+
+          </div> <!-- FIN COL IZQUIERDA -->
+
+          <!-- Columna derecha: Proyectos -->
+          <div class="col-lg-8 mb-4">
+            <div class="card border-0 shadow-sm rounded-4">
+              <div class="card-body d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h5 class="card-title text-muted mb-0">PROYECTOS</h5>
+                  <button *ngIf="esProfesor" class="btn btn-primary btn-sm">Agregar Proyecto</button>
+                </div>
+                <p class="card-text text-center text-muted">Los proyectos aparecerán aquí.</p>
+              </div>
+            </div>
+          </div> <!-- FIN COL DERECHA -->
+
+        </div> <!-- FIN ROW -->
+      </div> <!-- FIN CONTENIDO DE LA CLASE -->
+    </div> <!-- FIN CONTENIDO PRINCIPAL -->
+  </div> <!-- FIN ROW FLEX-WRAP -->
+</div> <!-- FIN CONTAINER-FLUID -->

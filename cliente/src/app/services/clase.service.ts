@@ -42,6 +42,13 @@ getMisClases(): Observable<ClasesResponse> {
 
   return this.http.get<ClasesResponse>(`${this.apiUrl}/`, { headers });
 }
+getClaseById(id: string): Observable<Clase> {
+  const token = this.getToken();
+  const headers = { Authorization: `Bearer ${token}` };
+  return this.http.get<Clase>(`${this.apiUrl}/${id}`, { headers });
+}
+
+
 
 }
 
