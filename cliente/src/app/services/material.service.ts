@@ -1,30 +1,24 @@
-// src/app/services/material.service.ts
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Material } from '../models/material-interface';// <-- tu modelo
+import { Material } from '../models/material-interface';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class MaterialService {
-  private baseUrl = 'http://localhost:3000/api/material'; // Ajusta según tu backend
+  private http = inject(HttpClient);
+  private apiUrl = 'http://localhost:3000/api/material';
 
-  constructor(private http: HttpClient) {}
+  constructor() {}
 
+  // Obtener materiales de una clase
   getMaterialesPorClase(claseId: string): Observable<Material[]> {
-    return this.http.get<Material[]>(`${this.baseUrl}/clase/${claseId}`);
+    return this.http.get<Material[]>(`${this.apiUrl}/clase/${claseId}`);
   }
 
-  createMaterial(data: { nombre: string; tipoId: string; claseId: string }) {
-    return this.http.post(`${this.baseUrl}/`, data);
-  }
-
-  updateMaterial(id: string, data: any) {
-    return this.http.put(`${this.baseUrl}/${id}`, data);
-  }
-
-  deleteMaterial(id: string) {
-    return this.http.delete(`${this.baseUrl}/${id}`);
+  // ✅ Crear material (para PDF, links, imágenes, etc.)
+  createMaterial(formData: FormData): Observable<any> {
+    return this.http.post<any>(this.apiUrl, formData);
   }
 }

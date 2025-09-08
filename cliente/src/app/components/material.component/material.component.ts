@@ -1,78 +1,110 @@
-// src/app/components/material/material.component.ts
-import { Component, Input, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
-import { MaterialService } from '../../services/material.service';
-import { Material } from '../../models/material-interface';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MaterialService } from '../../services/material.service';
+import { TipoMaterialService } from '../../services/tipo-material';
+// ✅ CORRECCIÓN: Se importa el componente de lista de materiales para que sea reconocido
+import { ListaMaterialesComponent } from '../lista-materiales/lista-materiales';
 
 @Component({
   selector: 'app-material',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ListaMaterialesComponent],
   templateUrl: './material.component.html',
+  styleUrls: ['./material.component.css']
 })
-export class MaterialComponent implements OnInit, OnChanges {
+export class MaterialComponent implements OnInit {
   @Input() claseId!: string;
-  @Input() esProfesor: boolean = false;
-
-  materiales: Material[] = [];
-  cargando: boolean = true;
-  errorMessage: string | null = null;
+  @Input() esProfesor!: boolean;
+  @Input() tiposMaterial: any[] = [];
 
   nuevoMaterialNombre: string = '';
   nuevoMaterialTipoId: string = '';
+  nuevoMaterialUrl: string = '';
+  selectedFile: File | null = null;
+  errorMessage: string = '';
 
-  constructor(private materialService: MaterialService, private cd: ChangeDetectorRef) {}
+  private materialesService = inject(MaterialService);
+  private tipoMaterialesService = inject(TipoMaterialService);
 
-  ngOnInit(): void {
-    // por si claseId ya viene al inicio
-    if (this.claseId) this.cargarMateriales();
+  constructor() {}
+
+  ngOnInit(): void {}
+
+  tipoRequiereUrl(): boolean {
+    const tipo = this.tiposMaterial.find(t => t._id === this.nuevoMaterialTipoId);
+    return tipo && tipo.nombre.toLowerCase() === 'link';
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['claseId'] && this.claseId) {
-      this.cargarMateriales();
+  tipoRequiereArchivo(): boolean {
+    const tipo = this.tiposMaterial.find(t => t._id === this.nuevoMaterialTipoId);
+    return tipo && (
+      tipo.nombre.toLowerCase() === 'pdf' ||
+      tipo.nombre.toLowerCase() === 'imagen' ||
+      tipo.nombre.toLowerCase() === 'Documento'
+    );
+  }
+
+  getAcceptExtension(): string {
+    const tipo = this.tiposMaterial.find(t => t._id === this.nuevoMaterialTipoId);
+    if (tipo) {
+      if (tipo.nombre.toLowerCase() === 'pdf') return '.pdf';
+      if (tipo.nombre.toLowerCase() === 'video') return '.mp4,.mov,.avi';
+      if (tipo.nombre.toLowerCase() === 'imagen') return '.png,.jpg,.jpeg,.gif';
+      if (tipo.nombre.toLowerCase() === 'doc') return '.doc,.docx,.txt';
+    }
+    return '';
+  }
+
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
     }
   }
 
-  cargarMateriales() {
-    this.cargando = true;
-    this.materiales = [];
-    this.errorMessage = null;
+  async agregarMaterial(): Promise<void> {
+    if (!this.nuevoMaterialNombre || !this.nuevoMaterialTipoId || !this.claseId) {
+      this.errorMessage = 'Por favor, completa todos los campos requeridos.';
+      return;
+    }
 
-    this.materialService.getMaterialesPorClase(this.claseId).subscribe({
-      next: (data) => {
-        this.materiales = data || [];
-        this.cargando = false;
-        this.cd.detectChanges(); // forzar actualización
+    if (this.tipoRequiereUrl() && !this.nuevoMaterialUrl) {
+      this.errorMessage = 'La URL es requerida para este tipo de material.';
+      return;
+    }
+
+    if (this.tipoRequiereArchivo() && !this.selectedFile) {
+      this.errorMessage = 'Por favor, selecciona un archivo para subir.';
+      return;
+    }
+
+    // ✅ Armamos FormData para enviar al backend
+    const formData = new FormData();
+    formData.append('nombre', this.nuevoMaterialNombre);
+    formData.append('claseId', this.claseId);
+    formData.append('tipoId', this.nuevoMaterialTipoId);
+
+    if (this.tipoRequiereArchivo() && this.selectedFile) {
+      formData.append('file', this.selectedFile, this.selectedFile.name);
+    } else if (this.tipoRequiereUrl()) {
+      formData.append('url', this.nuevoMaterialUrl);
+    }
+
+    this.materialesService.createMaterial(formData).subscribe({
+      next: (response) => {
+        console.log('✅ Material agregado con éxito:', response);
+        // Limpiar los campos después de agregar
+        this.nuevoMaterialNombre = '';
+        this.nuevoMaterialTipoId = '';
+        this.nuevoMaterialUrl = '';
+        this.selectedFile = null;
+        this.errorMessage = '';
       },
-      error: (err) => {
-        console.error('Error al cargar materiales:', err);
-        this.errorMessage = 'No se pudieron cargar los materiales.';
-        this.cargando = false;
-        this.cd.detectChanges(); // forzar actualización
-      },
+      error: (err: any) => {
+        this.errorMessage = 'Error al agregar el material.';
+        console.error('❌ Error al agregar material:', err);
+      }
     });
-  }
-
-  agregarMaterial() {
-    if (!this.nuevoMaterialNombre || !this.nuevoMaterialTipoId) return;
-
-    this.materialService
-      .createMaterial({
-        nombre: this.nuevoMaterialNombre,
-        tipoId: this.nuevoMaterialTipoId,
-        claseId: this.claseId,
-      })
-      .subscribe({
-        next: () => {
-          this.nuevoMaterialNombre = '';
-          this.nuevoMaterialTipoId = '';
-          this.cargarMateriales(); // recargar lista
-        },
-        error: (err) => {
-          console.error('Error al crear material:', err);
-        },
-      });
   }
 }

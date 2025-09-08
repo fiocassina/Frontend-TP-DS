@@ -1,6 +1,11 @@
 export interface Material {
-  _id: string;
+tipo: any;
+rutaArchivo: string;
+  _id?: string;
   nombre: string;
-  tipo: { _id: string; nombre: string };
-  clase: string;
+  tipoId: string;
+  claseId: string;
+  url?: string;        // Para links/videos
+  archivo?: string;    // Para archivos subidos (path/nombre)
+  fechaCreacion?: Date;
 }

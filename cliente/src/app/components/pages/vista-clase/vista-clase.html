@@ -75,8 +75,20 @@
               </div>
             </div>
 
-            <!-- Lista de materiales -->
-            <app-material [claseId]="clase?._id || ''" [esProfesor]="esProfesor"></app-material>
+            <!-- Formulario para agregar materiales -->
+            <app-material 
+              [claseId]="clase?._id || ''" 
+              [esProfesor]="esProfesor"
+              [tiposMaterial]="tiposMaterial">
+            </app-material>
+
+            <!-- ✅ Agregado: Componente para mostrar la lista de materiales -->
+            <div class="mt-4">
+              <h5 class="text-muted mb-3">MATERIALES</h5>
+              <app-lista-materiales
+                [claseId]="clase?._id || ''">
+              </app-lista-materiales>
+            </div>
 
           </div> <!-- FIN COL IZQUIERDA -->
 

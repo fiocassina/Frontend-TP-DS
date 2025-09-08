@@ -1,0 +1,54 @@
+<div class="card border-0 shadow-sm rounded-4">
+  <div class="card-header bg-success text-white">
+    <h5 class="mb-0">Materiales Subidos</h5>
+  </div>
+  <div class="card-body">
+    <!-- Mensaje de carga -->
+    @if (loading()) {
+      <div class="d-flex justify-content-center my-4">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+    }
+
+    <!-- Mensaje de error -->
+    @if (error()) {
+      <div class="alert alert-danger" role="alert">
+        <span class="fw-bold">Error:</span> {{ error() }}
+      </div>
+    }
+
+    <!-- Mensaje si no hay materiales -->
+    @if (materiales().length === 0 && !loading() && !error()) {
+      <div class="alert alert-info" role="alert">
+        No hay materiales disponibles para esta clase.
+      </div>
+    }
+
+    <!-- Lista de materiales -->
+    @if (materiales().length > 0 && !loading()) {
+      <ul class="list-group">
+        @for (material of materiales(); track material._id) {
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-1">{{ material.nombre }}</h6>
+              <small class="text-muted">Tipo: {{ material.tipo?.nombre || 'Desconocido' }}</small>
+            </div>
+            <div>
+              @if (material.rutaArchivo) {
+                <a [href]="getMaterialUrl(material.rutaArchivo)" target="_blank" class="btn btn-sm btn-outline-primary">
+                  Ver Archivo
+                </a>
+              } @else if (material.url) {
+                <a [href]="material.url" target="_blank" class="btn btn-sm btn-outline-info">
+                  Ir a URL
+                </a>
+              }
+            </div>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</div>
