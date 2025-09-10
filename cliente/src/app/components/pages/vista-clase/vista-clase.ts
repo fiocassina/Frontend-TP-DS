@@ -8,12 +8,12 @@ import { MaterialComponent } from '../../material.component/material.component';
 import { TipoMaterial } from '../../../models/tipo-material-interface.js';
 import { TipoMaterialService } from '../../../services/tipo-material.js';
 import { ListaMaterialesComponent } from '../../lista-materiales/lista-materiales.js';
-
+import { TipoProyectoList } from '../../tipo-proyecto-list/tipo-proyecto-list.js';
 
 @Component({
   selector: 'vista-clase',
   standalone: true,
-  imports: [CommonModule, EncabezadoComponent, MaterialComponent, ListaMaterialesComponent ],
+  imports: [CommonModule, EncabezadoComponent, MaterialComponent, ListaMaterialesComponent, TipoProyectoList ],
   templateUrl: './vista-clase.html',
   styleUrls: ['./vista-clase.css']
 })

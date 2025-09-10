@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { TipoMaterialList } from './components/tipo-material-list/tipo-material-list.js';
 import { TipoMaterialForm } from './components/tipo-material-form/tipo-material-form.js';
+import { TipoProyectoList } from './components/tipo-proyecto-list/tipo-proyecto-list.js';
+import { TipoProyectoForm } from './components/tipo-proyecto-form/tipo-proyecto-form.js';
 import { LoginComponent } from './components/auth/login/login.component.js';
 import { DashboardComponent } from './components/pages/dashboard/dashboard.component.js';
 import { RegistroComponent } from './components/auth/registro/registro.js';
@@ -16,6 +18,9 @@ export const routes: Routes = [
     { path: 'tipo-material-list', component: TipoMaterialList },
     { path: 'tipo-material-form', component: TipoMaterialForm },
     { path: 'tipo-material-form/:id', component: TipoMaterialForm },
+    { path: 'tipo-proyecto-list', component: TipoProyectoList },
+    { path: 'tipo-proyecto-form', component: TipoProyectoForm },
+    { path: 'tipo-proyecto-form/:id', component: TipoProyectoForm },
     { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
     { path: 'inicio', component: DashboardComponent, canActivate: [authGuard] },
