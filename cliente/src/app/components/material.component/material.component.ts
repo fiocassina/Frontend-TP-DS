@@ -3,13 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MaterialService } from '../../services/material.service';
 import { TipoMaterialService } from '../../services/tipo-material';
-// ✅ CORRECCIÓN: Se importa el componente de lista de materiales para que sea reconocido
-import { ListaMaterialesComponent } from '../lista-materiales/lista-materiales';
+//import { ListaMaterialesComponent } from '../lista-materiales/lista-materiales';
 
 @Component({
   selector: 'app-material',
   standalone: true,
-  imports: [CommonModule, FormsModule, ListaMaterialesComponent],
+  imports: [CommonModule, FormsModule, /*ListaMaterialesComponent*/],
   templateUrl: './material.component.html',
   styleUrls: ['./material.component.css']
 })
@@ -100,6 +99,7 @@ export class MaterialComponent implements OnInit {
         this.nuevoMaterialUrl = '';
         this.selectedFile = null;
         this.errorMessage = '';
+        
       },
       error: (err: any) => {
         this.errorMessage = 'Error al agregar el material.';

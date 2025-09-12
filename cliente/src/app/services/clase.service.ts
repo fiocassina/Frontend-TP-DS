@@ -47,8 +47,10 @@ getClaseById(id: string): Observable<Clase> {
   const headers = { Authorization: `Bearer ${token}` };
   return this.http.get<Clase>(`${this.apiUrl}/${id}`, { headers });
 }
-
-
-
+eliminarClase(id: string): Observable<any> {
+  const token = this.getToken();
+  const headers = { Authorization: `Bearer ${token}` };
+  return this.http.delete<any>(`${this.apiUrl}/${id}`, { headers });
+}
 }
 

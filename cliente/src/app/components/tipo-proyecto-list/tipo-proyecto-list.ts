@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TipoProyecto } from '../../models/tipo-proyecto-interface'; // Importa la interfaz de TipoProyecto
 import { TipoProyectoService } from '../../services/tipo-proyecto.service'; // Importa el servicio de TipoProyecto
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-tipo-proyecto-list',
@@ -16,7 +17,9 @@ export class TipoProyectoList implements OnInit {
   isLoading: boolean = true;
   errorMessage: string | null = null;
 
-  constructor(private tipoProyectoService: TipoProyectoService, private router: Router) {}
+  constructor(private tipoProyectoService: TipoProyectoService,
+              private router: Router,
+              private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.obtenerTiposProyecto();
@@ -29,11 +32,13 @@ export class TipoProyectoList implements OnInit {
       next: (data) => {
         this.tiposProyecto = data;
         this.isLoading = false;
+        this.cdr.detectChanges(); // Asegura que la vista se actualice
       },
       error: (error) => {
         console.error('Error al obtener los tipos de proyecto:', error);
         this.errorMessage = 'No se pudieron cargar los tipos de proyecto. Intenta de nuevo más tarde.';
         this.isLoading = false;
+        this.cdr.detectChanges(); // Asegura que la vista se actualice
       }
     });
   }
