@@ -1,0 +1,39 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.nav-item {
+  display: flex;
+  /* para poder centrar contenido */
+  align-items: center;
+  width: 100%;
+  height: 3rem;
+  /* altura fija para que el hover funcione */
+  padding: 0 1rem;
+  /* solo horizontal */
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  color: #212529;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+}
+.nav-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  background-color: #f8f9fa;
+}
+
+.nav-item.active {
+  font-weight: 600;
+  background-color: #e9ecef;
+}

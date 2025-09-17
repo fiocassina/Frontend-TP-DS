@@ -1,18 +1,37 @@
-<div *ngIf="proyectos.length > 0; else noProyectos" class="mt-3">
-  <div *ngFor="let proyecto of proyectos"
-    class="mb-2 p-2 border rounded-3 d-flex justify-content-between align-items-center">
-    <div>
-      <strong>{{ proyecto.nombre }}</strong> - {{ proyecto.tipoProyecto.nombre }}
-      <small class="text-muted">(Entrega: {{ proyecto.fechaEntrega | date:'shortDate' }})</small>
-    </div>
-    <div *ngIf="esProfesor">
-      <button class="btn btn-danger btn-sm" (click)="eliminarProyecto(proyecto._id)">
-        <i class="bi bi-trash"></i>
-      </button>
+<div *ngIf="proyectos.length > 0; else noProyectos" class="row mt-3">
+  <div class="col-md-6 mb-3" *ngFor="let proyecto of proyectos">
+    <div class="card h-100 shadow-sm border-0 rounded-4 hoverable">
+      <div class="card-body d-flex flex-column">
+
+        <!-- Datos del proyecto -->
+        <h5 class="card-title">{{ proyecto.nombre }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ proyecto.tipoProyecto.nombre}}</h6>
+        <p class="card-text">
+          <small class="text-muted">
+            Entrega: {{ proyecto.fechaEntrega | date:'shortDate' }}
+          </small>
+        </p>
+        <p *ngIf="proyecto.descripcion" class="text-secondary">{{ proyecto.descripcion }}</p>
+
+        <!-- Botones de acción -->
+        <div class="mt-auto d-flex gap-2">
+          <ng-container *ngIf="esProfesor">
+            <button class="btn btn-outline-primary btn-sm">Ver entregas</button>
+            <button class="btn btn-danger btn-sm" (click)="eliminarProyecto(proyecto._id)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </ng-container>
+
+          <ng-container *ngIf="!esProfesor">
+            <button class="btn btn-success btn-sm">Entregar proyecto</button>
+          </ng-container>
+        </div>
+
+      </div>
     </div>
   </div>
 </div>
 
 <ng-template #noProyectos>
-  <p class="text-muted">Aquí se van a mostrarán los proyectos de la clase.</p>
+  <p class="text-muted">Aquí se mostrarán los proyectos de la clase.</p>
 </ng-template>

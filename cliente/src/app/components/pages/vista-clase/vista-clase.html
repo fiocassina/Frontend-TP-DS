@@ -3,23 +3,13 @@
 <div class="container-fluid">
   <div class="row flex-nowrap">
 
-    <!-- Sidebar -->
-    <div class="col-auto col-md-3 col-xl-2 bg-light min-vh-100 d-flex flex-column p-3">
-      <nav class="nav flex-column">
-        <a class="nav-link text-dark active" routerLink="/inicio">
-          <i class="bi bi-house-door-fill me-2"></i>Inicio
-        </a>
-        <a class="nav-link text-dark" routerLink="/lista-clases">
-          <i class="bi bi-journals me-2"></i>Mis clases
-        </a>
-        <a class="nav-link text-dark" routerLink="/perfil">
-          <i class="bi bi-person-circle me-2"></i>Perfil
-        </a>
-      </nav>
+    <!-- Sidebar fijo a la izquierda -->
+    <div class="col-md-2 bg-light min-vh-100 p-3 sidebar">
+      <app-navbar></app-navbar>
     </div>
 
     <!-- Contenido principal -->
-    <div class="col-auto col-md-9 col-xl-10 py-3">
+    <div class="col py-3">
 
       <!-- Cargando -->
       <div *ngIf="cargando" class="text-center my-5">
@@ -79,11 +69,10 @@
             <app-material [claseId]="clase?._id || ''" [esProfesor]="esProfesor" [tiposMaterial]="tiposMaterial">
             </app-material>
 
-            <!-- Componente para mostrar la lista de materiales -->
+            <!-- Lista de materiales -->
             <div class="mt-4">
               <h5 class="text-muted mb-3">MATERIALES</h5>
-              <app-lista-materiales [claseId]="clase?._id || ''">
-              </app-lista-materiales>
+              <app-lista-materiales [claseId]="clase?._id || ''"></app-lista-materiales>
             </div>
 
           </div> <!-- FIN COL IZQUIERDA -->
@@ -96,8 +85,6 @@
                 <!-- Header proyectos -->
                 <div class="d-flex justify-content-between align-items-center mb-3">
                   <h5 class="card-title text-muted mb-0">PROYECTOS</h5>
-
-                  <!-- Botón para mostrar formulario de creación -->
                   <button *ngIf="esProfesor" class="btn btn-primary btn-sm"
                     (click)="mostrarFormularioProyecto = !mostrarFormularioProyecto">
                     Crear Proyecto
@@ -117,7 +104,7 @@
                   <div class="mb-2">
                     <label class="form-label">Tipo de proyecto</label>
                     <select class="form-select" [(ngModel)]="nuevoProyecto.tipoProyecto">
-                      <option *ngFor="let tipo of tiposProyecto" [ngValue]="tipo">{{ tipo.nombre }}</option>           
+                      <option *ngFor="let tipo of tiposProyecto" [ngValue]="tipo">{{ tipo.nombre }}</option>
                     </select>
                   </div>
                   <div class="mb-2">
@@ -128,22 +115,19 @@
                 </div>
 
                 <!-- Listado de proyectos -->
-
-                <app-lista-proyectos [proyectos]="proyectos" [esProfesor]="esProfesor" (eliminar)="eliminarProyecto($event)">
+                <app-lista-proyectos [proyectos]="proyectos" [esProfesor]="esProfesor"
+                  (eliminar)="eliminarProyecto($event)">
                 </app-lista-proyectos>
-
 
                 <!-- Gestión de tipos de proyecto -->
                 <div *ngIf="esProfesor" class="mt-4">
                   <h5 class="card-title text-muted mb-3">GESTIÓN DE TIPOS DE PROYECTO</h5>
-                  
                   <app-tipo-proyecto-list></app-tipo-proyecto-list>
                 </div>
 
               </div>
             </div>
-          </div>
-          <!-- FIN COL DERECHA -->
+          </div> <!-- FIN COL DERECHA -->
 
         </div> <!-- FIN ROW -->
       </div> <!-- FIN CONTENIDO DE LA CLASE -->

@@ -14,6 +14,7 @@ import { ProyectoService } from '../../../services/proyecto.service';
 import { Proyecto } from '../../../models/proyecto-interface';
 import { TipoProyecto } from '../../../models/tipo-proyecto-interface';
 import { ListaProyectosComponent } from '../../lista-proyectos/lista-proyectos';
+import { NavbarComponent } from '../../navbar/navbar';
 
 @Component({
   selector: 'vista-clase',
@@ -25,7 +26,8 @@ import { ListaProyectosComponent } from '../../lista-proyectos/lista-proyectos';
     MaterialComponent,
     ListaMaterialesComponent,
     TipoProyectoList,
-    ListaProyectosComponent
+    ListaProyectosComponent,
+    NavbarComponent
   ],
   templateUrl: './vista-clase.html',
   styleUrls: ['./vista-clase.css']
