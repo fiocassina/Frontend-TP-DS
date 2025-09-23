@@ -115,8 +115,8 @@
                 </div>
 
                 <!-- Listado de proyectos -->
-                <app-lista-proyectos [proyectos]="proyectos" [esProfesor]="esProfesor"
-                  (eliminar)="eliminarProyecto($event)">
+                <app-lista-proyectos [proyectos]="proyectos" [esProfesor]="esProfesor" (eliminar)="eliminarProyecto($event)"
+                  (entregaExitosa)="cargarProyectosYEntregas(clase?._id || '')">
                 </app-lista-proyectos>
 
                 <!-- Gestión de tipos de proyecto -->

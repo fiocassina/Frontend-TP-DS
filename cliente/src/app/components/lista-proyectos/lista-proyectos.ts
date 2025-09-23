@@ -15,6 +15,7 @@ export class ListaProyectosComponent {
   @Input() proyectos!: Proyecto[];
   @Input() esProfesor: boolean = false;
   @Output() eliminar = new EventEmitter<string>();
+  @Output() entregaExitosa = new EventEmitter<void>();
 
   proyectoExpandidoId: string | null = null;
   comentario: string = '';
@@ -41,6 +42,7 @@ export class ListaProyectosComponent {
   onFileSelected(event: any) {
     this.archivoSeleccionado = event.target.files[0] ?? null;
   }
+  
   verEntregas(proyectoId: string) {
     // Por ahora no hace nada
   }
@@ -56,14 +58,8 @@ export class ListaProyectosComponent {
     formData.append('comentario', this.comentario || '');
     if (this.archivoSeleccionado) {
       formData.append('archivoUrl', this.archivoSeleccionado, this.archivoSeleccionado.name);
-      const tipoArchivo = this.archivoSeleccionado.type.includes('pdf') ? 'pdf' : 'imagen';
-      formData.append('tipoArchivo', tipoArchivo);
     }
-
-    // Aquí el alumnoId lo podría traer de un AuthService o token
-    const alumnoId = localStorage.getItem('userId'); // ejemplo simple
-    if (alumnoId) formData.append('alumnoId', alumnoId);
-
+    
     this.entregaService.crearEntrega(formData).subscribe({
       next: (res) => {
         console.log('Entrega realizada:', res);
@@ -71,6 +67,7 @@ export class ListaProyectosComponent {
         this.archivoSeleccionado = null;
         this.errorMessage = '';
         this.proyectoExpandidoId = null;
+        this.entregaExitosa.emit();
       },
       error: (err) => {
         console.error('Error al entregar:', err);

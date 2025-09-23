@@ -9,5 +9,7 @@ export interface Proyecto {
   fechaEntrega: string; // ISO string
   createdAt?: string;
   updatedAt?: string;
+
+  entregado?: boolean;
 }
 

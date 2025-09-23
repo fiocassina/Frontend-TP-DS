@@ -15,6 +15,8 @@ import { Proyecto } from '../../../models/proyecto-interface';
 import { TipoProyecto } from '../../../models/tipo-proyecto-interface';
 import { ListaProyectosComponent } from '../../lista-proyectos/lista-proyectos';
 import { NavbarComponent } from '../../navbar/navbar';
+import { EntregaService } from '../../../services/entrega.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'vista-clase',
@@ -47,7 +49,7 @@ export class VistaClase implements OnInit {
     nombre: '',
     descripcion: '',
     tipoProyecto: {} as TipoProyecto,
-    claseId: '', // se setea al cargar la clase
+    claseId: '',
     fechaEntrega: ''
   };
 
@@ -56,6 +58,7 @@ export class VistaClase implements OnInit {
     private claseService: ClaseService,
     private proyectoService: ProyectoService,
     private tipoMaterialService: TipoMaterialService,
+    private entregaService: EntregaService,
     private cd: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
@@ -63,39 +66,83 @@ export class VistaClase implements OnInit {
   ngOnInit(): void {
     const claseId = this.route.snapshot.paramMap.get('id');
     if (claseId) {
-      this.claseService.getClaseById(claseId).subscribe({
-        next: (data) => {
-          this.clase = data;
-          this.nuevoProyecto.claseId = data._id || '';
-
-          // Determinar si es profesor
-          if (isPlatformBrowser(this.platformId)) {
-            const token = localStorage.getItem('token');
-            let userId: string | null = null;
-            if (token) {
-              try {
-                const payload = JSON.parse(atob(token.split('.')[1]));
-                userId = payload.id;
-              } catch {}
-            }
-            this.esProfesor = !!(userId && data.profesorId?._id === userId);
-          }
-
-          this.cargarProyectosClase(claseId);
-          this.cargando = false;
-          this.cd.detectChanges();
-        },
-        error: (err) => {
-          console.error('Error al cargar clase:', err);
-          this.errorMessage = 'No se pudo cargar la clase.';
-          this.cargando = false;
-          this.cd.detectChanges();
-        }
-      });
+      this.cargarDatosClase(claseId);
     }
 
     this.cargarTiposMaterial();
     this.cargarTiposProyecto();
+  }
+
+  cargarDatosClase(claseId: string): void {
+    this.cargando = true;
+    this.claseService.getClaseById(claseId).subscribe({
+      next: (data) => {
+        this.clase = data;
+        this.nuevoProyecto.claseId = data._id || '';
+        this.esProfesor = this.esUsuarioProfesor(data);
+        this.cargarProyectosYEntregas(claseId);
+      },
+      error: (err) => {
+        console.error('Error al cargar clase:', err);
+        this.errorMessage = 'No se pudo cargar la clase.';
+        this.cargando = false;
+      }
+    });
+  }
+
+  cargarProyectosYEntregas(claseId: string): void {
+    // Si es profesor, solo carga los proyectos, no necesita las entregas
+    if (this.esProfesor) {
+      this.proyectoService.getProyectosClase(claseId).subscribe({
+        next: (proyectos) => {
+          this.proyectos = proyectos;
+          this.cargando = false;
+          this.cd.detectChanges();
+        },
+        error: (err) => console.error('Error cargando proyectos (profesor):', err)
+      });
+      return;
+    }
+
+    // Si es alumno, carga proyectos y sus propias entregas
+    forkJoin({
+      proyectos: this.proyectoService.getProyectosClase(claseId),
+      entregas: this.entregaService.obtenerEntregasPorAlumno()
+    }).subscribe({
+      next: ({ proyectos, entregas }) => {
+        const proyectosConEstado = proyectos.map(proyecto => {
+          const entregaExistente = entregas.find(e => e.proyecto._id === proyecto._id);
+          return {
+            ...proyecto,
+            entregado: !!entregaExistente
+          };
+        });
+        this.proyectos = proyectosConEstado;
+        this.cargando = false;
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error cargando proyectos y entregas (alumno):', err);
+        this.errorMessage = 'No se pudieron cargar los proyectos o las entregas.';
+        this.cargando = false;
+        this.cd.detectChanges();
+      }
+    });
+  }
+
+  esUsuarioProfesor(clase: Clase): boolean {
+    if (isPlatformBrowser(this.platformId)) {
+      const token = localStorage.getItem('token');
+      let userId: string | null = null;
+      if (token) {
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          userId = payload.id;
+        } catch {}
+      }
+      return !!(userId && clase.profesorId?._id === userId);
+    }
+    return false;
   }
 
   cargarTiposMaterial(): void {
@@ -108,26 +155,12 @@ export class VistaClase implements OnInit {
   cargarTiposProyecto(): void {
     this.proyectoService.getTiposProyecto().subscribe({
       next: (tipos) => {
-        console.log("Tipos de proyecto recibidos en Angular:", tipos); // <-- ponerlo aquí
         this.tiposProyecto = tipos;
       },
       error: (err) => console.error('Error cargando tipos de proyecto:', err)
     });
   }
   
-
-  cargarProyectosClase(claseId: string): void {
-    this.proyectoService.getProyectosClase(claseId).subscribe({
-      next: (proyectos) => {
-        // Asignamos un nuevo array para que Angular detecte los cambios
-        this.proyectos = [...proyectos];
-        this.cd.detectChanges(); // forzamos detección de cambios
-      },
-      error: (err) => console.error('Error cargando proyectos:', err)
-    });
-  }
-  
-
   crearProyecto(): void {
     if (!this.nuevoProyecto.nombre || !this.nuevoProyecto.tipoProyecto?._id || !this.nuevoProyecto.fechaEntrega) return;
   
@@ -139,21 +172,15 @@ export class VistaClase implements OnInit {
       tipoProyecto: this.nuevoProyecto.tipoProyecto
     }).subscribe({
       next: (res) => {
-        // Reemplazamos el array completo para actualizar el binding
-        this.proyectos = [...this.proyectos, res];
-  
-        // Limpiar formulario y ocultarlo
+        this.cargarProyectosYEntregas(this.clase?._id || ''); // Recargar la lista después de crear
         this.nuevoProyecto = { nombre: '', descripcion: '', tipoProyecto: {} as TipoProyecto, claseId: this.clase?._id || '', fechaEntrega: '' };
         this.mostrarFormularioProyecto = false;
-  
-        this.cd.detectChanges(); // forzamos detección de cambios
+        this.cd.detectChanges();
       },
       error: (err) => console.error('Error al crear proyecto', err)
     });
   }
   
-  
-
   eliminarProyecto(proyectoId: string): void {
     this.proyectoService.eliminarProyecto(proyectoId).subscribe({
       next: () => this.proyectos = this.proyectos.filter(p => p._id !== proyectoId),
@@ -161,7 +188,6 @@ export class VistaClase implements OnInit {
     });
   }
 
-  // Función auxiliar para mostrar el nombre del tipo de proyecto
   nombreTipoProyecto(proyecto: Proyecto): string {
     const tipo = this.tiposProyecto.find(t => t._id === proyecto.tipoProyecto?._id || proyecto.tipoProyecto._id);
     return tipo ? tipo.nombre : 'Sin tipo';
