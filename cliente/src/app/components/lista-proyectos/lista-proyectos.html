@@ -5,7 +5,7 @@
 
         <!-- Datos del proyecto -->
         <h5 class="card-title">{{ proyecto.nombre }}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{ proyecto.tipoProyecto.nombre}}</h6>
+        <h6 class="card-subtitle mb-2 text-muted">{{ proyecto.tipoProyecto.nombre }}</h6>
         <p class="card-text">
           <small class="text-muted">
             Entrega: {{ proyecto.fechaEntrega | date:'shortDate' }}
@@ -16,15 +16,37 @@
         <!-- Botones de acción -->
         <div class="mt-auto d-flex gap-2">
           <ng-container *ngIf="esProfesor">
-            <button class="btn btn-outline-primary btn-sm">Ver entregas</button>
+            <button class="btn btn-outline-primary btn-sm" (click)="verEntregas(proyecto._id)">
+              Ver entregas
+            </button>
             <button class="btn btn-danger btn-sm" (click)="eliminarProyecto(proyecto._id)">
               <i class="bi bi-trash"></i>
             </button>
           </ng-container>
 
           <ng-container *ngIf="!esProfesor">
-            <button class="btn btn-success btn-sm">Entregar proyecto</button>
+            <button class="btn btn-success btn-sm" (click)="toggleEntrega(proyecto._id)">
+              Entregar proyecto
+            </button>
           </ng-container>
+        </div>
+
+        <!-- Formulario de entrega expandido -->
+        <div *ngIf="proyectoExpandidoId === proyecto._id" class="mt-3 p-3 border rounded bg-light">
+          <div class="mb-2">
+            <label>Comentario o enlace:</label>
+            <textarea class="form-control" [(ngModel)]="comentario" rows="2"
+              placeholder="Escribe tu comentario o pega un link"></textarea>
+          </div>
+          <div class="mb-2">
+            <label>Archivo (PDF o imagen):</label>
+            <input type="file" class="form-control" (change)="onFileSelected($event)"
+              accept=".pdf,.png,.jpg,.jpeg,.gif">
+          </div>
+          <button class="btn btn-primary btn-sm mt-2" (click)="entregarProyecto(proyecto._id)">
+            Entregar
+          </button>
+          <div *ngIf="errorMessage" class="text-danger mt-2">{{ errorMessage }}</div>
         </div>
 
       </div>
