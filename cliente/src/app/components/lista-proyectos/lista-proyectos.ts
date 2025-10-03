@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Proyecto } from '../../models/proyecto-interface';
 import { FormsModule } from '@angular/forms';
 import { EntregaService } from '../../services/entrega.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lista-proyectos',
@@ -22,7 +23,7 @@ export class ListaProyectosComponent {
   archivoSeleccionado: File | null = null;
   errorMessage: string = '';
 
-  constructor(private entregaService: EntregaService) {}
+  constructor(private entregaService: EntregaService, private router: Router) { }
 
   eliminarProyecto(proyectoId: string) {
     this.eliminar.emit(proyectoId);
@@ -42,11 +43,11 @@ export class ListaProyectosComponent {
   onFileSelected(event: any) {
     this.archivoSeleccionado = event.target.files[0] ?? null;
   }
-  
+
   verEntregas(proyectoId: string) {
-    // Por ahora no hace nada
+    this.router.navigate(['/entregas/proyecto', proyectoId]);
   }
-  
+
   entregarProyecto(proyectoId: string) {
     if (!this.comentario && !this.archivoSeleccionado) {
       this.errorMessage = 'Debes agregar un comentario o un archivo.';
@@ -59,7 +60,7 @@ export class ListaProyectosComponent {
     if (this.archivoSeleccionado) {
       formData.append('archivoUrl', this.archivoSeleccionado, this.archivoSeleccionado.name);
     }
-    
+
     this.entregaService.crearEntrega(formData).subscribe({
       next: (res) => {
         console.log('Entrega realizada:', res);

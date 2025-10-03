@@ -1,0 +1,38 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Entregas del proyecto</h2>
+
+  <table class="table table-hover table-bordered align-middle">
+    <thead class="table-light">
+      <tr>
+        <th scope="col">Alumno</th>
+        <th scope="col">Comentario</th>
+        <th scope="col">Archivo</th>
+        <th scope="col">Fecha de entrega</th>
+        <th scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let entrega of entregas">
+        <td>{{ entrega.alumno?.nombre }} {{ entrega.alumno?.apellido }}</td>
+        <td>{{ entrega.comentario || 'Sin comentario' }}</td>
+        <td>
+          <a *ngIf="entrega.archivoUrl" [href]="entrega.archivoUrl" target="_blank" class="btn btn-outline-secondary btn-sm">
+            Ver archivo
+          </a>
+          <span *ngIf="!entrega.archivoUrl" class="text-muted">Sin archivo</span>
+        </td>
+        <td>
+          {{ entrega.fechaEntrega ? (entrega.fechaEntrega | date:'short') : 'Sin fecha' }}
+        </td>
+        <td>
+          <button class="btn btn-primary btn-sm" (click)="verDetalle(entrega._id)">
+            Ver / Corregir
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="entregas.length === 0">
+        <td colspan="5" class="text-center text-muted">No hay entregas para este proyecto.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
