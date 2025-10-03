@@ -14,7 +14,6 @@ export class TipoMaterialList implements OnInit {
   tiposMaterial: TipoMaterial[] = [];
     isLoading: boolean = true; 
   errorMessage: string | null = null; 
- // inyecto el servicio TipoMaterialService para poder usar sus métodos
   constructor(private tipoMaterialService: TipoMaterialService, private router: Router) {}
 
   ngOnInit(): void {

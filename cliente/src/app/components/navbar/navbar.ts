@@ -9,5 +9,4 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./navbar.css']
 })
 export class NavbarComponent {
-  // No hace falta ninguna variable de rol
 }

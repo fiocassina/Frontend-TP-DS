@@ -1,38 +1,71 @@
-<div class="container mt-4">
-  <h2 class="mb-4">Entregas del proyecto</h2>
+<app-encabezado></app-encabezado>
 
-  <table class="table table-hover table-bordered align-middle">
-    <thead class="table-light">
-      <tr>
-        <th scope="col">Alumno</th>
-        <th scope="col">Comentario</th>
-        <th scope="col">Archivo</th>
-        <th scope="col">Fecha de entrega</th>
-        <th scope="col">Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let entrega of entregas">
-        <td>{{ entrega.alumno?.nombre }} {{ entrega.alumno?.apellido }}</td>
-        <td>{{ entrega.comentario || 'Sin comentario' }}</td>
-        <td>
-          <a *ngIf="entrega.archivoUrl" [href]="entrega.archivoUrl" target="_blank" class="btn btn-outline-secondary btn-sm">
-            Ver archivo
-          </a>
-          <span *ngIf="!entrega.archivoUrl" class="text-muted">Sin archivo</span>
-        </td>
-        <td>
-          {{ entrega.fechaEntrega ? (entrega.fechaEntrega | date:'short') : 'Sin fecha' }}
-        </td>
-        <td>
-          <button class="btn btn-primary btn-sm" (click)="verDetalle(entrega._id)">
-            Ver / Corregir
-          </button>
-        </td>
-      </tr>
-      <tr *ngIf="entregas.length === 0">
-        <td colspan="5" class="text-center text-muted">No hay entregas para este proyecto.</td>
-      </tr>
-    </tbody>
-  </table>
+<div class="container-fluid">
+  <div class="row flex-nowrap">
+
+    <div class="col-md-2 bg-light min-vh-100 p-3 sidebar">
+      <app-navbar></app-navbar>
+    </div>
+
+    <div class="col py-3">
+
+      <h2 class="mb-4 text-primary fw-bold">
+        Entregas del proyecto
+      </h2>
+
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th scope="col">Alumno</th>
+                <th scope="col">Comentario</th>
+                <th scope="col">Archivo</th>
+                <th scope="col">Fecha</th>
+                <th scope="col" class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let entrega of entregas">
+                <td>{{ entrega.alumno.nombreCompleto }}</td>
+
+                <td>
+                  <span [ngClass]="{'text-muted fst-italic': !entrega.comentario}">
+                    {{ entrega.comentario || 'Sin comentario' }}
+                  </span>
+                </td>
+
+                <td>
+                  <a *ngIf="entrega.archivoUrl" [href]="entrega.archivoUrl" target="_blank"
+                    class="btn btn-outline-secondary btn-sm">
+                    📎 Ver archivo
+                  </a>
+                  <span *ngIf="!entrega.archivoUrl" class="text-muted">Sin archivo</span>
+                </td>
+
+                <td>
+                  <span class="badge bg-light text-dark px-2 py-1">
+                    {{ entrega.fechaEntrega ? (entrega.fechaEntrega | date:'short') : 'Sin fecha' }}
+                  </span>
+                </td>
+
+                <td class="text-center">
+                  <button class="btn btn-sm btn-primary shadow-sm" (click)="verDetalle(entrega._id)">
+                    Ver / Corregir
+                  </button>
+                </td>
+              </tr>
+
+              <tr *ngIf="entregas.length === 0">
+                <td colspan="5" class="text-center text-muted py-4">
+                  No hay entregas para este proyecto.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>

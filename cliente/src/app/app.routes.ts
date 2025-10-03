@@ -15,7 +15,6 @@ import { MaterialComponent } from './components/material.component/material.comp
 import { EntregaListComponent } from './components/entregas/entrega-list/entrega-list.js';
 import { EntregaDetalleComponent } from './components/entregas/entrega-detalle/entrega-detalle.js';
 
-// voy a importar las rutas de los componentes que voy a crear
 export const routes: Routes = [
     { path: 'tipo-material-list', component: TipoMaterialList },
     { path: 'tipo-material-form', component: TipoMaterialForm },
@@ -34,8 +33,4 @@ export const routes: Routes = [
     { path: 'entregas/proyecto/:proyectoId', component: EntregaListComponent, canActivate: [authGuard] },
     { path: 'entregas/:id', component: EntregaDetalleComponent, canActivate: [authGuard] },
 
-    // Si quieres que el componente de materiales se cargue directamente en la ruta de la clase
-    // { path: 'clase/:id', component: MaterialComponent },
-
-    //{ path: '**', redirectTo: '/login' }
 ];

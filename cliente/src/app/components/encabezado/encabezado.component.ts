@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-
+import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-encabezado',
   standalone: true,
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './encabezado.component.html',
   styleUrl: './encabezado.component.css'
 })

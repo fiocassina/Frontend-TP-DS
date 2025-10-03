@@ -10,6 +10,6 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes), provideClientHydration(withEventReplay()),
-    provideHttpClient(withFetch()) // me permite hablar con el backend mediante HTTP requests
+    provideHttpClient(withFetch()) 
   ]
 };

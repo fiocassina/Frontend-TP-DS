@@ -16,7 +16,6 @@ export class ClaseService {
   constructor(private http: HttpClient) { }
 
   private getToken(): string | null {
-    // ✅ The fix is here: get the token from localStorage
     if (typeof window !== 'undefined') {
         return localStorage.getItem('token');
         }
@@ -36,8 +35,8 @@ crearClase(clase: Omit<Clase, '_id' | 'clave'>): Observable<any> {
   return this.http.post<any>(this.apiUrl, clase, { headers });
 }
 getMisClases(): Observable<ClasesResponse> {
-  const token = this.getToken(); // obtenemos el token
-  console.log("Token enviado:", token); // 🔹 aquí vemos qué token se está usando
+  const token = this.getToken(); 
+  console.log("Token enviado:", token); 
   const headers = { Authorization: `Bearer ${token}` };
 
   return this.http.get<ClasesResponse>(`${this.apiUrl}/`, { headers });

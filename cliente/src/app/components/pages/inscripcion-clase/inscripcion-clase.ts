@@ -43,7 +43,6 @@ export class InscripcionClase implements OnInit {
 
     this.claseService.inscribirse(clave).subscribe({
       next: (res) => {
-        // ✅ Cuando la inscripción fue exitosa, redirigimos a /inicio
         this.router.navigate(['/inicio']);
       },
       error: (err) => {

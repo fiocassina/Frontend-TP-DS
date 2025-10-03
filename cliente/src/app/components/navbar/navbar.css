@@ -14,13 +14,10 @@ nav {
 
 .nav-item {
   display: flex;
-  /* para poder centrar contenido */
   align-items: center;
   width: 100%;
   height: 3rem;
-  /* altura fija para que el hover funcione */
   padding: 0 1rem;
-  /* solo horizontal */
   border-radius: 0.5rem;
   font-size: 1rem;
   color: #212529;

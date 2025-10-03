@@ -16,7 +16,6 @@ export class EntregaService {
   private http = inject(HttpClient);
   private baseUrl = 'http://localhost:3000/api/entregas';
 
-  // Método privado para no repetir token y headers
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
     if (!token) throw new Error('No se encontró el token de autenticación.');
@@ -47,8 +46,6 @@ obtenerEntregaPorId(entregaId: string): Observable<Entrega> {
   });
   return this.http.get<Entrega>(`${this.baseUrl}/${entregaId}`, { headers });
 }
-
-
   // ----------------- CORRECCIONES -----------------
 
   crearCorreccion(entregaId: string, nota: number, comentario: string): Observable<any> {
