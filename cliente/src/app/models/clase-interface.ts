@@ -4,7 +4,7 @@ export interface Clase {
   materia: string; 
   descripcion?: string; 
   clave: string; 
-  profesorId: { // <-- Cambio a objeto
+  profesorId: {
         _id: string;
         nombreCompleto: string; 
     };

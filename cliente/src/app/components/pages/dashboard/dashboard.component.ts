@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { EncabezadoComponent } from '../../encabezado/encabezado.component';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { ClasesListComponent } from '../../clases-list/clases-list';
+import { NavbarComponent } from '../../navbar/navbar';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,7 +12,8 @@ import { ClasesListComponent } from '../../clases-list/clases-list';
     CommonModule,
     EncabezadoComponent,
     RouterLink,
-    ClasesListComponent
+    ClasesListComponent,
+    NavbarComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'

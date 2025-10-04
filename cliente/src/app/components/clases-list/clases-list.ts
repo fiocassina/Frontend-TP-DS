@@ -64,4 +64,23 @@ export class ClasesListComponent implements OnInit {
     this.clasesAMostrar = this.esVistaProfesor ? this.clasesComoProfe : this.clasesComoAlumno;
     this.cd.detectChanges();
   }
+  onEliminarClase(claseId: string): void {
+    if (!confirm('¿Estás seguro de que quieres eliminar esta clase? Esta acción no se puede deshacer.')) {
+      return;
+    }
+  
+    this.claseService.eliminarClase(claseId).subscribe({
+      next: (res) => {
+        console.log('Clase eliminada:', res);
+        // Actualizar la lista local sin recargar la página
+        this.clasesAMostrar = this.clasesAMostrar.filter(c => c._id !== claseId);
+        this.clasesComoProfe = this.clasesComoProfe.filter(c => c._id !== claseId);
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al eliminar clase:', err);
+        alert('No se pudo eliminar la clase. Intenta de nuevo.');
+      }
+    });
+  }
 }

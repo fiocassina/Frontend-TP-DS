@@ -26,13 +26,12 @@ export class TipoMaterialService {
     return this.http.post<TipoMaterial>(this.apiUrl, tipoMaterial);
   }
 
-          // tipoMaterial es el objeto que contiene los datos del tipo de material a actualizar.
   updateTipoMaterial(id: string, tipoMaterial: TipoMaterial): Observable<TipoMaterial> {
     return this.http.put<TipoMaterial>(this.apiUrl + '/' + id, tipoMaterial);
   }
 
 
-  eliminarTipoMaterial(id: string): Observable<void> { // Usamos void porque DELETE no suele devolver un cuerpo significativo
+  eliminarTipoMaterial(id: string): Observable<void> { 
     return this.http.delete<void>(this.apiUrl + '/' + id);
   }
 }

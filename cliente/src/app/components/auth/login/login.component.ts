@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
-//el validator es para validar los campos del formulario
 import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { RouterModule } from '@angular/router';

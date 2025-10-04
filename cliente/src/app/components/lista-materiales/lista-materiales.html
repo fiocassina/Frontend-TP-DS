@@ -3,7 +3,6 @@
     <h5 class="mb-0">Materiales Subidos</h5>
   </div>
   <div class="card-body">
-    <!-- Mensaje de carga -->
     @if (loading()) {
       <div class="d-flex justify-content-center my-4">
         <div class="spinner-border text-primary" role="status">
@@ -12,21 +11,18 @@
       </div>
     }
 
-    <!-- Mensaje de error -->
     @if (error()) {
       <div class="alert alert-danger" role="alert">
         <span class="fw-bold">Error:</span> {{ error() }}
       </div>
     }
 
-    <!-- Mensaje si no hay materiales -->
     @if (materiales().length === 0 && !loading() && !error()) {
       <div class="alert alert-info" role="alert">
         No hay materiales disponibles para esta clase.
       </div>
     }
 
-    <!-- Lista de materiales -->
     @if (materiales().length > 0 && !loading()) {
       <ul class="list-group">
         @for (material of materiales(); track material._id) {

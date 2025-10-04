@@ -1,0 +1,20 @@
+<div *ngIf="entrega">
+  <h2>Detalle de la entrega</h2>
+  <p><strong>Alumno:</strong> {{ alumnoNombre }}</p>
+  <p><strong>Comentario del alumno:</strong> {{ entrega.comentario }}</p>
+  <p *ngIf="entrega.archivoUrl">
+    <strong>Archivo:</strong> <a [href]="entrega.archivoUrl" target="_blank">Ver archivo</a>
+  </p>
+  <p><strong>Fecha de entrega:</strong> {{ entrega.fechaEntrega | date:'short' }}</p>
+
+  <hr>
+
+  <h3>Agregar corrección</h3>
+  <label>Nota:</label>
+  <input type="number" [(ngModel)]="nota" min="0" max="10">
+  <br>
+  <label>Comentario:</label>
+  <textarea [(ngModel)]="comentario"></textarea>
+  <br>
+  <button (click)="guardarCorreccion()">Guardar corrección</button>
+</div>

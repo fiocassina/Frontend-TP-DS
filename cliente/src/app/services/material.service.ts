@@ -12,12 +12,10 @@ export class MaterialService {
 
   constructor() {}
 
-  // Obtener materiales de una clase
   getMaterialesPorClase(claseId: string): Observable<Material[]> {
     return this.http.get<Material[]>(`${this.apiUrl}/clase/${claseId}`);
   }
 
-  // ✅ Crear material (para PDF, links, imágenes, etc.)
   createMaterial(formData: FormData): Observable<any> {
     return this.http.post<any>(this.apiUrl, formData);
   }

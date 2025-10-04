@@ -1,8 +1,7 @@
-// src/app/components/tipo-material-form/tipo-material-form.component.ts
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Necesario para *ngIf
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms'; // Módulos para formularios reactivos
-import { ActivatedRoute, Router } from '@angular/router'; // Para obtener parámetros de la URL y navegar
+import { CommonModule } from '@angular/common'; 
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router'; 
 import { TipoMaterialService } from '../../services/tipo-material.js';
 import { TipoMaterial } from '../../models/tipo-material-interface.js';
 
@@ -11,25 +10,24 @@ import { TipoMaterial } from '../../models/tipo-material-interface.js';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule // Importar ReactiveFormsModule es CRUCIAL para usar FormGroup y FormBuilder
+    ReactiveFormsModule 
   ],
   templateUrl: './tipo-material-form.html',
   styleUrl: './tipo-material-form.css'
 })
 export class TipoMaterialForm implements OnInit {
-  tipoMaterialForm: FormGroup; // El objeto FormGroup que representará nuestro formulario
-  isEditMode: boolean = false; // Indica si estamos en modo edición o creación
-  tipoMaterialId: string | null = null; // Guardará el ID del tipo de material si estamos editando
-  loading: boolean = false; // Estado de carga para el formulario
-  errorMessage: string | null = null; // Para mostrar errores al usuario
+  tipoMaterialForm: FormGroup; 
+  isEditMode: boolean = false; 
+  tipoMaterialId: string | null = null; 
+  loading: boolean = false; 
+  errorMessage: string | null = null; 
 
   constructor(
-    private fb: FormBuilder, // Inyectamos FormBuilder para construir el formulario
-    private tipoMaterialService: TipoMaterialService, // Inyectamos nuestro servicio de API
-    private route: ActivatedRoute, // Para acceder a los parámetros de la URL (ej. el ID en modo edición)
-    private router: Router // Para navegar programáticamente (ej. volver a la lista)
+    private fb: FormBuilder, 
+    private tipoMaterialService: TipoMaterialService, 
+    private route: ActivatedRoute,
+    private router: Router 
   ) {
-    // Inicializamos el formulario reactivo aquí, en el constructor
     this.tipoMaterialForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       descripcion: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(200)]]
@@ -40,8 +38,8 @@ export class TipoMaterialForm implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.tipoMaterialId = params.get('id'); 
       if (this.tipoMaterialId) {
-        this.isEditMode = true; // Si hay ID, estamos en modo edición
-        this.loadTipoMaterialForEdit(this.tipoMaterialId); // Cargar datos para editar
+        this.isEditMode = true;
+        this.loadTipoMaterialForEdit(this.tipoMaterialId); 
       }
     });
   }
@@ -51,7 +49,6 @@ export class TipoMaterialForm implements OnInit {
     this.errorMessage = null;
     this.tipoMaterialService.getTipoMaterialById(id).subscribe({
       next: (tipo: TipoMaterial) => {
-        // Rellenar el formulario con los datos obtenidos del backend
         this.tipoMaterialForm.patchValue({
           nombre: tipo.nombre,
           descripcion: tipo.descripcion
@@ -66,11 +63,9 @@ export class TipoMaterialForm implements OnInit {
     });
   }
 
-  // Método que se llama cuando se envía el formulario
   onSubmit(): void {
-    this.errorMessage = null; // Resetea mensajes de error
+    this.errorMessage = null; 
     if (this.tipoMaterialForm.invalid) {
-      // Marcar todos los campos como 'touched' para mostrar los mensajes de validación
       this.tipoMaterialForm.markAllAsTouched();
       this.errorMessage = 'Por favor, completa todos los campos requeridos y corrige los errores.';
       return;
@@ -84,7 +79,7 @@ export class TipoMaterialForm implements OnInit {
         next: (response) => {
           console.log('Tipo de material actualizado:', response);
           this.loading = false;
-          this.router.navigate(['/tipo-material-list']); // Navegar de vuelta a la lista
+          this.router.navigate(['/tipo-material-list']); 
         },
         error: (error) => {
           console.error('Error al actualizar tipo de material:', error);
@@ -98,7 +93,7 @@ export class TipoMaterialForm implements OnInit {
         next: (response) => {
           console.log('Tipo de material creado:', response);
           this.loading = false;
-          this.tipoMaterialForm.reset(); // Limpiar el formulario después de crear
+          this.tipoMaterialForm.reset(); 
           this.router.navigate(['/tipo-material-list']); 
         },
         error: (error) => {
@@ -110,7 +105,6 @@ export class TipoMaterialForm implements OnInit {
     }
   }
 
-  // Método para volver a la lista
   goBack(): void {
     this.router.navigate(['/tipo-material-list']);
   }

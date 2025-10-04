@@ -6,9 +6,9 @@
     <div class="mb-3">
       <label class="form-label">Nombre del material</label>
       <input type="text" class="form-control" 
-             [(ngModel)]="nuevoMaterialNombre" 
-             placeholder="Ej: Apunte PDF, Guía de ejercicios"
-             required>
+            [(ngModel)]="nuevoMaterialNombre" 
+            placeholder="Ej: Apunte PDF, Guía de ejercicios"
+            required>
     </div>
     
     <div class="mb-3">
@@ -21,22 +21,20 @@
       </select>
     </div>
 
-    <!-- Campo URL -->
     <div class="mb-3" *ngIf="tipoRequiereUrl()">
       <label class="form-label">URL del material</label>
       <input type="url" class="form-control" 
-             [(ngModel)]="nuevoMaterialUrl" 
-             placeholder="https://..."
-             required>
+            [(ngModel)]="nuevoMaterialUrl" 
+            placeholder="https://..."
+            required>
     </div>
 
-    <!-- Campo Archivo -->
     <div class="mb-3" *ngIf="tipoRequiereArchivo()">
       <label class="form-label">Subir archivo</label>
       <input type="file" class="form-control" 
-             (change)="onFileSelected($event)"
-             [accept]="getAcceptExtension()"
-             required>
+            (change)="onFileSelected($event)"
+            [accept]="getAcceptExtension()"
+            required>
     </div>
 
     <button class="btn btn-primary" (click)="agregarMaterial()">Agregar Material</button>

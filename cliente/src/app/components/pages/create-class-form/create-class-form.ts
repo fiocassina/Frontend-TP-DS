@@ -57,28 +57,21 @@ export class CreateClassForm implements OnInit {
     this.isLoading = true;
     this.errorMessage = null;
 
-
     const nuevaClase = this.claseForm.value as Omit<Clase, 'clave' | '_id'>;
 
 
 this.claseService.crearClase(nuevaClase).subscribe({
   next: (response) => {
-    // ✅ AGREGA ESTOS CONSOLE.LOG PARA INVESTIGAR:
-    console.log('🔍 Respuesta completa del backend:', response);
-    
     if (response && response.data) {
       const claseCreada = response.data;
-      console.log('✅ Clase creada extraída:', claseCreada);
       this.isLoading = false;
       this.router.navigate(['/inicio']); 
     } else {
-      console.error('❌ La respuesta no tiene la estructura esperada:', response);
       this.errorMessage = 'Error inesperado al crear la clase.';
       this.isLoading = false;
     }
   },
   error: (error) => {
-    console.error('❌ Error al crear la clase:', error);
     this.errorMessage = 'Hubo un error al crear la clase. Intenta de nuevo.';
     this.isLoading = false;
   }

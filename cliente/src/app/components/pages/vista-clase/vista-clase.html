@@ -3,23 +3,13 @@
 <div class="container-fluid">
   <div class="row flex-nowrap">
 
-    <!-- Sidebar -->
-    <div class="col-auto col-md-3 col-xl-2 bg-light min-vh-100 d-flex flex-column p-3">
-      <nav class="nav flex-column">
-        <a class="nav-link text-dark active" routerLink="/inicio">
-          <i class="bi bi-house-door-fill me-2"></i>Inicio
-        </a>
-        <a class="nav-link text-dark" routerLink="/lista-clases">
-          <i class="bi bi-journals me-2"></i>Mis clases
-        </a>
-        <a class="nav-link text-dark" routerLink="/perfil">
-          <i class="bi bi-person-circle me-2"></i>Perfil
-        </a>
-      </nav>
+    <!-- Sidebar fijo a la izquierda -->
+    <div class="col-md-2 bg-light min-vh-100 p-3 sidebar">
+      <app-navbar></app-navbar>
     </div>
 
     <!-- Contenido principal -->
-    <div class="col-auto col-md-9 col-xl-10 py-3">
+    <div class="col py-3">
 
       <!-- Cargando -->
       <div *ngIf="cargando" class="text-center my-5">
@@ -29,15 +19,12 @@
         <p class="mt-3">Cargando clase...</p>
       </div>
 
-      <!-- Error -->
       <div *ngIf="errorMessage && !cargando" class="alert alert-danger text-center">
         {{ errorMessage }}
       </div>
 
-      <!-- Contenido de la clase -->
       <div *ngIf="!cargando && !errorMessage">
 
-        <!-- Encabezado de la clase -->
         <div
           class="d-flex justify-content-between align-items-center mb-4 p-4 rounded-bottom-4 bg-primary text-white shadow">
           <div>
@@ -48,10 +35,8 @@
 
         <div class="row">
 
-          <!-- Columna izquierda -->
           <div class="col-lg-4 mb-4">
 
-            <!-- Clave de la clase -->
             <div class="card border-0 shadow-sm mb-4 rounded-4">
               <div class="card-body">
                 <h5 class="card-title text-muted">CLAVE DE LA CLASE</h5>
@@ -59,7 +44,6 @@
               </div>
             </div>
 
-            <!-- Información de la clase -->
             <div class="card border-0 shadow-sm mb-4 rounded-4">
               <div class="card-body">
                 <h5 class="card-title text-muted">INFORMACION DE CLASE</h5>
@@ -75,44 +59,69 @@
               </div>
             </div>
 
-            <!-- Formulario para agregar materiales -->
-            <app-material 
-              [claseId]="clase?._id || ''" 
-              [esProfesor]="esProfesor"
-              [tiposMaterial]="tiposMaterial">
+            <app-material [claseId]="clase?._id || ''" [esProfesor]="esProfesor" [tiposMaterial]="tiposMaterial">
             </app-material>
 
-            <!-- ✅ Agregado: Componente para mostrar la lista de materiales -->
             <div class="mt-4">
               <h5 class="text-muted mb-3">MATERIALES</h5>
-              <app-lista-materiales
-                [claseId]="clase?._id || ''">
-              </app-lista-materiales>
+              <app-lista-materiales [claseId]="clase?._id || ''"></app-lista-materiales>
             </div>
 
-          </div> <!-- FIN COL IZQUIERDA -->
+          </div> 
 
-          <!-- Columna derecha: Proyectos -->
+          <!-- Proyectos -->
           <div class="col-lg-8 mb-4">
             <div class="card border-0 shadow-sm rounded-4">
               <div class="card-body d-flex flex-column">
+
                 <div class="d-flex justify-content-between align-items-center mb-3">
                   <h5 class="card-title text-muted mb-0">PROYECTOS</h5>
-                  <button *ngIf="esProfesor" class="btn btn-primary btn-sm">Agregar Proyecto</button>
+                  <button *ngIf="esProfesor" class="btn btn-primary btn-sm"
+                    (click)="mostrarFormularioProyecto = !mostrarFormularioProyecto">
+                    Crear Proyecto
+                  </button>
                 </div>
-                <p class="card-text text-center text-muted">Los proyectos aparecerán aquí.</p>
 
-                <hr class="my-3">
-                <h5 class="card-title text-muted mb-3">GESTION DE TIPOS DE PROYECTO</h5>
-                <app-tipo-proyecto-list></app-tipo-proyecto-list>
+                <!-- Formulario de creación de proyecto -->
+                <div *ngIf="mostrarFormularioProyecto && esProfesor" class="mb-3 p-3 border rounded-3 bg-light">
+                  <div class="mb-2">
+                    <label class="form-label">Nombre del proyecto</label>
+                    <input type="text" class="form-control" [(ngModel)]="nuevoProyecto.nombre">
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label">Descripción</label>
+                    <textarea class="form-control" rows="2" [(ngModel)]="nuevoProyecto.descripcion"></textarea>
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label">Tipo de proyecto</label>
+                    <select class="form-select" [(ngModel)]="nuevoProyecto.tipoProyecto">
+                      <option *ngFor="let tipo of tiposProyecto" [ngValue]="tipo">{{ tipo.nombre }}</option>
+                    </select>
+                  </div>
+                  <div class="mb-2">
+                    <label class="form-label">Fecha de entrega</label>
+                    <input type="date" class="form-control" [(ngModel)]="nuevoProyecto.fechaEntrega">
+                  </div>
+                  <button class="btn btn-success btn-sm mt-2" (click)="crearProyecto()">Guardar Proyecto</button>
+                </div>
+
+                <!-- Listado de proyectos -->
+                <app-lista-proyectos [proyectos]="proyectos" [esProfesor]="esProfesor" (eliminar)="eliminarProyecto($event)"
+                  (entregaExitosa)="cargarProyectosYEntregas(clase?._id || '')">
+                </app-lista-proyectos>
+
+                <!-- Gestión de tipos de proyecto -->
+                <div *ngIf="esProfesor" class="mt-4">
+                  <h5 class="card-title text-muted mb-3">GESTIÓN DE TIPOS DE PROYECTO</h5>
+                  <app-tipo-proyecto-list></app-tipo-proyecto-list>
+                </div>
 
               </div>
             </div>
-          </div> 
-          <!-- FIN COL DERECHA -->
+          </div>
 
-        </div> <!-- FIN ROW -->
-      </div> <!-- FIN CONTENIDO DE LA CLASE -->
-    </div> <!-- FIN CONTENIDO PRINCIPAL -->
-  </div> <!-- FIN ROW FLEX-WRAP -->
-</div> <!-- FIN CONTAINER-FLUID -->
+        </div> 
+      </div> 
+    </div>
+  </div> 
+</div> 
