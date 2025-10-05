@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common'; 
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TipoProyecto } from '../models/tipo-proyecto-interface';
 import { Proyecto } from '../models/proyecto-interface';
@@ -10,12 +11,29 @@ import { Proyecto } from '../models/proyecto-interface';
 export class ProyectoService {
   private apiUrl = 'http://localhost:3000/api/proyectos';
 
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
+  private platformId = inject(PLATFORM_ID);
+
+  /**
+   * Obtiene las cabeceras de autorización, asegurando que localStorage solo se acceda en el navegador.
+   * Esto es necesario para evitar errores en Server-Side Rendering (SSR).
+   */
+  private getAuthHeaders(): HttpHeaders {
+    if (!isPlatformBrowser(this.platformId)) {
+        // Si es SSR, devuelve cabeceras vacías para no romper el proceso
+        return new HttpHeaders(); 
+    }
+    
+    const token = localStorage.getItem('token');
+    if (!token) {
+        console.error('No se encontró el token de autenticación en el navegador.');
+        return new HttpHeaders();
+    }
+    return new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+  }
 
   getProyectosClase(claseId: string): Observable<Proyecto[]> {
-    const token = localStorage.getItem('token') || '';
-    const headers = { Authorization: `Bearer ${token}` };
-    return this.http.get<Proyecto[]>(`${this.apiUrl}/clase/${claseId}`, { headers });
+    return this.http.get<Proyecto[]>(`${this.apiUrl}/clase/${claseId}`, { headers: this.getAuthHeaders() });
   }
 
   crearProyecto(proyecto: { 
@@ -25,20 +43,14 @@ export class ProyectoService {
       fechaEntrega: string; 
       claseId: string; 
   }): Observable<Proyecto> {
-      const token = localStorage.getItem('token') || '';
-      const headers = { Authorization: `Bearer ${token}` };
-      return this.http.post<Proyecto>(this.apiUrl, proyecto, { headers });
+    return this.http.post<Proyecto>(this.apiUrl, proyecto, { headers: this.getAuthHeaders() });
   }
 
   eliminarProyecto(proyectoId: string): Observable<any> {
-    const token = localStorage.getItem('token') || '';
-    const headers = { Authorization: `Bearer ${token}` };
-    return this.http.delete(`${this.apiUrl}/${proyectoId}`, { headers });
+    return this.http.delete(`${this.apiUrl}/${proyectoId}`, { headers: this.getAuthHeaders() });
   }
 
   getTiposProyecto(): Observable<TipoProyecto[]> {
-    const token = localStorage.getItem('token') || '';
-    const headers = { Authorization: `Bearer ${token}` };
-    return this.http.get<TipoProyecto[]>(`http://localhost:3000/api/tipo-proyectos`, { headers });
+    return this.http.get<TipoProyecto[]>(`http://localhost:3000/api/tipo-proyectos`, { headers: this.getAuthHeaders() });
   }
 }

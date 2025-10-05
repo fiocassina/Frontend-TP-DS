@@ -1,44 +1,63 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { EntregaService } from '../../../services/entrega.service.js';
-import { Entrega } from '../../../models/entrega-interface.js';
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+import { Entrega } from '../../../models/entrega-interface';
+import { EntregaService } from '../../../services/entrega.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-entrega-detalle',
-  templateUrl: './entrega-detalle.html',
-  imports: [NgIf,  DatePipe, FormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, DatePipe],
+  templateUrl: './entrega-detalle.html', 
   styleUrls: ['./entrega-detalle.css']
 })
 export class EntregaDetalleComponent implements OnInit {
+  entrega: Entrega | null = null;
+  nota: number | null = null;
+  comentarioCorreccion: string = ''; 
 
-  entrega?: Entrega;
-  alumnoNombre: string = '';
-  nota: number = 0;
-  comentario: string = '';
+ 
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private entregaService = inject(EntregaService);
 
-  constructor(private route: ActivatedRoute, private entregaService: EntregaService) { }
+  constructor() {
 
-  ngOnInit(): void {
-    const entregaId = this.route.snapshot.paramMap.get('id');
-    if (entregaId) {
-      this.entregaService.obtenerEntregaPorId(entregaId)
-        .subscribe({
-          next: (data) => this.entrega = data,
-          error: (err) => console.error('Error al obtener entrega:', err)
-        });
+    this.entrega = this.route.snapshot.data['entrega'] || null;
 
+
+    if (!this.entrega) {
+      alert('Error: No se pudo cargar el detalle de la entrega o no existe.');
+      this.router.navigate(['/inicio']);
+      return;
     }
   }
 
-  guardarCorreccion(): void {
-    if (!this.entrega) return;
+  ngOnInit(): void {
+  }
 
-    this.entregaService.crearCorreccion(this.entrega!._id!, this.nota, this.comentario)
-      .subscribe({
-        next: () => alert('Corrección guardada con éxito'),
-        error: (err) => console.error('Error al guardar corrección:', err)
-      });
+  guardarCorreccion(): void {
+    if (!this.entrega || this.nota === null) {
+      alert('La nota y la entrega son requeridos.');
+      return;
+    }
+
+    
+    this.entregaService.crearCorreccion(
+      this.entrega._id!, 
+      this.nota,
+      this.comentarioCorreccion 
+    ).subscribe({
+      next: (response) => {
+        alert('Corrección guardada con éxito.');
+        
+        this.router.navigate(['/entregas/proyecto', this.entrega!.proyecto._id]);
+      },
+      error: (err) => {
+        console.error('Error al guardar la corrección:', err);
+        alert('Error al guardar la corrección. Inténtelo de nuevo.');
+      }
+    });
   }
 }

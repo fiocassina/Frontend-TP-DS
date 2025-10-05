@@ -27,8 +27,8 @@ cliente/pnpm-lock.yaml
 *.launch
 .settings/
 *.sublime-workspace
-
-
+.angular/
+*.log
 
 .vscode/*
 !.vscode/settings.json
@@ -50,3 +50,20 @@ testem.log
 
 .DS_Store
 Thumbs.db
+
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.eslintcache
+.stylelintcache
+
+**/.js
+**/.js.map
+!karma.conf.js
+!protractor.conf.js
+
+npm-shrinkwrap.json
+
+.env

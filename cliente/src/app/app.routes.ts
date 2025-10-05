@@ -11,9 +11,10 @@ import { authGuard } from './guards/auth-guard.js';
 import { ClasesListComponent } from './components/clases-list/clases-list.js';
 import { InscripcionClase } from './components/pages/inscripcion-clase/inscripcion-clase.js';
 import { VistaClase } from './components/pages/vista-clase/vista-clase.js';
-import { MaterialComponent } from './components/material.component/material.component.js'; // Importamos el componente de material
+import { MaterialComponent } from './components/material.component/material.component.js'; 
 import { EntregaListComponent } from './components/entregas/entrega-list/entrega-list.js';
 import { EntregaDetalleComponent } from './components/entregas/entrega-detalle/entrega-detalle.js';
+import { entregaResolver } from './resolvers/entrega-resolver.js'; 
 
 export const routes: Routes = [
     { path: 'tipo-material-list', component: TipoMaterialList },
@@ -31,6 +32,9 @@ export const routes: Routes = [
     { path: 'inscripcion', component: InscripcionClase },
     { path: 'clase/:id', component: VistaClase },
     { path: 'entregas/proyecto/:proyectoId', component: EntregaListComponent, canActivate: [authGuard] },
-    { path: 'entregas/:id', component: EntregaDetalleComponent, canActivate: [authGuard] },
-
+    { path: 'entregas/:id', component: EntregaDetalleComponent, canActivate: [authGuard],
+        resolve: {
+            entrega: entregaResolver // El resolver se ejecuta antes de cargar el componente
+        }
+    },
 ];
