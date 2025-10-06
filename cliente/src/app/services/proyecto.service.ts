@@ -14,13 +14,8 @@ export class ProyectoService {
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID);
 
-  /**
-   * Obtiene las cabeceras de autorización, asegurando que localStorage solo se acceda en el navegador.
-   * Esto es necesario para evitar errores en Server-Side Rendering (SSR).
-   */
   private getAuthHeaders(): HttpHeaders {
     if (!isPlatformBrowser(this.platformId)) {
-        // Si es SSR, devuelve cabeceras vacías para no romper el proceso
         return new HttpHeaders(); 
     }
     

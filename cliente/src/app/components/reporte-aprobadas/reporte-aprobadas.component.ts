@@ -5,29 +5,23 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { tap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
+import { NavbarComponent } from '../navbar/navbar';
+import { EncabezadoComponent } from '../encabezado/encabezado.component';
 
-// Interfaz para tipar los datos que vienen del backend
 interface ReporteEntrega {
-  _id: string;
+  id: string; 
+  proyectoNombre: string;
+  alumnoNombre: string;
+  nota: number | null;
+  comentarioCorreccion: string | null; 
   fechaEntrega: Date;
-  correccion: {
-    nota: number;
-    comentario: string;
-  };
-  alumnoId: {
-    _id: string;
-    nombreCompleto: string;
-  };
-  proyectoId: {
-    _id: string;
-    nombre: string;
-  };
+  fechaCorreccion: Date | null;
 }
 
 @Component({
   selector: 'app-reporte-aprobadas',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe],
+  imports: [CommonModule, FormsModule, DatePipe, NavbarComponent, EncabezadoComponent],
   templateUrl: './reporte-aprobadas.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./reporte-aprobadas.component.css']
@@ -73,7 +67,6 @@ export class ReporteAprobadasComponent implements OnInit {
         next: (data) => {
           this.reporteResultados = data;
           this.isLoading = false;
-          // FORZAMOS LA ACTUALIZACIÓN: Le decimos a Angular que pinte la data
           this.cdr.detectChanges(); 
         },
         error: (error: HttpErrorResponse) => {
@@ -91,7 +84,5 @@ export class ReporteAprobadasComponent implements OnInit {
       });
   }
 
-  volver(): void {
-    this.router.navigate(['/proyectos']);
-  }
+  
 }

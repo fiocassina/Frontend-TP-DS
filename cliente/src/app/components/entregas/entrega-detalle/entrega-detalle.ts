@@ -4,11 +4,13 @@ import { EntregaService } from '../../../services/entrega.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { EstadoEntrega } from '../../../models/entrega-interface';
+import { NavbarComponent } from '../../navbar/navbar';
+import { EncabezadoComponent } from '../../encabezado/encabezado.component';
 @Component({
   selector: 'app-entrega-detalle',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe],
+  imports: [CommonModule, FormsModule, DatePipe, NavbarComponent, EncabezadoComponent],
   templateUrl: './entrega-detalle.html', 
   styleUrls: ['./entrega-detalle.css'] 
 })
@@ -40,45 +42,50 @@ export class EntregaDetalleComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   guardarCorreccion(): void {
-    this.errorMessage = null; 
+    this.errorMessage = null;
 
-   
-    if (!this.entrega || this.nota === null || this.nota < 0 || this.nota > 10) {
+    // Validación de la nota
+    if (this.entrega === null || this.nota === null || this.nota < 0 || this.nota > 10) {
       this.errorMessage = 'La nota debe ser un número entre 0 y 10, y la entrega debe ser válida.';
       return;
     }
-    
+
+    // Llama al servicio para crear la corrección en el backend
     this.entregaService.crearCorreccion(
-      this.entrega._id!, 
+      this.entrega._id!,
       this.nota,
-      this.comentarioCorreccion 
+      this.comentarioCorreccion
     ).subscribe({
       next: (response) => {
-       
         console.log('Corrección guardada con éxito:', response);
 
         if (this.entrega) {
-         
+          
+          const nuevoEstado: EstadoEntrega = this.nota! >= 6 ? 'aprobada' : 'desaprobada';
+
           this.entrega = {
             ...this.entrega,
-            correccion: { nota: this.nota!, comentario: this.comentarioCorreccion, _id: response._id }
-          } as Entrega;
+            estado: nuevoEstado, 
+            correccion: {
+              _id: response.data._id, 
+              nota: this.nota!,
+              comentario: this.comentarioCorreccion,
+              fechaCorreccion: new Date() 
+            }
+          };
         }
       },
       error: (err) => {
         console.error('Error al guardar la corrección:', err);
-      
-        this.errorMessage = 'Error al guardar la corrección. Inténtelo de nuevo.';
+        this.errorMessage = 'Error al guardar la corrección. Por favor, inténtelo de nuevo más tarde.';
       }
     });
   }
 
   volver(): void {
-   
     const proyectoId = this.entrega?.proyecto?._id || this.entrega?.proyecto;
     if (proyectoId) {
         this.router.navigate(['/entregas/proyecto', proyectoId]);

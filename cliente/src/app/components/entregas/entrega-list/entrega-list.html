@@ -22,40 +22,52 @@
                 <th scope="col">Comentario</th>
                 <th scope="col">Archivo</th>
                 <th scope="col">Fecha</th>
-                <th scope="col" class="text-center">Acciones</th>
+                <th scope="col" class="text-center">Estado / Acciones</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let entrega of entregas">
                 <td>{{ entrega.alumno.nombreCompleto }}</td>
-
                 <td>
                   <span [ngClass]="{'text-muted fst-italic': !entrega.comentario}">
                     {{ entrega.comentario || 'Sin comentario' }}
                   </span>
                 </td>
-
                 <td>
-                  <a *ngIf="entrega.archivoUrl" [href]="entrega.archivoUrl" target="_blank"
+                  <a *ngIf="entrega.archivoUrl" [href]="'http://localhost:3000' + entrega.archivoUrl" target="_blank"
                     class="btn btn-outline-secondary btn-sm">
                     📎 Ver archivo
                   </a>
                   <span *ngIf="!entrega.archivoUrl" class="text-muted">Sin archivo</span>
                 </td>
-
                 <td>
                   <span class="badge bg-light text-dark px-2 py-1">
                     {{ entrega.fechaEntrega ? (entrega.fechaEntrega | date:'short') : 'Sin fecha' }}
                   </span>
                 </td>
-
-                <td class="text-center">
-                  <button class="btn btn-sm btn-primary shadow-sm" (click)="verDetalle(entrega._id)">
+                <td class="text-center" [ngSwitch]="entrega.estado">
+                  <button *ngSwitchCase="'pendiente'" class="btn btn-sm btn-primary shadow-sm"
+                    (click)="verDetalle(entrega._id)">
                     Ver / Corregir
                   </button>
+                  <span *ngSwitchCase="'aprobada'"
+                    class="badge fs-6 text-bg-success d-inline-flex align-items-center gap-2"
+                    (click)="verDetalle(entrega._id)" style="cursor: pointer;" title="Ver detalle de la corrección">
+                    Aprobada
+                    <span class="badge bg-white text-success rounded-pill">
+                      {{ entrega.correccion?.nota }}
+                    </span>
+                  </span>
+                  <span *ngSwitchCase="'desaprobada'"
+                    class="badge fs-6 text-bg-danger d-inline-flex align-items-center gap-2"
+                    (click)="verDetalle(entrega._id)" style="cursor: pointer;" title="Ver detalle de la corrección">
+                    Desaprobada
+                    <span class="badge bg-white text-danger rounded-pill">
+                      {{ entrega.correccion?.nota }}
+                    </span>
+                  </span>
                 </td>
               </tr>
-
               <tr *ngIf="entregas.length === 0">
                 <td colspan="5" class="text-center text-muted py-4">
                   No hay entregas para este proyecto.
@@ -65,7 +77,6 @@
           </table>
         </div>
       </div>
-
     </div>
   </div>
-</div>
+</div> 
