@@ -1,8 +1,26 @@
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Entrega } from '../models/entrega-interface';
 import { isPlatformBrowser } from '@angular/common';
+
+interface ReporteEntrega {
+  _id: string;
+  fechaEntrega: Date;
+  correccion: {
+    nota: number;
+    comentario: string;
+  };
+  alumnoId: { // Datos poblados de Alumno
+    _id: string;
+    nombreCompleto: string;
+  };
+  proyectoId: { // Datos poblados de Proyecto
+    _id: string;
+    nombre: string;
+  };
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -72,5 +90,19 @@ export class EntregaService {
   obtenerCorrecciones(entregaId: string): Observable<any> {
     const correccionesUrl = 'http://localhost:3000/api/correcciones'; 
     return this.http.get(`${correccionesUrl}/entrega/${entregaId}`, { headers: this.getAuthHeaders() });
+  }
+
+  getReporteEntregasAprobadas(
+    proyectoId: string, 
+  ): Observable<ReporteEntrega[]> {
+    const headers = this.getAuthHeaders();
+
+    let params = new HttpParams()
+      .set('proyectoId', proyectoId)
+
+    return this.http.get<ReporteEntrega[]>(`${this.baseUrl}/reporte/aprobadas`, { 
+      headers, 
+      params 
+    });
   }
 }

@@ -12,14 +12,20 @@
         </p>
         <p *ngIf="proyecto.descripcion" class="text-secondary">{{ proyecto.descripcion }}</p>
 
-        <div class="mt-auto d-flex gap-2">
+        <div class="mt-auto d-flex flex-column gap-2">
           <ng-container *ngIf="esProfesor">
-            <button class="btn btn-outline-primary btn-sm" (click)="verEntregas(proyecto._id)">
-              Ver entregas
-            </button>
-            <button class="btn btn-danger btn-sm" (click)="eliminarProyecto(proyecto._id)">
-              <i class="bi bi-trash"></i>
-            </button>
+            <div class="d-flex gap-2 align-items-center">
+              <button class="btn btn-outline-primary btn-sm" (click)="verEntregas(proyecto._id)">
+                Ver todas las entregas
+              </button>
+              <button class="btn btn-danger btn-sm" (click)="eliminarProyecto(proyecto._id)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+            <a [routerLink]="['/reporte-aprobadas', proyecto._id]"
+              class="text-decoration-underline text-success fw-bold cursor-pointer small">
+              Ver alumnos aprobados
+            </a>
           </ng-container>
 
           <ng-container *ngIf="!esProfesor">

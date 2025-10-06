@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Proyecto } from '../../models/proyecto-interface';
 import { FormsModule } from '@angular/forms';
 import { EntregaService } from '../../services/entrega.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule} from '@angular/router';
 
 @Component({
   selector: 'app-lista-proyectos',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './lista-proyectos.html',
   styleUrls: ['./lista-proyectos.css']
 })

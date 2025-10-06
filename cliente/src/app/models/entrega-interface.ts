@@ -1,11 +1,18 @@
 import { Proyecto } from './proyecto-interface';
 import { Usuario } from './usuario-interface';
+import { Correccion } from './correccion-interface';
+
+interface AlumnoPoblado {
+    _id: string;
+    nombreCompleto: string; 
+}
 
 export interface Entrega {
   _id?: string;
   proyecto: Proyecto;   
-  alumno: Usuario;      
+  alumno: AlumnoPoblado;      
   archivoUrl?: string; 
   comentario?: string;
   fechaEntrega?: Date;
+  correccion?: Correccion;
 }

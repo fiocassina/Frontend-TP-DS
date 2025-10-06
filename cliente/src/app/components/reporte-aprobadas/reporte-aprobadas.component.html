@@ -1,0 +1,60 @@
+<div class="container mx-auto p-4 md:p-8 bg-white shadow-xl rounded-lg mt-8">
+  <h2 class="text-3xl font-extrabold text-indigo-700 mb-6 border-b pb-3">
+    {{ nombreProyecto }}
+  </h2>
+
+ 
+  <!-- Mensajes de Error -->
+  <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+    role="alert">
+    <strong class="font-bold">¡Error!</strong>
+    <span class="block sm:inline"> {{ errorMessage }}</span>
+  </div>
+
+  <!-- Contenedor de la Tabla de Resultados -->
+  <div *ngIf="reporteResultados.length > 0" class="overflow-x-auto shadow-md rounded-lg mt-8">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-indigo-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Alumno</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Fecha de Entrega
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Nota</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Comentario del
+            Profesor</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <tr *ngFor="let entrega of reporteResultados" class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+            {{ entrega.alumnoId.nombreCompleto }}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            {{ entrega.fechaEntrega | date:'shortDate' }}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-bold"
+            [ngClass]="{'text-green-600': entrega.correccion.nota >= 6, 'text-red-600': entrega.correccion.nota < 6}">
+            {{ entrega.correccion.nota }}
+          </td>
+          <td class="px-6 py-4 text-sm text-gray-700">
+            {{ entrega.correccion.comentario || 'N/A' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mensaje si no hay resultados -->
+  <div *ngIf="!isLoading && reporteResultados.length === 0 && !errorMessage"
+    class="text-center p-6 bg-yellow-50 rounded-lg border border-yellow-200 mt-8">
+    <p class="text-lg text-yellow-800">No se encontraron alumnos aprobados en este proyecto.</p>
+  </div>
+
+  <!-- Botón para volver -->
+  <div class="mt-8">
+    <button (click)="volver()"
+      class="px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-150 ease-in-out">
+      &larr; Volver a Proyectos
+    </button>
+  </div>
+</div>
