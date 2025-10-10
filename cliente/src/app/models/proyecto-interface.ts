@@ -1,6 +1,7 @@
 import { TipoProyecto } from './tipo-proyecto-interface';
 
 export interface Proyecto {
+claseNombre: any;
   _id: string;
   nombre: string;
   descripcion?: string;

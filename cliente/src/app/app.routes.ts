@@ -16,6 +16,7 @@ import { EntregaListComponent } from './components/entregas/entrega-list/entrega
 import { EntregaDetalleComponent } from './components/entregas/entrega-detalle/entrega-detalle.js';
 import { entregaResolver } from './resolvers/entrega-resolver.js'; 
 import { ReporteAprobadasComponent } from './components/reporte-aprobadas/reporte-aprobadas.component.js';
+import { ListadoProyectosPendientesComponent } from './components/listado-proyectos-pendientes/listado-proyectos-pendientes.js';
 
 export const routes: Routes = [
     { path: 'tipo-material-list', component: TipoMaterialList },
@@ -32,8 +33,10 @@ export const routes: Routes = [
     { path: 'lista-clases', component: ClasesListComponent },
     { path: 'inscripcion', component: InscripcionClase },
     { path: 'clase/:id', component: VistaClase },
+    { path: 'listadoProyPend', component: ListadoProyectosPendientesComponent },
     { path: 'entregas/proyecto/:proyectoId', component: EntregaListComponent, canActivate: [authGuard] },
     { path: 'entregas/:id', component: EntregaDetalleComponent, canActivate: [authGuard],
+    
         resolve: {
             entrega: entregaResolver // El resolver se ejecuta antes de cargar el componente
         }},

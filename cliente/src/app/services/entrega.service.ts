@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Entrega } from '../models/entrega-interface';
+import { Proyecto } from '../models/proyecto-interface.js';
 
 interface ReporteEntrega {
   id: string; 
@@ -73,5 +74,17 @@ export class EntregaService {
     const headers = { Authorization: `Bearer ${token}` };
     const params = { proyectoId };
     return this.http.get<ReporteEntrega[]>(`${this.baseUrl}/reporte/aprobadas`, { headers, params });
-  }
+  
+}
+
+obtenerProyectosPendientes(): Observable<Proyecto[]> {
+  const token = this.getToken();
+  const headers = { Authorization: `Bearer ${token}` };
+  return this.http.get<Proyecto[]>(`${this.baseUrl}/pendientes/alumno`, { headers });
+}
+
+
+
+
+
 }
