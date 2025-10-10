@@ -1,10 +1,22 @@
 <div class="d-flex flex-column justify-content-center align-items-center min-vh-100 bg-gradient-login p-3">
 
-  <!-- Título de la app -->
+  
   <div class="text-center text-white mb-4">
     <h1 class="display-4 fw-bolder">StudyRoom</h1>
     <p class="lead mb-0">Bienvenido, por favor inicia sesión</p>
   </div>
+
+<div *ngIf="mostrarRegistroExitoso" class="alert alert-success d-flex align-items-center mb-4 p-3 shadow-md"
+  role="alert" style="max-width: 550px; max-height: 60px; margin: 0 auto;">
+  <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 -7 60 35" xmlns="http://www.w3.org/2000/svg" style="width: 90px; height: 90px;">
+    <path fill-rule="evenodd"
+      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+      clip-rule="evenodd"></path>
+  </svg>
+  <div class="font-semibold small text-center">
+    ¡Registro exitoso! Ahora puedes iniciar sesión.
+  </div>
+</div>
 
   <!-- Card del login -->
   <div class="card shadow-sm p-4 w-100" style="max-width: 400px; border-radius: 12px;">

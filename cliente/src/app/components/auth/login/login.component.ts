@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LoginService } from '../../../services/login.service';
@@ -17,13 +17,18 @@ import { HttpClientModule } from '@angular/common/http';
 })
 export class LoginComponent implements OnInit {
   loginForm : any;
-  constructor(private formBuilder:FormBuilder, private router:Router, private loginService: LoginService) { }
+  mostrarRegistroExitoso: boolean = false;
+  constructor(private formBuilder:FormBuilder, private router:Router, private loginService: LoginService, private route: ActivatedRoute) { }
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required]]
     });
+    this.route.queryParams.subscribe(params => {
+      this.mostrarRegistroExitoso = params['registered'] === 'true';
+    });
   }
+  
   login(){
     if(this.loginForm.invalid){
       this.loginForm.markAllAsTouched();

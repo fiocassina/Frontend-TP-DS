@@ -3,27 +3,27 @@
 <div class="container-fluid">
   <div class="row flex-nowrap">
 
-    <!-- Sidebar fijo -->
+   
     <div class="col-md-2 bg-light min-vh-100 p-3 sidebar">
       <app-navbar></app-navbar>
     </div>
 
-    <!-- Contenido principal -->
+    
     <div class="col py-3">
 
-      <h2 class="mb-4 text-primary fw-bold">Proyectos Pendientes</h2>
+      <h2 class="mb-4 text-primary fw-bold">Proyectos con entregas pendientes</h2>
 
       <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
         <strong>¡Error!</strong> {{ errorMessage }}
       </div>
 
-      <!-- Acordeón de proyectos -->
+    
       <div *ngIf="!cargando && proyectosPendientes.length > 0" class="accordion" id="accordionProyectosPendientes">
 
         <div *ngFor="let proyecto of proyectosPendientes; let i = index"
              class="accordion-item mb-3 shadow-sm border-0 rounded-3">
 
-          <!-- Cabecera visible -->
+          
           <h2 class="accordion-header" id="heading{{ i }}">
             <button class="accordion-button collapsed fw-semibold d-flex justify-content-between align-items-center"
                     type="button"
@@ -41,7 +41,7 @@
             </button>
           </h2>
 
-          <!-- Contenido expandible -->
+          
           <div [id]="'collapse' + i"
                class="accordion-collapse collapse"
                [attr.aria-labelledby]="'heading' + i"
@@ -56,13 +56,13 @@
 
       </div>
 
-      <!-- Si no hay proyectos -->
+    
       <div *ngIf="!cargando && proyectosPendientes.length === 0 && !errorMessage"
            class="text-center p-4 bg-warning bg-opacity-25 rounded-lg border border-warning mt-4">
         <p class="text-lg text-warning mb-0">No se encontraron proyectos pendientes.</p>
       </div>
 
-      <!-- Spinner de carga -->
+     
       <div *ngIf="cargando" class="text-center mt-5">
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden">Cargando...</span>

@@ -11,7 +11,7 @@
       </ul>
 
       <h4 *ngIf="esVistaProfesor" class="mt-3">Clases dictadas por usted</h4>
-      <h4 *ngIf="!esVistaProfesor" class="mt-3">Clases en las que estás inscrito</h4>
+      <h4 *ngIf="!esVistaProfesor" class="mt-3">Clases en las que estás inscripto</h4>
 
       <div class="classes-grid">
         <div *ngFor="let clase of clasesAMostrar" class="class-card position-relative">
@@ -44,12 +44,7 @@
   <div *ngIf="clasesComoProfe.length === 0 && clasesComoAlumno.length === 0" class="no-classes-container">
     <div class="no-classes-content">
       <h4 class="mb-4">¡Bienvenido!</h4>
-      <button [routerLink]="['/crear-clase']" class="btn btn-primary btn-lg me-3">
-        Crear clase
-      </button>
-      <button [routerLink]="['/unirse-clase']" class="btn btn-outline-primary btn-lg">
-        Unirse a una clase
-      </button>
+      <p class="mb-4">Aún no estás inscripto en ninguna clase ni dictas alguna.</p>
     </div>
   </div>
 </div>
