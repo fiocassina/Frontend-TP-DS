@@ -72,6 +72,13 @@ export class PerfilComponent implements OnInit {
       }
     });
   }
+  cerrarSesion(): void {
+    // Borrar token
+    localStorage.removeItem('token');
+    this.usuario = null;
+    this.router.navigate(['/login']);
+  }
+
 
   solicitarBaja(): void {
     const confirmacion = window.confirm(

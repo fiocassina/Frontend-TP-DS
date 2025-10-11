@@ -37,7 +37,6 @@ export class ClaseService {
 
   getMisClases(): Observable<ClasesResponse> {
     const token = this.getToken();
-    console.log("Token enviado:", token);
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.get<ClasesResponse>(`${this.apiUrl}/`, { headers });
   }

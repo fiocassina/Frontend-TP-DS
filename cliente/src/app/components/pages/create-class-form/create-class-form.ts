@@ -8,6 +8,7 @@ import { ClaseService } from '../../../services/clase.service'; // Importa el se
 import { Clase } from '../../../models/clase-interface';
 import { RouterLink } from '@angular/router';
 import { EncabezadoComponent } from '../../encabezado/encabezado.component';
+import { NavbarComponent } from '../../navbar/navbar';
 
 
 @Component({
@@ -17,6 +18,7 @@ import { EncabezadoComponent } from '../../encabezado/encabezado.component';
     CommonModule,
     ReactiveFormsModule,
     EncabezadoComponent,
+    NavbarComponent,
     //RouterLink
 ],
   templateUrl: './create-class-form.html',

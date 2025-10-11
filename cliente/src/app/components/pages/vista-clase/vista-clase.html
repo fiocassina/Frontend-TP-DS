@@ -135,10 +135,15 @@
 
                 <div *ngIf="esProfesor" class="mt-4">
                   <h5 class="card-title text-muted mb-3">GESTIÓN DE TIPOS DE PROYECTO</h5>
-                  <app-tipo-proyecto-list></app-tipo-proyecto-list>
+                  <button class="btn btn-outline-primary btn-sm mb-3" (click)="mostrarTiposProyecto = !mostrarTiposProyecto">
+                    {{ mostrarTiposProyecto ? 'Ocultar tipos de proyecto' : 'Ver tipos de proyecto' }}
+                  </button>
+                
+                  <div *ngIf="mostrarTiposProyecto">
+                    <app-tipo-proyecto-list></app-tipo-proyecto-list>
+                  </div>
                 </div>
 
-              </div>
             </div>
           </div>
 

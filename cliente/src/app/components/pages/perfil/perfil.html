@@ -50,6 +50,7 @@
           </div>
         </div>
 
+        <!-- Zona de peligro -->
         <div *ngIf="!modoEdicion" class="card border-danger mt-4">
           <div class="card-header bg-danger text-white">
             Zona de Peligro
@@ -62,6 +63,12 @@
             <button class="btn btn-danger" (click)="solicitarBaja()">Dar de baja mi cuenta</button>
           </div>
         </div>
+
+        <!-- Botón de cerrar sesión debajo de la zona de peligro -->
+        <div class="mt-3 d-flex justify-content-center">
+          <button class="btn btn-secondary" (click)="cerrarSesion()">Cerrar sesión</button>
+        </div>
+
       </ng-container>
 
       <ng-template #cargandoPerfil>
