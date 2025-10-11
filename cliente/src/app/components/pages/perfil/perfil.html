@@ -1,0 +1,78 @@
+<app-encabezado></app-encabezado>
+
+<div class="container-fluid">
+  <div class="row flex-nowrap">
+    <div class="col-md-2 bg-light min-vh-100 p-3 sidebar">
+      <app-navbar></app-navbar>
+    </div>
+
+    <div class="col py-3">
+      <h1 class="mb-4">Mi Perfil</h1>
+
+      <!-- Error -->
+      <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+      <!-- Contenido del perfil -->
+      <ng-container *ngIf="usuario; else cargandoPerfil">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            Datos de la cuenta
+            <button *ngIf="!modoEdicion" class="btn btn-primary btn-sm" (click)="activarModoEdicion()">
+              Editar Perfil
+            </button>
+          </div>
+          <div class="card-body">
+            <div *ngIf="!modoEdicion">
+              <div class="mb-3">
+                <strong>Nombre Completo:</strong>
+                <p>{{ usuario.nombreCompleto }}</p>
+              </div>
+              <div>
+                <strong>Email:</strong>
+                <p>{{ usuario.email }}</p>
+              </div>
+            </div>
+
+            <div *ngIf="modoEdicion">
+              <div class="mb-3">
+                <label for="nombreCompleto" class="form-label">Nombre Completo</label>
+                <input type="text" id="nombreCompleto" class="form-control" [(ngModel)]="usuarioEditado.nombreCompleto">
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" class="form-control" [(ngModel)]="usuarioEditado.email">
+              </div>
+              <div class="d-flex justify-content-end">
+                <button class="btn btn-secondary me-2" (click)="cancelarEdicion()">Cancelar</button>
+                <button class="btn btn-success" (click)="guardarCambios()">Guardar Cambios</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!modoEdicion" class="card border-danger mt-4">
+          <div class="card-header bg-danger text-white">
+            Zona de Peligro
+          </div>
+          <div class="card-body">
+            <p>
+              Al dar de baja tu cuenta, perderás el acceso a todas tus clases y no podrás
+              volver a ingresar con este usuario.
+            </p>
+            <button class="btn btn-danger" (click)="solicitarBaja()">Dar de baja mi cuenta</button>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #cargandoPerfil>
+        <div class="text-center my-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <p class="mt-2 text-muted">Cargando perfil...</p>
+        </div>
+      </ng-template>
+
+    </div>
+  </div>
+</div>

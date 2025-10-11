@@ -17,6 +17,7 @@ import { EntregaDetalleComponent } from './components/entregas/entrega-detalle/e
 import { entregaResolver } from './resolvers/entrega-resolver.js'; 
 import { ReporteAprobadasComponent } from './components/reporte-aprobadas/reporte-aprobadas.component.js';
 import { ListadoProyectosPendientesComponent } from './components/listado-proyectos-pendientes/listado-proyectos-pendientes.js';
+import { PerfilComponent } from './components/pages/perfil/perfil.js';
 
 export const routes: Routes = [
     { path: 'tipo-material-list', component: TipoMaterialList },
@@ -40,6 +41,8 @@ export const routes: Routes = [
         resolve: {
             entrega: entregaResolver // El resolver se ejecuta antes de cargar el componente
         }},
-    { path: 'reporte-aprobadas/:proyectoId', component: ReporteAprobadasComponent,}
+    { path: 'reporte-aprobadas/:proyectoId', component: ReporteAprobadasComponent,},
+    { path: 'perfil', component: PerfilComponent, canActivate: [authGuard] }, 
+
     
 ];

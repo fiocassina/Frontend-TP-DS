@@ -1,9 +1,13 @@
+
 export interface Usuario {
+  _id: string;
+  email: string;
+  nombreCompleto: string; 
+  activo: boolean; 
+  }
+
+export interface NuevoUsuario {
+  nombreCompleto: string;
   email: string;
   password: string;
-  nombreCompleto?: string;    
-}
-
-export interface NuevoUsuario extends Usuario {
-  nombreCompleto: string;
 }

@@ -39,11 +39,9 @@ export class VistaClase implements OnInit {
   errorMessage: string | null = null;
   esProfesor: boolean = false;
   cargando: boolean = true;
-
   tiposMaterial: TipoMaterial[] = [];
   tiposProyecto: TipoProyecto[] = [];
   proyectos: Proyecto[] = [];
-
   mostrarFormularioProyecto: boolean = false;
   nuevoProyecto = {
     nombre: '',
@@ -52,6 +50,9 @@ export class VistaClase implements OnInit {
     claseId: '',
     fechaEntrega: ''
   };
+
+  modoEdicion: boolean = false;
+  claseEditada: Partial<Clase> = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -68,7 +69,6 @@ export class VistaClase implements OnInit {
     if (claseId) {
       this.cargarDatosClase(claseId);
     }
-
     this.cargarTiposMaterial();
     this.cargarTiposProyecto();
   }
@@ -91,7 +91,6 @@ export class VistaClase implements OnInit {
   }
 
   cargarProyectosYEntregas(claseId: string): void {
-    // Si es profesor, solo carga los proyectos, no necesita las entregas
     if (this.esProfesor) {
       this.proyectoService.getProyectosClase(claseId).subscribe({
         next: (proyectos) => {
@@ -103,8 +102,6 @@ export class VistaClase implements OnInit {
       });
       return;
     }
-
-    // Si es alumno, carga proyectos y sus propias entregas
     forkJoin({
       proyectos: this.proyectoService.getProyectosClase(claseId),
       entregas: this.entregaService.obtenerEntregasPorAlumno()
@@ -112,10 +109,7 @@ export class VistaClase implements OnInit {
       next: ({ proyectos, entregas }) => {
         const proyectosConEstado = proyectos.map(proyecto => {
           const entregaExistente = entregas.find(e => e.proyecto._id === proyecto._id);
-          return {
-            ...proyecto,
-            entregado: !!entregaExistente
-          };
+          return { ...proyecto, entregado: !!entregaExistente };
         });
         this.proyectos = proyectosConEstado;
         this.cargando = false;
@@ -160,10 +154,9 @@ export class VistaClase implements OnInit {
       error: (err) => console.error('Error cargando tipos de proyecto:', err)
     });
   }
-  
+
   crearProyecto(): void {
     if (!this.nuevoProyecto.nombre || !this.nuevoProyecto.tipoProyecto?._id || !this.nuevoProyecto.fechaEntrega) return;
-  
     this.proyectoService.crearProyecto({
       nombre: this.nuevoProyecto.nombre,
       descripcion: this.nuevoProyecto.descripcion,
@@ -172,7 +165,7 @@ export class VistaClase implements OnInit {
       tipoProyecto: this.nuevoProyecto.tipoProyecto
     }).subscribe({
       next: (res) => {
-        this.cargarProyectosYEntregas(this.clase?._id || ''); // Recargar la lista después de crear
+        this.cargarProyectosYEntregas(this.clase?._id || '');
         this.nuevoProyecto = { nombre: '', descripcion: '', tipoProyecto: {} as TipoProyecto, claseId: this.clase?._id || '', fechaEntrega: '' };
         this.mostrarFormularioProyecto = false;
         this.cd.detectChanges();
@@ -180,7 +173,7 @@ export class VistaClase implements OnInit {
       error: (err) => console.error('Error al crear proyecto', err)
     });
   }
-  
+
   eliminarProyecto(proyectoId: string): void {
     this.proyectoService.eliminarProyecto(proyectoId).subscribe({
       next: () => this.proyectos = this.proyectos.filter(p => p._id !== proyectoId),
@@ -189,7 +182,39 @@ export class VistaClase implements OnInit {
   }
 
   nombreTipoProyecto(proyecto: Proyecto): string {
-    const tipo = this.tiposProyecto.find(t => t._id === proyecto.tipoProyecto?._id || proyecto.tipoProyecto._id);
+    const tipo = this.tiposProyecto.find(t => t._id === proyecto.tipoProyecto?._id);
     return tipo ? tipo.nombre : 'Sin tipo';
+  }
+
+  activarModoEdicion(): void {
+    if (this.clase) {
+      this.claseEditada = {
+        nombre: this.clase.nombre,
+        materia: this.clase.materia,
+        descripcion: this.clase.descripcion
+      };
+      this.modoEdicion = true;
+    }
+  }
+
+  cancelarEdicion(): void {
+    this.modoEdicion = false;
+    this.claseEditada = {};
+  }
+
+  guardarCambios(): void {
+    if (!this.clase || !this.clase._id) return;
+
+    this.claseService.actualizarClase(this.clase._id, this.claseEditada).subscribe({
+      next: (response) => {
+        this.clase = response.data;
+        this.modoEdicion = false;
+        console.log('Clase actualizada con éxito');
+      },
+      error: (err) => {
+        console.error('Error al actualizar la clase', err);
+        this.errorMessage = 'No se pudieron guardar los cambios.';
+      }
+    });
   }
 }
