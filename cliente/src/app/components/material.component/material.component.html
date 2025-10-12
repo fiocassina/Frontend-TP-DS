@@ -3,45 +3,44 @@
     <h5 class="mb-0">Agregar Material</h5>
   </div>
   <div class="card-body">
-    <div class="mb-3">
-      <label class="form-label">Nombre del material</label>
-      <input type="text" class="form-control" 
-            [(ngModel)]="nuevoMaterialNombre" 
-            placeholder="Ej: Apunte PDF, Guía de ejercicios"
-            required>
-    </div>
-    
-    <div class="mb-3">
-      <label class="form-label">Tipo de material</label>
-      <select class="form-select" [(ngModel)]="nuevoMaterialTipoId" required>
-        <option value="">Selecciona un tipo</option>
-        <option *ngFor="let tipo of tiposMaterial" [value]="tipo._id">
-          {{ tipo.nombre }} - {{ tipo.descripcion }}
-        </option>
-      </select>
-    </div>
 
-    <div class="mb-3" *ngIf="tipoRequiereUrl()">
-      <label class="form-label">URL del material</label>
-      <input type="url" class="form-control" 
-            [(ngModel)]="nuevoMaterialUrl" 
-            placeholder="https://..."
-            required>
-    </div>
+    <form #materialForm="ngForm" (ngSubmit)="agregarMaterial()">
 
-    <div class="mb-3" *ngIf="tipoRequiereArchivo()">
-      <label class="form-label">Subir archivo</label>
-      <input type="file" class="form-control" 
-            (change)="onFileSelected($event)"
-            [accept]="getAcceptExtension()"
-            required>
-    </div>
+      <div class="mb-3">
+        <label class="form-label">Nombre del material</label>
+        <input type="text" class="form-control" [(ngModel)]="nuevoMaterialNombre" name="nombreMaterial"
+          placeholder="Ej: Apunte PDF, Guía de ejercicios" required>
+      </div>
 
-    <button class="btn btn-primary" (click)="agregarMaterial()">Agregar Material</button>
-    
-    <div *ngIf="errorMessage" class="alert alert-danger mt-3">
-      {{ errorMessage }}
-    </div>
+      <div class="mb-3">
+        <label class="form-label">Tipo de material</label>
+        <select class="form-select" [(ngModel)]="nuevoMaterialTipoId" name="tipoMaterial" required>
+          <option value="">Selecciona un tipo</option>
+          <option *ngFor="let tipo of tiposMaterial" [value]="tipo._id">
+            {{ tipo.nombre }} - {{ tipo.descripcion }}
+          </option>
+        </select>
+      </div>
+
+      <div class="mb-3" *ngIf="tipoRequiereUrl()">
+        <label class="form-label">URL del material</label>
+        <input type="url" class="form-control" [(ngModel)]="nuevoMaterialUrl" name="urlMaterial"
+          placeholder="https://..." required>
+      </div>
+
+      <div class="mb-3" *ngIf="tipoRequiereArchivo()">
+        <label class="form-label">Subir archivo</label>
+        <input type="file" class="form-control" (change)="onFileSelected($event)" name="archivoMaterial"
+          [accept]="getAcceptExtension()" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Agregar Material</button>
+
+      <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+        {{ errorMessage }}
+      </div>
+
+    </form>
   </div>
 </div>
 

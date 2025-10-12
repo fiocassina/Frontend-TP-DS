@@ -85,7 +85,11 @@
 
               </div>
             </div>
-            <app-material [claseId]="clase?._id || ''" [esProfesor]="esProfesor" [tiposMaterial]="tiposMaterial">
+            <app-material 
+              [claseId]="clase?._id || ''" 
+              [esProfesor]="esProfesor" 
+              [tiposMaterial]="tiposMaterial"
+              (materialAgregado)="refrescarMateriales()">
             </app-material>
 
             <div class="mt-4">

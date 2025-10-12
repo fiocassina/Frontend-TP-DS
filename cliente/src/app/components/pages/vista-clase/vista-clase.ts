@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Inject, PLATFORM_ID, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -35,6 +35,8 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./vista-clase.css']
 })
 export class VistaClase implements OnInit {
+  @ViewChild(ListaMaterialesComponent) listaMaterialesComponent!: ListaMaterialesComponent;
+
   clase: Clase | null = null;
   errorMessage: string | null = null;
   esProfesor: boolean = false;
@@ -72,6 +74,10 @@ export class VistaClase implements OnInit {
     }
     this.cargarTiposMaterial();
     this.cargarTiposProyecto();
+  }
+
+  refrescarMateriales(): void {
+    this.listaMaterialesComponent.fetchMateriales();
   }
 
   cargarDatosClase(claseId: string): void {

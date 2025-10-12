@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MaterialService } from '../../services/material.service';
@@ -15,6 +15,7 @@ export class MaterialComponent implements OnInit {
   @Input() claseId!: string;
   @Input() esProfesor!: boolean;
   @Input() tiposMaterial: any[] = [];
+  @Output() materialAgregado = new EventEmitter<void>();
 
   nuevoMaterialNombre: string = '';
   nuevoMaterialTipoId: string = '';
@@ -77,7 +78,7 @@ export class MaterialComponent implements OnInit {
       return;
     }
 
-    // ✅ Armamos FormData para enviar al backend
+    
     const formData = new FormData();
     formData.append('nombre', this.nuevoMaterialNombre);
     formData.append('claseId', this.claseId);
@@ -96,6 +97,7 @@ export class MaterialComponent implements OnInit {
         this.nuevoMaterialUrl = '';
         this.selectedFile = null;
         this.errorMessage = '';
+        this.materialAgregado.emit();
         
       },
       error: (err: any) => {
