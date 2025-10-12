@@ -1,0 +1,78 @@
+<div class="d-flex justify-content-center align-items-center min-vh-100 bg-gradient-registro p-3 position-relative bg-gradient-restablecerContrasena">
+
+  <!-- 🔶 Alerta flotante -->
+  <div 
+    *ngIf="errorMessage"
+    class="alert alert-danger d-flex align-items-center shadow position-absolute"
+    style="
+      top: 40px;
+      left: 60%;
+      transform: translateX(30%);
+      z-index: 10;
+      max-width: 400px;
+      border-radius: 10px;
+      animation: fadeIn 0.3s ease-in-out;
+    "
+    role="alert"
+  >
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    {{ errorMessage }}
+  </div>
+
+  <!-- 🔷 Tarjeta principal -->
+  <div class="card shadow-sm p-4 w-100" style="max-width: 400px; border-radius: 12px;">
+    <h2 class="text-center fw-bold mb-4">Restablecer Contraseña</h2>
+
+    <form [formGroup]="restablecerForm" (ngSubmit)="restablecer()">
+      <p class="text-center small text-muted mb-4">
+        Ingresa tu email y tu nueva contraseña.
+      </p>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input formControlName="email" type="email" class="form-control" id="email" placeholder="ejemplo@correo.com" />
+        <div *ngIf="email.invalid && (email.touched || email.dirty)" class="text-danger small mt-1">
+          <div *ngIf="email.errors?.['required']">El email es obligatorio</div>
+          <div *ngIf="email.errors?.['email']">Formato de email incorrecto</div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="contrasenaNueva" class="form-label">Nueva Contraseña</label>
+        <input formControlName="contrasenaNueva" type="password" class="form-control" id="contrasenaNueva" placeholder="********" />
+        <div *ngIf="contrasenaNueva.invalid && (contrasenaNueva.touched || contrasenaNueva.dirty)" class="text-danger small mt-1">
+          <div *ngIf="contrasenaNueva.errors?.['required']">La nueva contraseña es obligatoria</div>
+          <div *ngIf="contrasenaNueva.errors?.['minlength']">Debe tener al menos 6 caracteres</div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="confirmarContrasena" class="form-label">Confirmar Contraseña</label>
+        <input formControlName="confirmarContrasena" type="password" class="form-control" id="confirmarContrasena" placeholder="********" />
+        <div *ngIf="confirmarContrasena.invalid && (confirmarContrasena.touched || confirmarContrasena.dirty)" class="text-danger small mt-1">
+          <div *ngIf="confirmarContrasena.errors?.['required']">Debe confirmar la contraseña</div>
+        </div>
+
+        <div *ngIf="restablecerForm.errors?.['contrasenaMismatch'] && confirmarContrasena.touched" class="text-danger small mt-1">
+          Las contraseñas no coinciden.
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="restablecerForm.invalid || loading">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        Restablecer Contraseña
+      </button>
+
+      <div class="text-center small">
+        <a routerLink="/login" class="text-primary text-decoration-none">Volver al Inicio de Sesión</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>

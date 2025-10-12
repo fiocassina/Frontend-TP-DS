@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { NgIf } from '@angular/common';
+import { NgIf, CommonModule } from '@angular/common'; // Aseguramos CommonModule para *ngIf
 import { UsuarioService } from '../../../services/usuario.service';
 import { NuevoUsuario } from '../../../models/usuario-interface';
 
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterModule, NgIf],
+  imports: [ReactiveFormsModule, RouterModule, NgIf, CommonModule],
   templateUrl: './registro.html',
   styleUrls: ['./registro.css']
 })
@@ -16,15 +16,16 @@ export class RegistroComponent implements OnInit {
 
   registroForm: any;
   loading = false;
-  errorMessage: string | null = null;
+  errorMessage: string | null = null; // Variable para mostrar la advertencia
 
-  constructor(private formBuilder: FormBuilder, private usuarioService: UsuarioService, private router: Router) {}
+  constructor(private formBuilder: FormBuilder, private usuarioService: UsuarioService, private router: Router) { }
 
   ngOnInit(): void {
     this.registroForm = this.formBuilder.group({
       nombreCompleto: ['', [Validators.required, Validators.minLength(6)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      // CAMBIO CLAVE: Agregamos Validators.minLength(6)
+      password: ['', [Validators.required, Validators.minLength(6)]],
       //rol: ['', Validators.required]
     });
   }
@@ -35,7 +36,7 @@ export class RegistroComponent implements OnInit {
   //get rol() { return this.registroForm.get('rol'); }
 
   registrar() {
-    if(this.registroForm.invalid){
+    if (this.registroForm.invalid) {
       this.registroForm.markAllAsTouched();
       return;
     }
@@ -43,17 +44,32 @@ export class RegistroComponent implements OnInit {
     const nuevoUsuario: NuevoUsuario = this.registroForm.value;
 
     this.loading = true;
-    this.errorMessage = null;
+    this.errorMessage = null; // Limpiar el mensaje de error/advertencia anterior
 
     this.usuarioService.registrarUsuario(nuevoUsuario).subscribe({
       next: (res) => {
         console.log('Usuario registrado:', res);
         this.loading = false;
-        this.router.navigate(['/login'], { queryParams: { registered: true } }); 
-      }, 
+        // Navegar al login después de un registro exitoso
+        this.router.navigate(['/login'], { queryParams: { registered: true } });
+      },
       error: (err) => {
         console.error('Error al registrar usuario:', err);
-        this.errorMessage = 'No se pudo registrar el usuario. ' + (err.error?.message || '');
+
+        // **CÓDIGO MODIFICADO:** Manejo de respuesta del servidor (mantenido)
+        if (err.status === 409) {
+          // Si es un 409 (Conflicto/Email Duplicado), usa el mensaje del Backend
+          this.errorMessage = err.error?.mensaje || 'El email ya está en uso. Intente con otro.';
+
+          // Opcional: Limpiar solo el campo email para que el usuario pueda corregir fácilmente
+          this.registroForm.get('email').setValue('');
+          this.registroForm.get('email').markAsTouched();
+
+        } else {
+          // Para otros errores (p. ej., 500, problemas de red)
+          this.errorMessage = 'Ocurrió un error inesperado. Intente de nuevo más tarde.';
+        }
+
         this.loading = false;
       }
     });

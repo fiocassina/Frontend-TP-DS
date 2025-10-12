@@ -1,0 +1,12 @@
+.bg-gradient-restablecerContrasena {
+  background: linear-gradient(#1A2B5B, #4682B4);
+  /*#082567 el anterior era este el mas oscuro, le puse el mismo q el del encabezado p q se parezcan los colores*/
+}
+
+.card {
+  font-family: 'Arial', sans-serif;
+}
+
+.text-primary:hover {
+  text-decoration: underline;
+}
