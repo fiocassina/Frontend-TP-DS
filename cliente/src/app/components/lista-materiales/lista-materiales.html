@@ -24,27 +24,67 @@
     }
 
     @if (materiales().length > 0 && !loading()) {
-      <ul class="list-group">
+      <ul class="list-group list-group-flush">
         @for (material of materiales(); track material._id) {
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
+          <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+            <div class="flex-grow-1 me-3">
               <h6 class="mb-1">{{ material.nombre }}</h6>
               <small class="text-muted">Tipo: {{ material.tipo?.nombre || 'Desconocido' }}</small>
             </div>
-            <div>
+            <div class="d-flex align-items-center flex-shrink-0">
               @if (material.rutaArchivo) {
-                <a [href]="getMaterialUrl(material.rutaArchivo)" target="_blank" class="btn btn-sm btn-outline-primary">
+                <a [href]="getMaterialUrl(material.rutaArchivo)" target="_blank" class="btn btn-sm btn-outline-secondary">
                   Ver Archivo
                 </a>
               } @else if (material.url) {
-                <a [href]="material.url" target="_blank" class="btn btn-sm btn-outline-info">
+                <a [href]="material.url" target="_blank" class="btn btn-sm btn-outline-secondary">
                   Ir a URL
                 </a>
+              }
+              @if (esProfesor) {
+              <div class="ms-2">
+                <button class="btn btn-sm btn-outline-primary" (click)="abrirModalEditar(material)" data-bs-toggle="modal"
+                  data-bs-target="#editarMaterialModal">
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger ms-1" (click)="eliminarMaterial(material._id)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
               }
             </div>
           </li>
         }
       </ul>
+    }
+  </div>
+</div>
+<div class="modal fade" id="editarMaterialModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    @if (materialSeleccionado()) {
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Material</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="nombreMaterial" class="form-label">Nombre del material</label>
+          <input type="text" class="form-control" id="nombreMaterial" [(ngModel)]="materialSeleccionado()!.nombre">
+        </div>
+
+        @if (materialSeleccionado()!.url) {
+        <div class="mb-3">
+          <label for="urlMaterial" class="form-label">URL</label>
+          <input type="url" class="form-control" id="urlMaterial" [(ngModel)]="materialSeleccionado()!.url">
+        </div>
+        }
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="guardarCambios()">Guardar Cambios</button>
+      </div>
+    </div>
     }
   </div>
 </div>

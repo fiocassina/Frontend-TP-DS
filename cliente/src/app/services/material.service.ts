@@ -19,4 +19,13 @@ export class MaterialService {
   createMaterial(formData: FormData): Observable<any> {
     return this.http.post<any>(this.apiUrl, formData);
   }
+
+  updateMaterial(id: string, materialData: Partial<Material>): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, materialData);
+  }
+
+  deleteMaterial(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  }
 }
+

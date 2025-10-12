@@ -47,7 +47,7 @@
                   <h5 class="card-title text-muted">INFORMACION DE CLASE</h5>
                   <button *ngIf="esProfesor && !modoEdicion" (click)="activarModoEdicion()"
                     class="btn btn-outline-primary btn-sm">
-                    ✏️ Editar datos de clase
+                    <i class="bi bi-pencil-square"></i> Editar clase
                   </button>
                 </div>
 
@@ -90,7 +90,10 @@
 
             <div class="mt-4">
               <h5 class="text-muted mb-3">MATERIALES</h5>
-              <app-lista-materiales [claseId]="clase?._id || ''"></app-lista-materiales>
+              <app-lista-materiales 
+              [claseId]="clase?._id || ''"
+              [esProfesor]="esProfesor"
+              ></app-lista-materiales>
             </div>
 
           </div>
