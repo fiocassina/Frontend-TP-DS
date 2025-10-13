@@ -20,18 +20,4 @@ export class TipoMaterialService {
   getTipoMaterialById(id: string): Observable<TipoMaterial> {
     return this.http.get<TipoMaterial>(this.apiUrl + '/' + id);
   }
-
-
-  createTipoMaterial(tipoMaterial: Omit<TipoMaterial, '_id'>): Observable<TipoMaterial> {
-    return this.http.post<TipoMaterial>(this.apiUrl, tipoMaterial);
-  }
-
-  updateTipoMaterial(id: string, tipoMaterial: TipoMaterial): Observable<TipoMaterial> {
-    return this.http.put<TipoMaterial>(this.apiUrl + '/' + id, tipoMaterial);
-  }
-
-
-  eliminarTipoMaterial(id: string): Observable<void> { 
-    return this.http.delete<void>(this.apiUrl + '/' + id);
-  }
 }

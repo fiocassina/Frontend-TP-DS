@@ -7,7 +7,7 @@ import { ClaseService } from '../../../services/clase.service';
 import { EncabezadoComponent } from '../../encabezado/encabezado.component';
 import { MaterialComponent } from '../../material.component/material.component';
 import { TipoMaterial } from '../../../models/tipo-material-interface';
-import { TipoMaterialService } from '../../../services/tipo-material';
+import { TipoMaterialService } from '../../../services/tipo-material.service';
 import { ListaMaterialesComponent } from '../../lista-materiales/lista-materiales';
 import { TipoProyectoList } from '../../tipo-proyecto-list/tipo-proyecto-list';
 import { ProyectoService } from '../../../services/proyecto.service';

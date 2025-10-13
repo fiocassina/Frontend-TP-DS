@@ -27,35 +27,34 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loginForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
-    });
+  this.loginForm = this.formBuilder.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required]]
+  });
 
-    // ✅ Mostrar mensaje de registro exitoso si llega por query params
-    this.route.queryParams.subscribe(params => {
-      this.mostrarRegistroExitoso = params['registered'] === 'true';
-      if (this.mostrarRegistroExitoso) {
-        setTimeout(() => {
-          this.mostrarRegistroExitoso = false;
-        }, 4000);
-      }
-    });
+  this.route.queryParams.subscribe(params => {
+    this.mostrarRegistroExitoso = params['registered'] === 'true';
+    if (this.mostrarRegistroExitoso) {
+      setTimeout(() => {
+        this.mostrarRegistroExitoso = false;
+      }, 4000);
+    }
+  });
 
-    // ✅ Detectar mensaje de restablecimiento exitoso desde sessionStorage
+  if (typeof window !== 'undefined' && typeof sessionStorage !== 'undefined') {
     const mensajeExito = sessionStorage.getItem('mensajeExito');
     if (mensajeExito) {
       this.mostrarRestablecimientoExitoso = true;
 
-      // 🕒 Ocultar automáticamente después de unos segundos
       setTimeout(() => {
         this.mostrarRestablecimientoExitoso = false;
       }, 4000);
 
-      // 🧹 Limpiar el mensaje del almacenamiento
       sessionStorage.removeItem('mensajeExito');
     }
   }
+}
+
 
   login() {
     if (this.loginForm.invalid) {

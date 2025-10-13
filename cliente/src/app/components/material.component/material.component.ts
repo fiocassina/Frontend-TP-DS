@@ -1,8 +1,9 @@
+// src/app/components/material.component/material.component.ts
 import { Component, Input, OnInit, inject, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MaterialService } from '../../services/material.service';
-import { TipoMaterialService } from '../../services/tipo-material';
+import { TipoMaterialService } from '../../services/tipo-material.service';
 
 @Component({
   selector: 'app-material',
@@ -32,15 +33,14 @@ export class MaterialComponent implements OnInit {
 
   tipoRequiereUrl(): boolean {
     const tipo = this.tiposMaterial.find(t => t._id === this.nuevoMaterialTipoId);
-    return tipo && tipo.nombre.toLowerCase() === 'link';
+    return tipo && tipo.nombre.toLowerCase() === 'enlace web';
   }
 
   tipoRequiereArchivo(): boolean {
     const tipo = this.tiposMaterial.find(t => t._id === this.nuevoMaterialTipoId);
     return tipo && (
       tipo.nombre.toLowerCase() === 'pdf' ||
-      tipo.nombre.toLowerCase() === 'imagen' ||
-      tipo.nombre.toLowerCase() === 'Documento'
+      tipo.nombre.toLowerCase() === 'imagen'
     );
   }
 
@@ -48,9 +48,7 @@ export class MaterialComponent implements OnInit {
     const tipo = this.tiposMaterial.find(t => t._id === this.nuevoMaterialTipoId);
     if (tipo) {
       if (tipo.nombre.toLowerCase() === 'pdf') return '.pdf';
-      if (tipo.nombre.toLowerCase() === 'video') return '.mp4,.mov,.avi';
       if (tipo.nombre.toLowerCase() === 'imagen') return '.png,.jpg,.jpeg,.gif';
-      if (tipo.nombre.toLowerCase() === 'doc') return '.doc,.docx,.txt';
     }
     return '';
   }
@@ -78,7 +76,6 @@ export class MaterialComponent implements OnInit {
       return;
     }
 
-    
     const formData = new FormData();
     formData.append('nombre', this.nuevoMaterialNombre);
     formData.append('claseId', this.claseId);
@@ -98,7 +95,6 @@ export class MaterialComponent implements OnInit {
         this.selectedFile = null;
         this.errorMessage = '';
         this.materialAgregado.emit();
-        
       },
       error: (err: any) => {
         this.errorMessage = 'Error al agregar el material.';

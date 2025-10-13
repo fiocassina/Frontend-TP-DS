@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { TipoMaterialList } from './components/tipo-material-list/tipo-material-list.js';
-import { TipoMaterialForm } from './components/tipo-material-form/tipo-material-form.js';
 import { TipoProyectoList } from './components/tipo-proyecto-list/tipo-proyecto-list.js';
 import { TipoProyectoForm } from './components/tipo-proyecto-form/tipo-proyecto-form.js';
 import { LoginComponent } from './components/auth/login/login.component.js';
@@ -21,9 +19,6 @@ import { PerfilComponent } from './components/pages/perfil/perfil.js';
 import { RestablecerContrasenaComponent } from './components/auth/restablecer-contrasena/restablecer-contrasena.js';
 
 export const routes: Routes = [
-    { path: 'tipo-material-list', component: TipoMaterialList },
-    { path: 'tipo-material-form', component: TipoMaterialForm },
-    { path: 'tipo-material-form/:id', component: TipoMaterialForm },
     { path: 'tipo-proyecto-list', component: TipoProyectoList },
     { path: 'tipo-proyecto-form', component: TipoProyectoForm },
     { path: 'tipo-proyecto-form/:id', component: TipoProyectoForm },
@@ -39,8 +34,6 @@ export const routes: Routes = [
     { path: 'restablecer-contrasena', component: RestablecerContrasenaComponent },
     { path: 'entregas/proyecto/:proyectoId', component: EntregaListComponent, canActivate: [authGuard] },
     { path: 'entregas/:id', component: EntregaDetalleComponent, canActivate: [authGuard],
-    
-    
         resolve: {
             entrega: entregaResolver // El resolver se ejecuta antes de cargar el componente
         }},
