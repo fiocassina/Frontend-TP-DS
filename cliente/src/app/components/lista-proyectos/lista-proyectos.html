@@ -7,7 +7,7 @@
         <h6 class="card-subtitle mb-2 text-muted">{{ proyecto.tipoProyecto.nombre }}</h6>
         <p class="card-text">
           <small class="text-muted">
-            Entrega: {{ proyecto.fechaEntrega | date:'shortDate' }}
+            Entrega: {{ proyecto.fechaEntrega | date:'dd/MM/yyyy' }}
           </small>
         </p>
         <p *ngIf="proyecto.descripcion" class="text-secondary">{{ proyecto.descripcion }}</p>
@@ -18,7 +18,11 @@
               <button class="btn btn-outline-primary btn-sm" (click)="verEntregas(proyecto._id)">
                 Ver todas las entregas
               </button>
-              <button class="btn btn-danger btn-sm" (click)="eliminarProyecto(proyecto._id)">
+              <button class="btn btn-outline-secondary btn-sm" (click)="abrirModalEditar(proyecto)" data-bs-toggle="modal"
+                data-bs-target="#editarProyectoModal">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-danger btn-sm" (click)="deleteProyecto(proyecto._id)">
                 <i class="bi bi-trash"></i>
               </button>
             </div>
@@ -65,3 +69,39 @@
 <ng-template #noProyectos>
   <p class="text-muted">Aquí se mostrarán los proyectos de la clase.</p>
 </ng-template>
+
+<div class="modal fade" id="editarProyectoModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" *ngIf="proyectoSeleccionado">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Proyecto</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="mb-3">
+          <label for="nombreProyecto" class="form-label">Nombre del proyecto</label>
+          <input type="text" class="form-control" id="nombreProyecto" [(ngModel)]="proyectoSeleccionado.nombre">
+        </div>
+
+        <div class="mb-3">
+          <label for="descProyecto" class="form-label">Descripción</label>
+          <textarea class="form-control" id="descProyecto" rows="3"
+            [(ngModel)]="proyectoSeleccionado.descripcion"></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="fechaProyecto" class="form-label">Fecha de Entrega</label>
+          <input type="date" class="form-control" id="fechaProyecto"
+            [ngModel]="proyectoSeleccionado.fechaEntrega | date:'yyyy-MM-dd'"
+            (ngModelChange)="proyectoSeleccionado.fechaEntrega = $event">
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="guardarCambios()">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+</div>

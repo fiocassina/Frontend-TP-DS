@@ -181,11 +181,17 @@ export class VistaClase implements OnInit {
     });
   }
 
-  eliminarProyecto(proyectoId: string): void {
-    this.proyectoService.eliminarProyecto(proyectoId).subscribe({
-      next: () => this.proyectos = this.proyectos.filter(p => p._id !== proyectoId),
-      error: (err) => console.error('Error al eliminar proyecto', err)
-    });
+  deleteProyecto(proyectoId: string): void {
+    if (confirm('¿Estás seguro de que deseas eliminar este proyecto? Esta acción no se puede deshacer.')) {
+      this.proyectoService.deleteProyecto(proyectoId).subscribe({
+        next: () => {
+        this.proyectos = this.proyectos.filter(p => p._id !== proyectoId);
+        this.cd.detectChanges(); 
+        console.log('Proyecto eliminado con éxito');
+      },
+        error: (err) => console.error('Error al eliminar proyecto', err)
+      });
+  }
   }
 
   nombreTipoProyecto(proyecto: Proyecto): string {

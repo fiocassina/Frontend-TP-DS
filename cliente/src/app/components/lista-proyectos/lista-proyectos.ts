@@ -4,6 +4,7 @@ import { Proyecto } from '../../models/proyecto-interface';
 import { FormsModule } from '@angular/forms';
 import { EntregaService } from '../../services/entrega.service';
 import { Router, RouterModule} from '@angular/router';
+import { ProyectoService } from '../../services/proyecto.service.js';
 
 @Component({
   selector: 'app-lista-proyectos',
@@ -22,12 +23,56 @@ export class ListaProyectosComponent {
   comentario: string = '';
   archivoSeleccionado: File | null = null;
   errorMessage: string = '';
+  proyectoSeleccionado: Proyecto | null = null;
 
-  constructor(private entregaService: EntregaService, private router: Router) { }
+  constructor(
+    private entregaService: EntregaService, 
+    private router: Router,
+    private proyectoService: ProyectoService
+  ) { }
 
-  eliminarProyecto(proyectoId: string) {
+  deleteProyecto(proyectoId: string) {
     this.eliminar.emit(proyectoId);
   }
+
+  abrirModalEditar(proyecto: Proyecto): void {
+    this.proyectoSeleccionado = { ...proyecto };
+  }
+
+  guardarCambios(): void {
+    if (!this.proyectoSeleccionado || !this.proyectoSeleccionado._id) return;
+
+    const datosActualizados = {
+      nombre: this.proyectoSeleccionado.nombre,
+      descripcion: this.proyectoSeleccionado.descripcion,
+      fechaEntrega: this.proyectoSeleccionado.fechaEntrega
+    };
+
+    this.proyectoService.updateProyecto(this.proyectoSeleccionado._id, datosActualizados).subscribe({
+      next: () => {
+        const index = this.proyectos.findIndex(p => p._id === this.proyectoSeleccionado!._id);
+        if (index !== -1) {
+          this.proyectos[index] = { ...this.proyectos[index], ...datosActualizados };
+        }
+      
+        const modalElement = document.getElementById('editarProyectoModal');
+        if (modalElement) {
+            const modal = new (window as any).bootstrap.Modal(modalElement);
+            modal.hide();
+            document.body.classList.remove('modal-open');
+            const backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) backdrop.remove();
+        }
+
+        this.proyectoSeleccionado = null; 
+      },
+      error: (err) => {
+        console.error('Error al actualizar el proyecto:', err);
+      }
+    });
+  }
+  
+
 
   toggleEntrega(proyectoId: string) {
     if (this.proyectoExpandidoId === proyectoId) {

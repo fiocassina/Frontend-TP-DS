@@ -41,7 +41,13 @@ export class ProyectoService {
     return this.http.post<Proyecto>(this.apiUrl, proyecto, { headers: this.getAuthHeaders() });
   }
 
-  eliminarProyecto(proyectoId: string): Observable<any> {
+
+  updateProyecto(proyectoId: string, proyectoData: Partial<Proyecto>): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${proyectoId}`, proyectoData, { headers: this.getAuthHeaders() });
+  }
+
+
+  deleteProyecto(proyectoId: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${proyectoId}`, { headers: this.getAuthHeaders() });
   }
 
