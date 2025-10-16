@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { ClaseService } from '../../../services/clase.service';
 import { FormsModule } from '@angular/forms';
 import { EncabezadoComponent } from '../../encabezado/encabezado.component';
@@ -26,19 +26,23 @@ export class InscripcionClase implements OnInit {
   constructor(
     private fb: FormBuilder,
     private claseService: ClaseService,
-    private router: Router
+    private router: Router,
+    private cd: ChangeDetectorRef 
   ) {
     this.inscripcionForm = this.fb.group({
       clave: ['', Validators.required]
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   onSubmit(): void {
+    this.errorMessage = null;
+
     if (this.inscripcionForm.invalid) return;
 
     this.isLoading = true;
+    this.cd.detectChanges();
     const clave = this.inscripcionForm.value.clave;
 
     this.claseService.inscribirse(clave).subscribe({
@@ -46,8 +50,19 @@ export class InscripcionClase implements OnInit {
         this.router.navigate(['/inicio']);
       },
       error: (err) => {
-        this.errorMessage = err.error?.message || 'Error al inscribirse en la clase';
+        console.error('Error de inscripción:', err);
+
+       
+        if (err.status === 403) {
+          this.errorMessage = err.error?.mensaje || 'No puede ingresar a esta clase porque es el profesor.';
+        } else if (err.status === 404) {
+          this.errorMessage = err.error?.mensaje || 'Clase no encontrada con esa clave.';
+        } else {
+          this.errorMessage = err.error?.mensaje || 'Error al inscribirse en la clase.';
+        }
+
         this.isLoading = false;
+        this.cd.detectChanges(); 
       }
     });
   }
