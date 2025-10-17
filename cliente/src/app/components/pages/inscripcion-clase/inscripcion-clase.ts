@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { ClaseService } from '../../../services/clase.service';
 import { FormsModule } from '@angular/forms';
 import { EncabezadoComponent } from '../../encabezado/encabezado.component';
-
+import { NavbarComponent } from '../../navbar/navbar';
 @Component({
   selector: 'app-inscripcion-clase',
   standalone: true,
@@ -14,6 +14,7 @@ import { EncabezadoComponent } from '../../encabezado/encabezado.component';
     ReactiveFormsModule,
     FormsModule,
     EncabezadoComponent,
+    NavbarComponent
   ],
   templateUrl: './inscripcion-clase.html',
   styleUrl: './inscripcion-clase.css'
