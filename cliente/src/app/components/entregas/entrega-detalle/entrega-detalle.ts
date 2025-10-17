@@ -60,8 +60,7 @@ export class EntregaDetalleComponent implements OnInit {
       this.comentarioCorreccion
     ).subscribe({
       next: (response) => {
-        console.log('Corrección guardada con éxito:', response);
-
+        this.volver();
         if (this.entrega) {
           
           const nuevoEstado: EstadoEntrega = this.nota! >= 6 ? 'aprobada' : 'desaprobada';

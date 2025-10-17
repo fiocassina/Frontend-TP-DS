@@ -100,38 +100,44 @@ export class VistaClase implements OnInit {
   }
 
   cargarProyectosYEntregas(claseId: string): void {
-    if (this.esProfesor) {
-      this.proyectoService.getProyectosClase(claseId).subscribe({
-        next: (proyectos) => {
-          this.proyectos = proyectos;
-          this.cargando = false;
-          this.cd.detectChanges();
-        },
-        error: (err) => console.error('Error cargando proyectos (profesor):', err)
-      });
-      return;
-    }
-    forkJoin({
-      proyectos: this.proyectoService.getProyectosClase(claseId),
-      entregas: this.entregaService.obtenerEntregasPorAlumno()
-    }).subscribe({
-      next: ({ proyectos, entregas }) => {
-        const proyectosConEstado = proyectos.map(proyecto => {
-          const entregaExistente = entregas.find(e => e.proyecto._id === proyecto._id);
-          return { ...proyecto, entregado: !!entregaExistente };
-        });
-        this.proyectos = proyectosConEstado;
+  if (this.esProfesor) {
+    this.proyectoService.getProyectosClase(claseId).subscribe({
+      next: (proyectos) => {
+        this.proyectos = proyectos;
         this.cargando = false;
         this.cd.detectChanges();
       },
-      error: (err) => {
-        console.error('Error cargando proyectos y entregas (alumno):', err);
-        this.errorMessage = 'No se pudieron cargar los proyectos o las entregas.';
-        this.cargando = false;
-        this.cd.detectChanges();
-      }
+      error: (err) => console.error('Error cargando proyectos (profesor):', err)
     });
+    return;
   }
+  forkJoin({
+    proyectos: this.proyectoService.getProyectosClase(claseId),
+    entregas: this.entregaService.obtenerEntregasPorAlumno()
+  }).subscribe({
+    next: ({ proyectos, entregas }) => {
+      const proyectosConEstado = proyectos.map(proyecto => {
+        // Buscamos la entrega que corresponde a este alumno para este proyecto
+        const entregaCorrespondiente = entregas.find(e => e.proyecto._id === proyecto._id);
+        // Creamos un objeto temporal que une el proyecto con SU entrega
+        return { 
+          ...proyecto, 
+          entregado: !!entregaCorrespondiente,
+          entrega: entregaCorrespondiente 
+        };
+      });
+      this.proyectos = proyectosConEstado;
+      this.cargando = false;
+      this.cd.detectChanges();
+    },
+    error: (err) => {
+      console.error('Error cargando proyectos y entregas (alumno):', err);
+      this.errorMessage = 'No se pudieron cargar los proyectos o las entregas.';
+      this.cargando = false;
+      this.cd.detectChanges();
+    }
+  });
+}
 
   esUsuarioProfesor(clase: Clase): boolean {
     if (isPlatformBrowser(this.platformId)) {

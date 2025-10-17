@@ -35,23 +35,36 @@
 
           <ng-container *ngIf="!esProfesor">
             <ng-container *ngIf="!proyecto.entregado">
-
               <ng-container *ngIf="!haVencido(proyecto); else fechaVencida">
                 <button class="btn btn-success btn-sm" (click)="toggleEntrega(proyecto._id)">
                   Entregar proyecto
                 </button>
               </ng-container>
-
               <ng-template #fechaVencida>
                 <button class="btn btn-danger btn-sm" disabled>
-                  Fecha de entrega vencida, no puedes entregar
+                  Plazo de entrega vencido
                 </button>
               </ng-template>
-
             </ng-container>
 
-            <ng-container *ngIf="proyecto.entregado">
-              <span class="badge bg-primary">Proyecto Entregado</span>
+            <ng-container *ngIf="proyecto.entregado" [ngSwitch]="proyecto.entrega?.estado">
+              <span *ngSwitchCase="'pendiente'" class="badge bg-primary">Proyecto Entregado</span>
+
+              <div *ngSwitchCase="'aprobada'" class="d-flex flex-column align-items-start gap-2">
+                <span class="badge bg-success">Entrega Aprobada</span>
+                <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
+                  data-bs-target="#correccionModal" (click)="abrirModalCorreccion(proyecto)">
+                  Ver Corrección
+                </button>
+              </div>
+
+              <div *ngSwitchCase="'desaprobada'" class="d-flex flex-column align-items-start gap-2">
+                <span class="badge bg-warning text-dark">Entrega desaprobada</span>
+                <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
+                  data-bs-target="#correccionModal" (click)="abrirModalCorreccion(proyecto)">
+                  Ver Corrección
+                </button>
+              </div>
             </ng-container>
           </ng-container>
         </div>
@@ -83,36 +96,27 @@
 </ng-template>
 
 <div class="modal fade" id="editarProyectoModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content" *ngIf="proyectoSeleccionado">
+</div>
+
+<div class="modal fade" id="correccionModal" tabindex="-1" aria-labelledby="correccionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" *ngIf="correccionSeleccionada">
       <div class="modal-header">
-        <h5 class="modal-title">Editar Proyecto</h5>
+        <h5 class="modal-title" id="correccionModalLabel">Corrección del Profesor</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-
         <div class="mb-3">
-          <label for="nombreProyecto" class="form-label">Nombre del proyecto</label>
-          <input type="text" class="form-control" id="nombreProyecto" [(ngModel)]="proyectoSeleccionado.nombre">
+          <label class="form-label fw-bold">Nota:</label>
+          <p class="fs-4 text-primary">{{ correccionSeleccionada.nota }} / 10</p>
         </div>
-
-        <div class="mb-3">
-          <label for="descProyecto" class="form-label">Descripción</label>
-          <textarea class="form-control" id="descProyecto" rows="3"
-            [(ngModel)]="proyectoSeleccionado.descripcion"></textarea>
+        <div>
+          <label class="form-label fw-bold">Comentarios:</label>
+          <p class="bg-light p-3 rounded">{{ correccionSeleccionada.comentario || 'Sin comentarios adicionales.' }}</p>
         </div>
-
-        <div class="mb-3">
-          <label for="fechaProyecto" class="form-label">Fecha de Entrega</label>
-          <input type="date" class="form-control" id="fechaProyecto"
-            [ngModel]="proyectoSeleccionado.fechaEntrega | date:'yyyy-MM-dd':'UTC'"
-            (ngModelChange)="proyectoSeleccionado.fechaEntrega = $event">
-        </div>
-
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" (click)="guardarCambios()">Guardar Cambios</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
   </div>

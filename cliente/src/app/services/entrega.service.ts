@@ -31,7 +31,6 @@ export class EntregaService {
     return null;
   }
 
-  // ----------------- ENTREGAS -----------------
   crearEntrega(formData: FormData): Observable<Entrega> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
@@ -82,9 +81,5 @@ obtenerProyectosPendientes(): Observable<Proyecto[]> {
   const headers = { Authorization: `Bearer ${token}` };
   return this.http.get<Proyecto[]>(`${this.baseUrl}/pendientes/alumno`, { headers });
 }
-
-
-
-
 
 }

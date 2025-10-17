@@ -33,9 +33,9 @@
           <h5 *ngIf="entrega.estado === 'desaprobada'" class="text-danger">❌ Entrega Desaprobada</h5>
 
           <div class="border p-3 rounded mb-3" [ngClass]="{
-                 'border-success bg-success bg-opacity-10': entrega.estado === 'aprobada',
-                 'border-danger bg-danger bg-opacity-10': entrega.estado === 'desaprobada'
-               }">
+                'border-success bg-success bg-opacity-10': entrega.estado === 'aprobada',
+                'border-danger bg-danger bg-opacity-10': entrega.estado === 'desaprobada'
+              }">
             <p><strong>Nota Final:</strong> <span class="h4">{{ entrega.correccion.nota }} / 10</span></p>
             <p><strong>Comentario del Profesor:</strong> {{ entrega.correccion.comentario }}</p>
           </div>
@@ -48,7 +48,7 @@
           <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
           <form class="row g-3 align-items-center">
-            <!-- Nota Final -->
+            <!-- Nota -->
             <div class="col-md-4">
               <label for="nota" class="form-label">Nota Final <span class="text-danger">*</span></label>
             </div>

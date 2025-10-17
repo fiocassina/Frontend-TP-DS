@@ -1,7 +1,8 @@
 import { TipoProyecto } from './tipo-proyecto-interface';
+import { Entrega } from './entrega-interface'; // Importar Entrega
 
 export interface Proyecto {
-claseNombre: any;
+  claseNombre: any;
   _id: string;
   nombre: string;
   descripcion?: string;
@@ -12,5 +13,5 @@ claseNombre: any;
   updatedAt?: string;
 
   entregado?: boolean;
+  entrega?: Entrega; 
 }
-

@@ -25,7 +25,6 @@ export class EntregaListComponent implements OnInit {
     private entregaService: EntregaService,
     private router: Router,
     private route: ActivatedRoute,
-    // 2. Inyectalo en el constructor
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -38,9 +37,8 @@ export class EntregaListComponent implements OnInit {
     this.entregaService.obtenerEntregas(this.proyectoId)
       .subscribe({
         next: (data) => {
-          console.log('Datos recibidos del backend:', data);
           this.entregas = data;
-          this.cdr.detectChanges(); // Actualizar la vista
+          this.cdr.detectChanges();
         },
         error: (err) => console.error('Error al cargar entregas:', err)
       });

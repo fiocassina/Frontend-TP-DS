@@ -1,11 +1,10 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { ProyectosPendientesService } from '../../services/proyectos-pendientes.service.js';
-import { Proyecto } from '../../models/proyecto-interface';
 import { DatePipe, isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from "../navbar/navbar";
 import { EncabezadoComponent } from "../encabezado/encabezado.component";
-
+import { Router } from '@angular/router'; // <-- 1. IMPORTAR Router
 
 @Component({
   selector: 'app-listado-proyectosPendientes',
@@ -17,47 +16,33 @@ import { EncabezadoComponent } from "../encabezado/encabezado.component";
 export class ListadoProyectosPendientesComponent implements OnInit {
   proyectosPendientes: any[] = [];
   cargando = true;
-errorMessage: any;
+  errorMessage: any;
 
   constructor(
     private proyectoService: ProyectosPendientesService,
     @Inject(PLATFORM_ID) private platformId: Object,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private router: Router // <-- 2. INYECTAR Router
   ) {}
 
-ngOnInit(): void {
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  console.log('Navegador: cargando proyectos...');
-
-  // Esperamos un breve momento para asegurarnos de que el token ya esté en localStorage
-  setTimeout(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      console.log('Token encontrado, cargando proyectos...');
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
       this.obtenerProyectosPendientes();
-    } else {
-      console.warn('No se encontró token en el navegador todavía.');
-      this.cargando = false;
     }
-  }, 500); // medio segundo de espera
-}
-
+  }
 
   obtenerProyectosPendientes(): void {
     this.proyectoService.obtenerProyectosPendientes().subscribe({
       next: (res: any[]) => {
-        console.log('Respuesta del backend cruda:', res);
+        // --- 3. MODIFICAR EL MAPEO para guardar el ID de la clase ---
         this.proyectosPendientes = res.map(p => ({
           nombre: p.nombre,
           descripcion: p.descripcion || 'Sin descripción',
           claseNombre: p.clase?.nombre || 'Sin clase',
+          tipoProyectoNombre: p.tipoProyecto?.nombre || 'Sin tipo',
+          claseId: p.clase?._id, 
           fechaEntrega: p.fechaEntrega
         }));
-        console.log('Proyectos mapeados:', this.proyectosPendientes);
-
         this.cargando = false;
         this.cd.detectChanges();
       },
@@ -70,5 +55,14 @@ ngOnInit(): void {
 
   formatearFecha(fecha: string): string {
     return new Date(fecha).toLocaleDateString('es-AR');
+  }
+
+  // --- 4. AÑADIR LA FUNCIÓN para ir a la clase ---
+  irAClase(claseId: string): void {
+    if (claseId) {
+      this.router.navigate(['/clase', claseId]);
+    } else {
+      console.error("No se pudo navegar: el ID de la clase no está disponible.");
+    }
   }
 }
