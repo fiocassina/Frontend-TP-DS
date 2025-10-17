@@ -72,7 +72,17 @@ export class ListaProyectosComponent {
     });
   }
   
-
+  public haVencido(proyecto: Proyecto): boolean {
+    if (!proyecto.fechaEntrega) {
+      return false; // Si por alguna razón no hay fecha, no lo marcamos como vencido.
+    }
+    const fechaLimite = new Date(proyecto.fechaEntrega);
+    const hoy = new Date();
+    // Para que la entrega sea válida DURANTE TODO el día de la fecha límite,
+    // ajustamos la hora de la fecha límite al final del día (23:59:59).
+    fechaLimite.setHours(23, 59, 59, 999);
+    return hoy > fechaLimite;
+  }
 
   toggleEntrega(proyectoId: string) {
     if (this.proyectoExpandidoId === proyectoId) {

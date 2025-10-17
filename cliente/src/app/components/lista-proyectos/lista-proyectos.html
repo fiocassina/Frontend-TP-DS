@@ -7,19 +7,20 @@
         <h6 class="card-subtitle mb-2 text-muted">{{ proyecto.tipoProyecto.nombre }}</h6>
         <p class="card-text">
           <small class="text-muted">
-            Entrega: {{ proyecto.fechaEntrega | date:'dd/MM/yyyy' }}
+            Entrega: {{ proyecto.fechaEntrega | date:'dd/MM/yyyy':'UTC' }}
           </small>
         </p>
         <p *ngIf="proyecto.descripcion" class="text-secondary">{{ proyecto.descripcion }}</p>
 
         <div class="mt-auto d-flex flex-column gap-2">
+
           <ng-container *ngIf="esProfesor">
             <div class="d-flex gap-2 align-items-center">
               <button class="btn btn-outline-primary btn-sm" (click)="verEntregas(proyecto._id)">
                 Ver todas las entregas
               </button>
-              <button class="btn btn-outline-secondary btn-sm" (click)="abrirModalEditar(proyecto)" data-bs-toggle="modal"
-                data-bs-target="#editarProyectoModal">
+              <button class="btn btn-outline-secondary btn-sm" (click)="abrirModalEditar(proyecto)"
+                data-bs-toggle="modal" data-bs-target="#editarProyectoModal">
                 <i class="bi bi-pencil"></i>
               </button>
               <button class="btn btn-danger btn-sm" (click)="deleteProyecto(proyecto._id)">
@@ -34,10 +35,21 @@
 
           <ng-container *ngIf="!esProfesor">
             <ng-container *ngIf="!proyecto.entregado">
-              <button class="btn btn-success btn-sm" (click)="toggleEntrega(proyecto._id)">
-                Entregar proyecto
-              </button>
+
+              <ng-container *ngIf="!haVencido(proyecto); else fechaVencida">
+                <button class="btn btn-success btn-sm" (click)="toggleEntrega(proyecto._id)">
+                  Entregar proyecto
+                </button>
+              </ng-container>
+
+              <ng-template #fechaVencida>
+                <button class="btn btn-danger btn-sm" disabled>
+                  Fecha de entrega vencida, no puedes entregar
+                </button>
+              </ng-template>
+
             </ng-container>
+
             <ng-container *ngIf="proyecto.entregado">
               <span class="badge bg-primary">Proyecto Entregado</span>
             </ng-container>
@@ -93,7 +105,7 @@
         <div class="mb-3">
           <label for="fechaProyecto" class="form-label">Fecha de Entrega</label>
           <input type="date" class="form-control" id="fechaProyecto"
-            [ngModel]="proyectoSeleccionado.fechaEntrega | date:'yyyy-MM-dd'"
+            [ngModel]="proyectoSeleccionado.fechaEntrega | date:'yyyy-MM-dd':'UTC'"
             (ngModelChange)="proyectoSeleccionado.fechaEntrega = $event">
         </div>
 
