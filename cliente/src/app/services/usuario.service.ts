@@ -6,6 +6,7 @@ import { NuevoUsuario, Usuario } from '../models/usuario-interface';
 // Interfaz corregida
 export interface RestablecerContrasenaPayload {
   email: string;
+  contrasenaActual: string;
   contrasenaNueva: string; 
 }
 

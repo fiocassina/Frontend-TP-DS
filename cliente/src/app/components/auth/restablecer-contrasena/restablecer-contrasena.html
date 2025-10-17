@@ -25,7 +25,7 @@
 
     <form [formGroup]="restablecerForm" (ngSubmit)="restablecer()">
       <p class="text-center small text-muted mb-4">
-        Ingresa tu email y tu nueva contraseña.
+        Ingresa tu email, tu contraseña actual y tu nueva contraseña.
       </p>
 
       <div class="mb-3">
@@ -34,6 +34,21 @@
         <div *ngIf="email.invalid && (email.touched || email.dirty)" class="text-danger small mt-1">
           <div *ngIf="email.errors?.['required']">El email es obligatorio</div>
           <div *ngIf="email.errors?.['email']">Formato de email incorrecto</div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="contrasenaActual" class="form-label">Contraseña Actual</label>
+      
+        <input formControlName="contrasenaActual" type="password" class="form-control" id="contrasenaActual"
+          placeholder="********"
+          [ngClass]="{'is-invalid': contrasenaActual.invalid && (contrasenaActual.touched || contrasenaActual.dirty)}" />
+      
+        <div *ngIf="contrasenaActual.invalid && (contrasenaActual.touched || contrasenaActual.dirty)"
+          class="text-danger small mt-1">
+          <div *ngIf="contrasenaActual.errors?.['required']">La contraseña actual es obligatoria</div>
+      
+          <div *ngIf="contrasenaActual.errors?.['incorrecta']">La contraseña actual es incorrecta.</div>
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { NgIf, CommonModule } from '@angular/common';
@@ -32,18 +32,21 @@ export class RestablecerContrasenaComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private usuarioService: UsuarioService,
-    private router: Router
+    private router: Router,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.restablecerForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
+      contrasenaActual: ['', [Validators.required]],
       contrasenaNueva: ['', [Validators.required, Validators.minLength(6)]],
       confirmarContrasena: ['', [Validators.required]]
     }, { validators: contrasenaMatchValidator });
   }
 
   get email() { return this.restablecerForm.get('email'); }
+  get contrasenaActual() { return this.restablecerForm.get('contrasenaActual'); }
   get contrasenaNueva() { return this.restablecerForm.get('contrasenaNueva'); }
   get confirmarContrasena() { return this.restablecerForm.get('confirmarContrasena'); }
   get passwordGroup() { return this.restablecerForm; }
@@ -58,17 +61,15 @@ export class RestablecerContrasenaComponent implements OnInit {
     }
 
     this.loading = true;
-    const { email, contrasenaNueva } = this.restablecerForm.value;
+    const { email, contrasenaActual, contrasenaNueva } = this.restablecerForm.value;
 
-    this.usuarioService.restablecerContrasena({ email, contrasenaNueva }).subscribe({
+    this.usuarioService.restablecerContrasena({ email, contrasenaActual, contrasenaNueva }).subscribe({
       next: (res) => {
         this.loading = false;
         this.restablecerForm.reset();
 
-        // ✅ Guardar el mensaje temporalmente en el sessionStorage
         sessionStorage.setItem('mensajeExito', res.mensaje || '¡Contraseña restablecida correctamente!');
 
-        // ✅ Redirigir inmediatamente al login
         this.router.navigate(['/login']);
       },
       error: (err) => {
@@ -78,11 +79,17 @@ export class RestablecerContrasenaComponent implements OnInit {
           this.errorMessage = err.error?.mensaje || 'El email ingresado no se encuentra registrado.';
           this.email.setValue('');
           this.email.markAsTouched();
-        } else {
+        } 
+        else if (err.status === 401) {
+         // this.errorMessage = err.error?.mensaje || 'La contraseña actual es incorrecta.';
+          this.contrasenaActual.setErrors({ incorrecta: true });
+        }
+        else {
           this.errorMessage = 'Ocurrió un error inesperado. Intente de nuevo más tarde.';
         }
 
         this.loading = false;
+        this.cd.detectChanges();
       }
     });
   }
