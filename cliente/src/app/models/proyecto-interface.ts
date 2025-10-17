@@ -1,6 +1,5 @@
 import { TipoProyecto } from './tipo-proyecto-interface';
-import { Entrega } from './entrega-interface'; // Importar Entrega
-
+import { Entrega } from './entrega-interface'; 
 export interface Proyecto {
   claseNombre: any;
   _id: string;

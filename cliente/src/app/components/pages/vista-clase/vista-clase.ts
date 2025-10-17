@@ -46,7 +46,7 @@ export class VistaClase implements OnInit {
   proyectos: Proyecto[] = [];
   mostrarFormularioProyecto: boolean = false;
   mostrarTiposProyecto: boolean = false;
-  mostrarFormularioMaterial: boolean = false; // <-- LÍNEA AGREGADA
+  mostrarFormularioMaterial: boolean = false; 
 
   nuevoProyecto = {
     nombre: '',

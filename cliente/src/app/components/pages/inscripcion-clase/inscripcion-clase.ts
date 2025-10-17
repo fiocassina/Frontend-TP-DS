@@ -53,7 +53,7 @@ export class InscripcionClase implements OnInit {
       error: (err) => {
         console.error('Error de inscripción:', err);
 
-       
+      
         if (err.status === 403) {
           this.errorMessage = err.error?.mensaje || 'No puede ingresar a esta clase porque es el profesor.';
         } else if (err.status === 404) {

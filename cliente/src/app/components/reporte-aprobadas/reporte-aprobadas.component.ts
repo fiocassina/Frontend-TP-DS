@@ -61,7 +61,6 @@ export class ReporteAprobadasComponent implements OnInit {
 
     this.entregaService.getReporteEntregasAprobadas(this.proyectoId)
       .pipe(
-        //tap(() => this.isLoading = false)
       )
       .subscribe({
         next: (data) => {

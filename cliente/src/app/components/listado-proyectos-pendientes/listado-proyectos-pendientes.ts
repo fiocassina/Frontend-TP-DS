@@ -4,7 +4,7 @@ import { DatePipe, isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from "../navbar/navbar";
 import { EncabezadoComponent } from "../encabezado/encabezado.component";
-import { Router } from '@angular/router'; // <-- 1. IMPORTAR Router
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-listado-proyectosPendientes',
@@ -22,7 +22,7 @@ export class ListadoProyectosPendientesComponent implements OnInit {
     private proyectoService: ProyectosPendientesService,
     @Inject(PLATFORM_ID) private platformId: Object,
     private cd: ChangeDetectorRef,
-    private router: Router // <-- 2. INYECTAR Router
+    private router: Router 
   ) {}
 
   ngOnInit(): void {
@@ -34,7 +34,6 @@ export class ListadoProyectosPendientesComponent implements OnInit {
   obtenerProyectosPendientes(): void {
     this.proyectoService.obtenerProyectosPendientes().subscribe({
       next: (res: any[]) => {
-        // --- 3. MODIFICAR EL MAPEO para guardar el ID de la clase ---
         this.proyectosPendientes = res.map(p => ({
           nombre: p.nombre,
           descripcion: p.descripcion || 'Sin descripción',
@@ -57,7 +56,6 @@ export class ListadoProyectosPendientesComponent implements OnInit {
     return new Date(fecha).toLocaleDateString('es-AR');
   }
 
-  // --- 4. AÑADIR LA FUNCIÓN para ir a la clase ---
   irAClase(claseId: string): void {
     if (claseId) {
       this.router.navigate(['/clase', claseId]);

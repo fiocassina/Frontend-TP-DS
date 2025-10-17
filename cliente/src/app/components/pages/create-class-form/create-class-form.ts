@@ -4,9 +4,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Necesario para directivas como *ngIf
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ClaseService } from '../../../services/clase.service'; // Importa el servicio que creaste
+import { ClaseService } from '../../../services/clase.service'; 
 import { Clase } from '../../../models/clase-interface';
-import { RouterLink } from '@angular/router';
 import { EncabezadoComponent } from '../../encabezado/encabezado.component';
 import { NavbarComponent } from '../../navbar/navbar';
 
@@ -19,7 +18,6 @@ import { NavbarComponent } from '../../navbar/navbar';
     ReactiveFormsModule,
     EncabezadoComponent,
     NavbarComponent,
-    //RouterLink
 ],
   templateUrl: './create-class-form.html',
   styleUrl: './create-class-form.css'

@@ -1,4 +1,3 @@
-// src/app/components/material.component/material.component.ts
 import { Component, Input, OnInit, inject, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';

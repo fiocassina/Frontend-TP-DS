@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { EntregaService } from '../../services/entrega.service';
 import { Router, RouterModule } from '@angular/router';
 import { ProyectoService } from '../../services/proyecto.service.js';
-import { Correccion } from '../../models/correccion-interface'; // Importar Correccion
+import { Correccion } from '../../models/correccion-interface'; 
 
 @Component({
   selector: 'app-lista-proyectos',
@@ -116,14 +116,10 @@ export class ListaProyectosComponent {
   this.entregaService.crearEntrega(formData).subscribe({
     next: (res) => {
       console.log('Entrega realizada:', res);
-      // --- LÓGICA AÑADIDA ---
-      // 1. Resetear el estado del formulario
       this.comentario = '';
       this.archivoSeleccionado = null;
       this.errorMessage = '';
-      // 2. Cerrar el formulario expandido
       this.proyectoExpandidoId = null; 
-      // 3. Notificar al componente padre para que recargue los datos y muestre "Proyecto Entregado"
       this.entregaExitosa.emit();
     },
     error: (err) => {

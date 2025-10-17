@@ -1,6 +1,3 @@
-// archivo: entrega-list.ts
-
-// 1. Importá ChangeDetectorRef
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { EntregaService } from '../../../services/entrega.service';
 import { Entrega } from '../../../models/entrega-interface';

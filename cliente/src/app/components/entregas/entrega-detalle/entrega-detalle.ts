@@ -53,7 +53,6 @@ export class EntregaDetalleComponent implements OnInit {
       return;
     }
 
-    // Llama al servicio para crear la corrección en el backend
     this.entregaService.crearCorreccion(
       this.entrega._id!,
       this.nota,
