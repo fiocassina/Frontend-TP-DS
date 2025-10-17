@@ -45,7 +45,9 @@ export class VistaClase implements OnInit {
   tiposProyecto: TipoProyecto[] = [];
   proyectos: Proyecto[] = [];
   mostrarFormularioProyecto: boolean = false;
-  mostrarTiposProyecto: boolean = false; 
+  mostrarTiposProyecto: boolean = false;
+  mostrarFormularioMaterial: boolean = false; // <-- LÍNEA AGREGADA
+
   nuevoProyecto = {
     nombre: '',
     descripcion: '',
@@ -163,31 +165,29 @@ export class VistaClase implements OnInit {
   }
 
   crearProyecto(): void {
-  if (!this.nuevoProyecto.nombre || !this.nuevoProyecto.tipoProyecto?._id || !this.nuevoProyecto.fechaEntrega) return;
+    if (!this.nuevoProyecto.nombre || !this.nuevoProyecto.tipoProyecto?._id || !this.nuevoProyecto.fechaEntrega) return;
 
-  const fechaInput = this.nuevoProyecto.fechaEntrega; 
+    const fechaInput = this.nuevoProyecto.fechaEntrega; 
 
-  // Crear un objeto Date a partir del string ingresado para la fecha.
-  const [year, month, day] = fechaInput.split('-').map(Number);
-  const fechaLocal = new Date(year, month - 1, day);
+    const [year, month, day] = fechaInput.split('-').map(Number);
+    const fechaLocal = new Date(year, month - 1, day);
 
-  // Convertir la fecha local a un string ISO.
-  this.proyectoService.crearProyecto({
-    nombre: this.nuevoProyecto.nombre,
-    descripcion: this.nuevoProyecto.descripcion,
-    claseId: this.nuevoProyecto.claseId,
-    fechaEntrega: fechaLocal.toISOString(), 
-    tipoProyecto: this.nuevoProyecto.tipoProyecto
-  }).subscribe({
-    next: (res) => {
-      this.cargarProyectosYEntregas(this.clase?._id || '');
-      this.nuevoProyecto = { nombre: '', descripcion: '', tipoProyecto: {} as TipoProyecto, claseId: this.clase?._id || '', fechaEntrega: '' };
-      this.mostrarFormularioProyecto = false;
-      this.cd.detectChanges();
-    },
-    error: (err) => console.error('Error al crear proyecto', err)
-  });
-}
+    this.proyectoService.crearProyecto({
+      nombre: this.nuevoProyecto.nombre,
+      descripcion: this.nuevoProyecto.descripcion,
+      claseId: this.nuevoProyecto.claseId,
+      fechaEntrega: fechaLocal.toISOString(), 
+      tipoProyecto: this.nuevoProyecto.tipoProyecto
+    }).subscribe({
+      next: (res) => {
+        this.cargarProyectosYEntregas(this.clase?._id || '');
+        this.nuevoProyecto = { nombre: '', descripcion: '', tipoProyecto: {} as TipoProyecto, claseId: this.clase?._id || '', fechaEntrega: '' };
+        this.mostrarFormularioProyecto = false;
+        this.cd.detectChanges();
+      },
+      error: (err) => console.error('Error al crear proyecto', err)
+    });
+  }
 
   deleteProyecto(proyectoId: string): void {
     if (confirm('¿Estás seguro de que deseas eliminar este proyecto? Esta acción no se puede deshacer.')) {
@@ -199,7 +199,7 @@ export class VistaClase implements OnInit {
       },
         error: (err) => console.error('Error al eliminar proyecto', err)
       });
-  }
+    }
   }
 
   nombreTipoProyecto(proyecto: Proyecto): string {

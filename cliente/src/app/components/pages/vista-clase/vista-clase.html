@@ -82,22 +82,20 @@
                     <button class="btn btn-success" (click)="guardarCambios()">Guardar Cambios</button>
                   </div>
                 </div>
-
               </div>
             </div>
-            <app-material 
-              [claseId]="clase?._id || ''" 
-              [esProfesor]="esProfesor" 
-              [tiposMaterial]="tiposMaterial"
-              (materialAgregado)="refrescarMateriales()">
-            </app-material>
 
+            <button *ngIf="esProfesor" class="btn btn-primary mb-3 w-100"
+              (click)="mostrarFormularioMaterial = !mostrarFormularioMaterial">
+              {{ mostrarFormularioMaterial ? 'Cerrar agregar material' : 'Agregar nuevo material' }}
+            </button>
+
+            <app-material *ngIf="mostrarFormularioMaterial" [claseId]="clase?._id || ''" [esProfesor]="esProfesor"
+              [tiposMaterial]="tiposMaterial" (materialAgregado)="refrescarMateriales()">
+            </app-material>
             <div class="mt-4">
               <h5 class="text-muted mb-3">MATERIALES</h5>
-              <app-lista-materiales 
-              [claseId]="clase?._id || ''"
-              [esProfesor]="esProfesor"
-              ></app-lista-materiales>
+              <app-lista-materiales [claseId]="clase?._id || ''" [esProfesor]="esProfesor"></app-lista-materiales>
             </div>
 
           </div>
@@ -110,7 +108,7 @@
                   <h5 class="card-title text-muted mb-0">PROYECTOS</h5>
                   <button *ngIf="esProfesor" class="btn btn-primary btn-sm"
                     (click)="mostrarFormularioProyecto = !mostrarFormularioProyecto">
-                    Crear Proyecto
+                    {{ mostrarFormularioProyecto ? 'Ocultar formulario' : 'Crear Proyecto' }}
                   </button>
                 </div>
 
@@ -142,18 +140,20 @@
 
                 <div *ngIf="esProfesor" class="mt-4">
                   <h5 class="card-title text-muted mb-3">GESTIÓN DE TIPOS DE PROYECTO</h5>
-                  <button class="btn btn-outline-primary btn-sm mb-3" (click)="mostrarTiposProyecto = !mostrarTiposProyecto">
+                  <button class="btn btn-outline-primary btn-sm mb-3"
+                    (click)="mostrarTiposProyecto = !mostrarTiposProyecto">
                     {{ mostrarTiposProyecto ? 'Ocultar tipos de proyecto' : 'Ver tipos de proyecto' }}
                   </button>
-                
+
                   <div *ngIf="mostrarTiposProyecto">
                     <app-tipo-proyecto-list></app-tipo-proyecto-list>
                   </div>
                 </div>
 
+              </div>
             </div>
-          </div>
 
+          </div>
         </div>
       </div>
     </div>
