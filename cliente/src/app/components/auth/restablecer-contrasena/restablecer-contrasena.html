@@ -1,6 +1,8 @@
-<div class="d-flex justify-content-center align-items-center min-vh-100 bg-gradient-registro p-3 position-relative bg-gradient-restablecerContrasena">
-
-  <!-- Alerta flotante -->
+<div class="d-flex flex-column justify-content-center align-items-center min-vh-100 bg-gradient-registro p-3 position-relative bg-gradient-restablecerContrasena">
+  <div class="text-center text-white mb-4">
+    <h1 class="display-4 fw-bolder">StudyRoom </h1>
+    <p class="lead mb-0">Restalecer contraseña</p>
+  </div>
   <div 
     *ngIf="errorMessage"
     class="alert alert-danger d-flex align-items-center shadow position-absolute"
@@ -21,10 +23,10 @@
 
   <!-- Tarjeta principal -->
   <div class="card shadow-sm p-4 w-100" style="max-width: 400px; border-radius: 12px;">
-    <h2 class="text-center fw-bold mb-4">Restablecer Contraseña</h2>
+    
 
     <form [formGroup]="restablecerForm" (ngSubmit)="restablecer()">
-      <p class="text-center small text-muted mb-4">
+      <p class="text-center small text-muted mb-0">
         Ingresa tu email, tu contraseña actual y tu nueva contraseña.
       </p>
 
