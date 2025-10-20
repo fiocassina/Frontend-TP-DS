@@ -71,8 +71,6 @@ export class ClasesListComponent implements OnInit {
   
     this.claseService.eliminarClase(claseId).subscribe({
       next: (res) => {
-        console.log('Clase eliminada:', res);
-        // Actualizar la lista local sin recargar la página
         this.clasesAMostrar = this.clasesAMostrar.filter(c => c._id !== claseId);
         this.clasesComoProfe = this.clasesComoProfe.filter(c => c._id !== claseId);
         this.cd.detectChanges();

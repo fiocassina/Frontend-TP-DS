@@ -19,8 +19,8 @@
               <button class="btn btn-outline-primary btn-sm" (click)="verEntregas(proyecto._id)">
                 Ver todas las entregas
               </button>
-              <button class="btn btn-outline-secondary btn-sm" (click)="abrirModalEditar(proyecto)" data-bs-toggle="modal"
-                data-bs-target="#editarProyectoModal">
+              <button class="btn btn-outline-secondary btn-sm" (click)="abrirModalEditar(proyecto)"
+                data-bs-toggle="modal" data-bs-target="#editarProyectoModal">
                 <i class="bi bi-pencil"></i>
               </button>
               <button class="btn btn-danger btn-sm" (click)="deleteProyecto(proyecto._id)">
@@ -95,7 +95,7 @@
   <p class="text-muted">Aquí se mostrarán los proyectos de la clase.</p>
 </ng-template>
 
-<div class="modal fade" id="editarProyectoModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="editarProyectoModal" #editarModal tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content" *ngIf="proyectoSeleccionado">
       <div class="modal-header">

@@ -1,5 +1,3 @@
-// src/app/components/pages/create-class-form/create-class-form.ts
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Necesario para directivas como *ngIf
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
