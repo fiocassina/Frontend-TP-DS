@@ -146,8 +146,7 @@
                   </button>
 
                   <div *ngIf="mostrarTiposProyecto">
-                    <app-tipo-proyecto-list></app-tipo-proyecto-list>
-                  </div>
+                    <app-tipo-proyecto-list *ngIf="clase" [claseId]="clase._id"></app-tipo-proyecto-list>
                 </div>
 
               </div>

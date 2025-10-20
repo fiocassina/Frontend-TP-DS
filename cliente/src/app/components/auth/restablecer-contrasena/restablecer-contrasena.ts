@@ -81,7 +81,6 @@ export class RestablecerContrasenaComponent implements OnInit {
           this.email.markAsTouched();
         } 
         else if (err.status === 401) {
-         // this.errorMessage = err.error?.mensaje || 'La contraseña actual es incorrecta.';
           this.contrasenaActual.setErrors({ incorrecta: true });
         }
         else {

@@ -1,16 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TipoProyectoService } from '../../services/tipo-proyecto.service';
 import { TipoProyecto } from '../../models/tipo-proyecto-interface';
+import { EncabezadoComponent } from '../encabezado/encabezado.component';
+import { NavbarComponent } from '../navbar/navbar';
 
 @Component({
   selector: 'app-tipo-proyecto-form',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    EncabezadoComponent,
+    NavbarComponent
   ],
   templateUrl: './tipo-proyecto-form.html',
   styleUrls: ['./tipo-proyecto-form.css']
@@ -20,13 +24,16 @@ export class TipoProyectoForm implements OnInit {
   isEditMode: boolean = false;
   tipoProyectoId: string | null = null;
   loading: boolean = false;
+  isSubmitting: boolean = false;
   errorMessage: string | null = null;
+  claseIdRegreso: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private tipoProyectoService: TipoProyectoService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cd: ChangeDetectorRef 
   ) {
     this.tipoProyectoForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
@@ -35,76 +42,72 @@ export class TipoProyectoForm implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      this.tipoProyectoId = params.get('id');
-      if (this.tipoProyectoId) {
-        this.isEditMode = true;
-        this.loadTipoProyectoForEdit(this.tipoProyectoId);
-      }
-    });
+    this.tipoProyectoId = this.route.snapshot.paramMap.get('id');
+    this.claseIdRegreso = this.route.snapshot.queryParamMap.get('claseId');
+    if (this.tipoProyectoId) {
+      this.isEditMode = true;
+      this.loadTipoProyectoForEdit(this.tipoProyectoId);
+    }
   }
 
   loadTipoProyectoForEdit(id: string): void {
     this.loading = true;
-    this.errorMessage = null;
     this.tipoProyectoService.getTipoProyectoById(id).subscribe({
       next: (tipo: TipoProyecto) => {
-        this.tipoProyectoForm.patchValue({
-          nombre: tipo.nombre,
-          descripcion: tipo.descripcion
-        });
+        this.tipoProyectoForm.patchValue(tipo);
         this.loading = false;
+        this.cd.detectChanges();
       },
-      error: (error: any) => {
-        console.error('Error al cargar tipo de proyecto para edición:', error);
+      error: () => {
         this.errorMessage = 'No se pudo cargar el tipo de proyecto para edición.';
         this.loading = false;
+        this.cd.detectChanges(); 
       }
     });
   }
 
   onSubmit(): void {
-    this.errorMessage = null;
     if (this.tipoProyectoForm.invalid) {
       this.tipoProyectoForm.markAllAsTouched();
-      this.errorMessage = 'Por favor, completa todos los campos requeridos y corrige los errores.';
       return;
     }
 
-    this.loading = true;
+    this.isSubmitting = true;
     const tipoProyectoData = this.tipoProyectoForm.value as TipoProyecto;
+
+    const handleSuccess = () => {
+      this.isSubmitting = false;   
+      this.cd.detectChanges();     
+      setTimeout(() => {
+        this.goBack();
+      }, 1);             
+    };
+
+    const handleError = (action: string) => {
+      this.errorMessage = `Error al ${action} el tipo de proyecto.`;
+      this.isSubmitting = false;
+      this.cd.detectChanges();
+    };
 
     if (this.isEditMode && this.tipoProyectoId) {
       this.tipoProyectoService.updateTipoProyecto(this.tipoProyectoId, tipoProyectoData).subscribe({
-        next: (response) => {
-          console.log('Tipo de proyecto actualizado:', response);
-          this.loading = false;
-          this.router.navigate(['/tipo-proyecto-list']);
-        },
-        error: (error) => {
-          console.error('Error al actualizar tipo de proyecto:', error);
-          this.errorMessage = 'Error al actualizar el tipo de proyecto. ' + (error.error?.message || 'Intenta de nuevo.');
-          this.loading = false;
-        }
+        next: handleSuccess,
+        error: () => handleError('actualizar')
       });
     } else {
       this.tipoProyectoService.createTipoProyecto(tipoProyectoData).subscribe({
-        next: (response) => {
-          console.log('Tipo de proyecto creado:', response);
-          this.loading = false;
-          this.tipoProyectoForm.reset();
-          this.router.navigate(['/tipo-proyecto-list']);
-        },
-        error: (error) => {
-          console.error('Error al crear tipo de proyecto:', error);
-          this.errorMessage = 'Error al crear el tipo de proyecto. ' + (error.error?.message || 'Intenta de nuevo.');
-          this.loading = false;
-        }
+        next: handleSuccess,
+        error: () => handleError('crear')
       });
     }
   }
 
   goBack(): void {
-    this.router.navigate(['/tipo-proyecto-list']);
+    if (this.claseIdRegreso) {
+      this.router.navigate(['/clase', this.claseIdRegreso]);
+    } else {
+      console.error("no se encontro identificador de clase, redirigiendo al inicio.");
+      this.router.navigate(['/inicio']);
+    }
   }
 }

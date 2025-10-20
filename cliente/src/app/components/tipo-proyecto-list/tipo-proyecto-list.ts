@@ -1,18 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+// CAMBIO: Añadimos Input
+import { Component, OnInit, Input } from '@angular/core'; 
 import { Router } from '@angular/router';
-import { TipoProyecto } from '../../models/tipo-proyecto-interface'; 
+import { TipoProyecto } from '../../models/tipo-proyecto-interface';
 import { TipoProyectoService } from '../../services/tipo-proyecto.service';
 import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-tipo-proyecto-list',
-  standalone: true, 
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './tipo-proyecto-list.html',
   styleUrls: ['./tipo-proyecto-list.css']
 })
 export class TipoProyectoList implements OnInit {
+  @Input() claseId: string | undefined;
+
   tiposProyecto: TipoProyecto[] = [];
   isLoading: boolean = true;
   errorMessage: string | null = null;
@@ -32,7 +35,7 @@ export class TipoProyectoList implements OnInit {
       next: (data) => {
         this.tiposProyecto = data;
         this.isLoading = false;
-        this.cdr.detectChanges(); // Asegura que la vista se actualice
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error al obtener los tipos de proyecto:', error);
@@ -58,10 +61,10 @@ export class TipoProyectoList implements OnInit {
   }
 
   editarTipoProyecto(id: string): void {
-    this.router.navigate(['/tipo-proyecto-form', id]);
+    this.router.navigate(['/tipo-proyecto-form', id], { queryParams: { claseId: this.claseId } });
   }
 
   crearTipoProyecto(): void {
-    this.router.navigate(['/tipo-proyecto-form']);
+    this.router.navigate(['/tipo-proyecto-form'], { queryParams: { claseId: this.claseId } });
   }
 }
