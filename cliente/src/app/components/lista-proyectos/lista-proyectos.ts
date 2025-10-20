@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Proyecto } from '../../models/proyecto-interface';
 import { FormsModule } from '@angular/forms';
@@ -30,7 +30,8 @@ export class ListaProyectosComponent {
   constructor(
     private entregaService: EntregaService,
     private router: Router,
-    private proyectoService: ProyectoService
+    private proyectoService: ProyectoService,
+    private cd: ChangeDetectorRef
   ) { }
   
   abrirModalCorreccion(proyecto: Proyecto): void {
@@ -47,31 +48,39 @@ export class ListaProyectosComponent {
   }
 
   guardarCambios(): void {
-    if (!this.proyectoSeleccionado || !this.proyectoSeleccionado._id) return;
-    const datosActualizados = {
-      nombre: this.proyectoSeleccionado.nombre,
-      descripcion: this.proyectoSeleccionado.descripcion,
-      fechaEntrega: this.proyectoSeleccionado.fechaEntrega
-    };
-    this.proyectoService.updateProyecto(this.proyectoSeleccionado._id, datosActualizados).subscribe({
-      next: () => {
-        const index = this.proyectos.findIndex(p => p._id === this.proyectoSeleccionado!._id);
-        if (index !== -1) {
-          this.proyectos[index] = { ...this.proyectos[index], ...datosActualizados };
+  if (!this.proyectoSeleccionado || !this.proyectoSeleccionado._id) return;
+
+  const datosActualizados = {
+    nombre: this.proyectoSeleccionado.nombre,
+    descripcion: this.proyectoSeleccionado.descripcion,
+    fechaEntrega: this.proyectoSeleccionado.fechaEntrega
+  };
+
+  this.proyectoService.updateProyecto(this.proyectoSeleccionado._id, datosActualizados).subscribe({
+    next: () => {
+      const index = this.proyectos.findIndex(p => p._id === this.proyectoSeleccionado!._id);
+      if (index !== -1) {
+        this.proyectos[index] = { ...this.proyectos[index], ...datosActualizados };
+      }
+
+      this.cd.detectChanges();
+
+      this.proyectoSeleccionado = null;
+
+      setTimeout(() => {
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = ''; 
+
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+          backdrop.remove();
         }
-        const modalElement = document.getElementById('editarProyectoModal');
-        if (modalElement) {
-            const modal = new (window as any).bootstrap.Modal(modalElement);
-            modal.hide();
-            document.body.classList.remove('modal-open');
-            const backdrop = document.querySelector('.modal-backdrop');
-            if (backdrop) backdrop.remove();
-        }
-        this.proyectoSeleccionado = null;
-      },
-      error: (err) => console.error('Error al actualizar el proyecto:', err)
-    });
-  }
+      }, 150); 
+    },
+    error: (err) => console.error('Error al actualizar el proyecto:', err)
+  });
+  
+}
   
   public haVencido(proyecto: Proyecto): boolean {
     if (!proyecto.fechaEntrega) return false;
