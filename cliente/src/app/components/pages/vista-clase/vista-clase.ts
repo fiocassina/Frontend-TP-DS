@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, Inject, PLATFORM_ID, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Clase } from '../../../models/clase-interface';
@@ -16,7 +16,6 @@ import { TipoProyecto } from '../../../models/tipo-proyecto-interface';
 import { ListaProyectosComponent } from '../../lista-proyectos/lista-proyectos';
 import { NavbarComponent } from '../../navbar/navbar';
 import { EntregaService } from '../../../services/entrega.service';
-import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'vista-clase',
@@ -61,6 +60,7 @@ export class VistaClase implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router, 
     private claseService: ClaseService,
     private proyectoService: ProyectoService,
     private tipoMaterialService: TipoMaterialService,
@@ -84,6 +84,7 @@ export class VistaClase implements OnInit {
 
   cargarDatosClase(claseId: string): void {
     this.cargando = true;
+    
     this.claseService.getClaseById(claseId).subscribe({
       next: (data) => {
         this.clase = data;
@@ -92,52 +93,60 @@ export class VistaClase implements OnInit {
         this.cargarProyectosYEntregas(claseId);
       },
       error: (err) => {
+
+        if (err.status === 403 || err.status === 401) {
+            this.cargando = true; 
+            return; 
+        }
+
         console.error('Error al cargar clase:', err);
         this.errorMessage = 'No se pudo cargar la clase.';
-        this.cargando = false;
+        this.cargando = false; 
+        this.cd.detectChanges();
       }
     });
   }
 
   cargarProyectosYEntregas(claseId: string): void {
-  if (this.esProfesor) {
     this.proyectoService.getProyectosClase(claseId).subscribe({
       next: (proyectos) => {
-        this.proyectos = proyectos;
+        this.proyectos = proyectos; 
+        if (this.esProfesor) {
+          this.cargando = false;
+          this.cd.detectChanges();
+          return;
+        }
+        this.entregaService.obtenerEntregasPorAlumno().subscribe({
+          next: (entregas) => {
+            const listaEntregas = Array.isArray(entregas) ? entregas : [];
+            this.proyectos = this.proyectos.map(proyecto => {
+              const entregaCorrespondiente = listaEntregas.find((e: any) => e.proyecto._id === proyecto._id);
+              return { 
+                ...proyecto, 
+                entregado: !!entregaCorrespondiente,
+                entrega: entregaCorrespondiente 
+              };
+            });
+            this.cargando = false;
+            this.cd.detectChanges();
+          },
+          error: (err) => {
+            this.cargando = false;
+            this.cd.detectChanges();
+          }
+        });
+      },
+      error: (err) => {
+        // Acá también silenciamos si falla por permisos
+        if (err.status !== 403 && err.status !== 401) {
+            console.error('Error cargando proyectos:', err);
+            this.errorMessage = 'No se pudieron cargar los proyectos.';
+        }
         this.cargando = false;
         this.cd.detectChanges();
-      },
-      error: (err) => console.error('Error cargando proyectos (profesor):', err)
+      }
     });
-    return;
   }
-  forkJoin({
-    proyectos: this.proyectoService.getProyectosClase(claseId),
-    entregas: this.entregaService.obtenerEntregasPorAlumno()
-  }).subscribe({
-    next: ({ proyectos, entregas }) => {
-      const proyectosConEstado = proyectos.map(proyecto => {
-        // Buscamos la entrega que corresponde a este alumno para este proyecto
-        const entregaCorrespondiente = entregas.find(e => e.proyecto._id === proyecto._id);
-        // Creamos un objeto temporal que une el proyecto con SU entrega
-        return { 
-          ...proyecto, 
-          entregado: !!entregaCorrespondiente,
-          entrega: entregaCorrespondiente 
-        };
-      });
-      this.proyectos = proyectosConEstado;
-      this.cargando = false;
-      this.cd.detectChanges();
-    },
-    error: (err) => {
-      console.error('Error cargando proyectos y entregas (alumno):', err);
-      this.errorMessage = 'No se pudieron cargar los proyectos o las entregas.';
-      this.cargando = false;
-      this.cd.detectChanges();
-    }
-  });
-}
 
   esUsuarioProfesor(clase: Clase): boolean {
     if (isPlatformBrowser(this.platformId)) {
@@ -172,9 +181,7 @@ export class VistaClase implements OnInit {
 
   crearProyecto(): void {
     if (!this.nuevoProyecto.nombre || !this.nuevoProyecto.tipoProyecto?._id || !this.nuevoProyecto.fechaEntrega) return;
-
     const fechaInput = this.nuevoProyecto.fechaEntrega; 
-
     const [year, month, day] = fechaInput.split('-').map(Number);
     const fechaLocal = new Date(year, month - 1, day);
 
@@ -201,7 +208,6 @@ export class VistaClase implements OnInit {
         next: () => {
         this.proyectos = this.proyectos.filter(p => p._id !== proyectoId);
         this.cd.detectChanges(); 
-        console.log('Proyecto eliminado con éxito');
       },
         error: (err) => console.error('Error al eliminar proyecto', err)
       });
@@ -231,7 +237,6 @@ export class VistaClase implements OnInit {
 
   guardarCambios(): void {
     if (!this.clase || !this.clase._id) return;
-
     this.claseService.actualizarClase(this.clase._id, this.claseEditada).subscribe({
       next: (response) => {
         this.clase = response.data;
