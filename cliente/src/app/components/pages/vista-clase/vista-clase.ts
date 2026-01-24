@@ -120,7 +120,7 @@ export class VistaClase implements OnInit {
           next: (entregas) => {
             const listaEntregas = Array.isArray(entregas) ? entregas : [];
             this.proyectos = this.proyectos.map(proyecto => {
-              const entregaCorrespondiente = listaEntregas.find((e: any) => e.proyecto._id === proyecto._id);
+              const entregaCorrespondiente = listaEntregas.find((e: any) => e.proyecto._id.toString() === proyecto._id);
               return { 
                 ...proyecto, 
                 entregado: !!entregaCorrespondiente,

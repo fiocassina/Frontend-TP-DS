@@ -124,18 +124,28 @@ export class ListaProyectosComponent implements AfterViewInit {
       formData.append('archivoUrl', this.archivoSeleccionado, this.archivoSeleccionado.name);
     }
 
-    this.entregaService.crearEntrega(formData).subscribe({
-      next: (res) => {
+    this.entregaService.crearEntrega(formData).subscribe({next: (res: any) => {
         console.log('Entrega realizada:', res);
-        this.comentario = '';
-        this.archivoSeleccionado = null;
-        this.errorMessage = '';
-        this.proyectoExpandidoId = null;
-        this.entregaExitosa.emit();
-      },
+        const index = this.proyectos.findIndex(p => p._id === proyectoId);
+      
+        if (index !== -1) {
+          this.proyectos[index].entrega = res.data;
+          this.proyectos[index].entregado = true;
+          this.cd.detectChanges();
+          }
+          this.comentario = '';
+          this.archivoSeleccionado = null;
+          this.errorMessage = '';
+          this.proyectoExpandidoId = null;
+          this.entregaExitosa.emit();
+        },
       error: (err) => {
         console.error('Error al entregar:', err);
-        this.errorMessage = 'Error al entregar el proyecto.';
+        if (err.status === 400) {
+          this.errorMessage = err.error.message || 'Ya has entregado este proyecto.';
+        } else {
+          this.errorMessage = 'Error al entregar el proyecto.';
+        }
       }
     });
   }

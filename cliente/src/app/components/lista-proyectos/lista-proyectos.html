@@ -48,7 +48,10 @@
             </ng-container>
 
             <ng-container *ngIf="proyecto.entregado" [ngSwitch]="proyecto.entrega?.estado">
-              <span *ngSwitchCase="'pendiente'" class="badge bg-primary">Proyecto Entregado</span>
+              <div *ngSwitchCase="'pendiente'" class="d-flex flex-column align-items-start gap-1">
+                <span class="badge bg-primary">Proyecto Entregado</span>
+                <small class="text-muted">Pendiente de aprobación</small>
+              </div>
 
               <div *ngSwitchCase="'aprobada'" class="d-flex flex-column align-items-start gap-2">
                 <span class="badge bg-success">Entrega Aprobada</span>
