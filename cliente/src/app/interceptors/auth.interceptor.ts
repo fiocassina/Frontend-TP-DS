@@ -23,16 +23,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-
-
-      if (error.status === 403 || error.status === 401) {
-        
-        if (isPlatformBrowser(platformId)) {
-
-          alert(' ACCESO DENEGADO: No tienes permiso para realizar esta acción.');
-          
-
-          router.navigate(['/inicio']); 
+      
+      if (!req.url.includes('/login')) { 
+        if (error.status === 403 || error.status === 401) {
+          if (isPlatformBrowser(platformId)) {
+            alert(' ACCESO DENEGADO: No tienes permiso para realizar esta acción.');
+            router.navigate(['/inicio']); 
+          }
         }
       }
 
