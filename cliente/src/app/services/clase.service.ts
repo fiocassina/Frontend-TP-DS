@@ -58,4 +58,10 @@ export class ClaseService {
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.put(`${this.apiUrl}/${id}`, claseData, { headers });
   }
+
+  expulsarAlumno(claseId: string, alumnoId: string): Observable<any> {
+    const token = this.getToken();
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.delete(`${this.apiUrl}/${claseId}/alumnos/${alumnoId}`, { headers });
+  }
 }

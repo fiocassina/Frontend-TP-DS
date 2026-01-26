@@ -46,7 +46,8 @@ export class VistaClase implements OnInit {
   mostrarFormularioProyecto: boolean = false;
   mostrarTiposProyecto: boolean = false;
   mostrarFormularioMaterial: boolean = false; 
-
+  mostrarModalAlumnos: boolean = false;
+  alumnos: any[] = [];
   nuevoProyecto = {
     nombre: '',
     descripcion: '',
@@ -88,17 +89,21 @@ export class VistaClase implements OnInit {
     this.claseService.getClaseById(claseId).subscribe({
       next: (data) => {
         this.clase = data;
+        // Asignamos los alumnos para el modal
+        this.alumnos = data.alumnos || []; 
+        
         this.nuevoProyecto.claseId = data._id || '';
         this.esProfesor = this.esUsuarioProfesor(data);
+        
+        // Cargamos el resto de las cosas
         this.cargarProyectosYEntregas(claseId);
+        this.cargarTiposMaterial(); 
       },
       error: (err) => {
-
         if (err.status === 403 || err.status === 401) {
             this.cargando = true; 
             return; 
         }
-
         console.error('Error al cargar clase:', err);
         this.errorMessage = 'No se pudo cargar la clase.';
         this.cargando = false; 
@@ -106,6 +111,7 @@ export class VistaClase implements OnInit {
       }
     });
   }
+  
 
   cargarProyectosYEntregas(claseId: string): void {
     this.proyectoService.getProyectosClase(claseId).subscribe({
@@ -248,5 +254,37 @@ export class VistaClase implements OnInit {
         this.errorMessage = 'No se pudieron guardar los cambios.';
       }
     });
+  }
+
+  //metodos para el modal de alumnos
+  abrirModal(): void {
+    this.mostrarModalAlumnos = true;
+  }
+
+  cerrarModal(): void {
+    this.mostrarModalAlumnos = false;
+  }
+
+  expulsarAlumno(alumnoId: string): void {
+    if(!confirm('¿Estás seguro de que querés eliminar a este alumno de la clase?')) return;
+
+    if (this.clase && this.clase._id) {
+      this.claseService.expulsarAlumno(this.clase._id, alumnoId).subscribe({
+        next: () => {
+          // Filtramos la lista local para sacarlo visualmente
+          this.alumnos = this.alumnos.filter(a => a._id !== alumnoId);
+          // También actualizamos el contador en el objeto clase si queremos
+          if(this.clase && this.clase.alumnos) {
+            this.clase.alumnos = this.alumnos;
+          }
+          alert('Alumno eliminado correctamente.');
+          this.cd.detectChanges();
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Error al expulsar alumno. Intenta nuevamente.');
+        }
+      });
+    }
   }
 }

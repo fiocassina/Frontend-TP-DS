@@ -72,8 +72,7 @@ export class EntregaService {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     const params = { proyectoId };
-    return this.http.get<ReporteEntrega[]>(`${this.baseUrl}/reporte/aprobadas`, { headers, params });
-  
+    return this.http.get<ReporteEntrega[]>(`${this.baseUrl}/reporte-aprobadas`, { headers, params });  
 }
 
 obtenerProyectosPendientes(): Observable<Proyecto[]> {

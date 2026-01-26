@@ -36,8 +36,15 @@
 
             <div class="card border-0 shadow-sm mb-4 rounded-4">
               <div class="card-body">
-                <h5 class="card-title text-muted">CLAVE DE LA CLASE</h5>
+                <h5 class="card-title text-muted text-center">CLAVE DE LA CLASE</h5>
                 <p class="h1 text-center fw-bold text-primary">{{ clase?.clave }}</p>
+
+                <div class="text-center mt-3">
+                  <button *ngIf="esProfesor" (click)="abrirModal()"
+                    class="btn btn-outline-primary btn-sm rounded-pill px-4">
+                    <i class="bi bi-people-fill me-2"></i> Ver Alumnos
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -55,7 +62,7 @@
                   <div class="mb-3 mt-3">
                     <p class="mb-1"><strong>Profesor:</strong> {{ clase?.profesorId?.nombreCompleto || 'No asignado' }}
                     </p>
-                    <p class="mb-1"><strong>Alumnos:</strong> {{ clase?.alumnos?.length || 0 }}</p>
+                    <p class="mb-1"><strong>Alumnos inscritos:</strong> {{ alumnos.length }}</p>
                   </div>
                   <div>
                     <h6 class="fw-bold">Descripción:</h6>
@@ -147,14 +154,74 @@
 
                   <div *ngIf="mostrarTiposProyecto">
                     <app-tipo-proyecto-list *ngIf="clase" [claseId]="clase._id"></app-tipo-proyecto-list>
+                  </div>
                 </div>
 
               </div>
             </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="mostrarModalAlumnos" class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true"
+  style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content rounded-4 border-0 shadow">
+
+      <div class="modal-header bg-primary text-white rounded-top-4">
+        <h5 class="modal-title fw-bold">Listado de Alumnos</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="cerrarModal()" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body p-4">
+
+        <div *ngIf="alumnos.length === 0" class="text-center py-5 text-muted bg-light rounded-3 border border-dashed">
+          <i class="bi bi-people display-4 mb-3 d-block"></i>
+          <p class="mb-0">Aún no hay alumnos inscriptos en esta clase.</p>
+        </div>
+
+        <div *ngIf="alumnos.length > 0" class="list-group list-group-flush">
+          <div *ngFor="let alumno of alumnos"
+            class="list-group-item d-flex justify-content-between align-items-center py-3 px-2 border-bottom">
+
+            <div class="d-flex align-items-center gap-3">
+              <div
+                class="d-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-circle fw-bold"
+                style="width: 45px; height: 45px; font-size: 1.2rem;">
+                {{ alumno.nombreCompleto.charAt(0).toUpperCase() }}
+              </div>
+              <div>
+                <div class="fw-bold text-dark">{{ alumno.nombreCompleto }}</div>
+                <div class="small text-muted">{{ alumno.email }}</div>
+              </div>
+            </div>
+
+            <div class="d-flex gap-2">
+
+              <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{alumno.email}}" target="_blank"
+                class="btn btn-outline-secondary btn-sm d-flex align-items-center" title="Enviar Email">
+                <i class="bi bi-envelope me-2"></i> Enviar mail
+              </a>
+
+              <button (click)="expulsarAlumno(alumno._id)" class="btn btn-outline-danger btn-sm"
+                title="Expulsar de la clase">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
 
           </div>
         </div>
+
       </div>
+
+      <div class="modal-footer border-top-0 pt-0 pb-3 pe-4">
+        <button type="button" class="btn btn-secondary px-4" (click)="cerrarModal()">Cerrar</button>
+      </div>
+
     </div>
   </div>
 </div>
