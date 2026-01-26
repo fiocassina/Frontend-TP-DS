@@ -3,7 +3,6 @@
 <div class="container-fluid">
   <div class="row flex-nowrap">
 
-    <!-- Sidebar fijo a la izquierda -->
     <div class="col-md-2 bg-light min-vh-100 p-3 sidebar">
       <app-navbar></app-navbar>
     </div>
@@ -19,7 +18,7 @@
           <p *ngIf="entrega.archivoUrl">
             <strong>Archivo:</strong>
             <a [href]="'http://localhost:3000' + entrega.archivoUrl" target="_blank" class="text-primary">
-              Descargar o Ver Archivo
+              <i class="bi bi-download me-1"></i> Descargar o Ver Archivo
             </a>
           </p>
           <p><strong>Fecha de Entrega:</strong> {{ entrega.fechaEntrega | date:'medium' }}</p>
@@ -27,58 +26,46 @@
 
         <hr>
 
-        <!-- Si la entrega ya fue corregida -->
-        <ng-container *ngIf="entrega.correccion">
-          <h5 *ngIf="entrega.estado === 'aprobada'" class="text-success">✅ Entrega Aprobada</h5>
-          <h5 *ngIf="entrega.estado === 'desaprobada'" class="text-danger">❌ Entrega Desaprobada</h5>
+        <h5 class="mb-3" [ngClass]="esEdicion ? 'text-primary' : 'text-warning'">
+          <i class="bi" [ngClass]="esEdicion ? 'bi-pencil-square' : 'bi-check-circle'"></i>
+          {{ esEdicion ? 'Editar Corrección Existente' : 'Nueva Corrección' }}
+        </h5>
 
-          <div class="border p-3 rounded mb-3" [ngClass]="{
-                'border-success bg-success bg-opacity-10': entrega.estado === 'aprobada',
-                'border-danger bg-danger bg-opacity-10': entrega.estado === 'desaprobada'
-              }">
-            <p><strong>Nota Final:</strong> <span class="h4">{{ entrega.correccion.nota }} / 10</span></p>
-            <p><strong>Comentario del Profesor:</strong> {{ entrega.correccion.comentario }}</p>
+        <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+        <form class="row g-3 align-items-center">
+          <div class="col-md-4">
+            <label for="nota" class="form-label fw-bold">Nota Final <span class="text-danger">*</span></label>
           </div>
-        </ng-container>
+          <div class="col-md-8">
+            <input type="number" id="nota" name="nota" [(ngModel)]="nota" min="1" max="10" required class="form-control"
+              placeholder="1-10">
+          </div>
 
-        <!-- Corregir entrega -->
-        <ng-container *ngIf="!entrega.correccion">
-          <h5 class="text-warning mb-3">Corregir Entrega</h5>
+          <div class="col-md-4">
+            <label for="comentario" class="form-label fw-bold">Comentario del Profesor <span
+                class="text-danger">*</span></label>
+          </div>
+          <div class="col-md-8">
+            <textarea id="comentario" name="comentario" [(ngModel)]="comentarioCorreccion" rows="4" required
+              class="form-control" placeholder="Ingrese la devolución para el alumno"></textarea>
+          </div>
 
-          <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+          <div class="col-12 text-end mt-4">
+            <button type="button" (click)="guardarCorreccion()" class="btn px-4"
+              [ngClass]="esEdicion ? 'btn-warning' : 'btn-success'">
+              <i class="bi" [ngClass]="esEdicion ? 'bi-arrow-clockwise' : 'bi-save'"></i>
+              {{ esEdicion ? 'Actualizar Corrección' : 'Guardar Corrección' }}
+            </button>
+          </div>
+        </form>
 
-          <form class="row g-3 align-items-center">
-            <!-- Nota -->
-            <div class="col-md-4">
-              <label for="nota" class="form-label">Nota Final <span class="text-danger">*</span></label>
-            </div>
-            <div class="col-md-8">
-              <input type="number" id="nota" name="nota" [(ngModel)]="nota" min="0" max="10" required
-                class="form-control" placeholder="0-10">
-            </div>
-
-            <!-- Comentario del Profesor -->
-            <div class="col-md-4">
-              <label for="comentario" class="form-label">Comentario del Profesor <span
-                  class="text-danger">*</span></label>
-            </div>
-            <div class="col-md-8">
-              <textarea id="comentario" name="comentario" [(ngModel)]="comentarioCorreccion" rows="4" required
-                class="form-control" placeholder="Ingrese el comentario del profesor"></textarea>
-            </div>
-
-            <!-- Botón Guardar Corrección -->
-            <div class="col-12 text-end mt-3">
-              <button type="button" (click)="guardarCorreccion()" class="btn btn-primary">
-                Guardar Corrección
-              </button>
-            </div>
-          </form>
-        </ng-container>
-
-        <div class="mt-4 text-end">
-          <button (click)="volver()" class="btn btn-outline-secondary">Volver a las Entregas</button>
+        <div class="mt-5 text-end border-top pt-3">
+          <button (click)="volver()" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Volver atrás
+          </button>
         </div>
+
       </div>
     </div>
   </div>

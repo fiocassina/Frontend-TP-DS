@@ -80,5 +80,9 @@ obtenerProyectosPendientes(): Observable<Proyecto[]> {
   const headers = { Authorization: `Bearer ${token}` };
   return this.http.get<Proyecto[]>(`${this.baseUrl}/pendientes/alumno`, { headers });
 }
-
+editarCorreccion(correccionId: string, nota: number, comentario: string): Observable<any> {
+    const token = this.getToken();
+    const headers = { Authorization: `Bearer ${token}` };
+    const body = { nota, comentario };
+    return this.http.put(`${this.correccionesUrl}/${correccionId}`, body, { headers });  }
 }

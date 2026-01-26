@@ -30,6 +30,10 @@ export class ProyectoService {
   getProyectosClase(claseId: string): Observable<Proyecto[]> {
     return this.http.get<Proyecto[]>(`${this.apiUrl}/clase/${claseId}`, { headers: this.getAuthHeaders() });
   }
+  
+  getProyectoById(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
+  }
 
   crearProyecto(proyecto: { 
       nombre: string; 

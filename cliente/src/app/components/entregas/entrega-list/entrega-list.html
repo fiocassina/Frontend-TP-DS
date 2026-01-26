@@ -9,8 +9,14 @@
 
     <div class="col py-3">
 
+      <div class="mb-3">
+        <button (click)="volverAClase()" class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-arrow-left me-1"></i> Volver a la Clase
+        </button>
+      </div>
+
       <h2 class="mb-4 text-primary fw-bold">
-        Entregas del proyecto
+        Entregas del proyecto <span *ngIf="nombreProyecto" class="text-dark">: {{ nombreProyecto }}</span>
       </h2>
 
       <div class="card shadow-sm border-0">
@@ -46,26 +52,32 @@
                   </span>
                 </td>
                 <td class="text-center" [ngSwitch]="entrega.estado">
+
                   <button *ngSwitchCase="'pendiente'" class="btn btn-sm btn-primary shadow-sm"
                     (click)="verDetalle(entrega._id)">
-                    Ver / Corregir
+                    <i class="bi bi-pencil-fill me-1"></i> Corregir
                   </button>
+
                   <span *ngSwitchCase="'aprobada'"
                     class="badge fs-6 text-bg-success d-inline-flex align-items-center gap-2"
-                    (click)="verDetalle(entrega._id)" style="cursor: pointer;" title="Ver detalle de la corrección">
+                    (click)="verDetalle(entrega._id)" style="cursor: pointer;" title="Clic para editar la corrección">
                     Aprobada
                     <span class="badge bg-white text-success rounded-pill">
                       {{ entrega.correccion?.nota }}
                     </span>
+                    <i class="bi bi-pencil-square ms-1 opacity-50"></i>
                   </span>
+
                   <span *ngSwitchCase="'desaprobada'"
                     class="badge fs-6 text-bg-danger d-inline-flex align-items-center gap-2"
-                    (click)="verDetalle(entrega._id)" style="cursor: pointer;" title="Ver detalle de la corrección">
+                    (click)="verDetalle(entrega._id)" style="cursor: pointer;" title="Clic para editar la corrección">
                     Desaprobada
                     <span class="badge bg-white text-danger rounded-pill">
                       {{ entrega.correccion?.nota }}
                     </span>
+                    <i class="bi bi-pencil-square ms-1 opacity-50"></i>
                   </span>
+
                 </td>
               </tr>
               <tr *ngIf="entregas.length === 0">
@@ -79,4 +91,4 @@
       </div>
     </div>
   </div>
-</div> 
+</div>

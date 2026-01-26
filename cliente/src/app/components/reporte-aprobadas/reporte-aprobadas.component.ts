@@ -1,9 +1,8 @@
 import { Component, OnInit, inject, ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core';
 import { EntregaService } from '../../services/entrega.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router'; // <--- AGREGAR RouterModule
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { tap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NavbarComponent } from '../navbar/navbar';
 import { EncabezadoComponent } from '../encabezado/encabezado.component';
@@ -21,7 +20,7 @@ interface ReporteEntrega {
 @Component({
   selector: 'app-reporte-aprobadas',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe, NavbarComponent, EncabezadoComponent],
+  imports: [CommonModule, FormsModule, DatePipe, NavbarComponent, EncabezadoComponent, RouterModule], // <--- IMPORTANTE: RouterModule para que ande routerLink
   templateUrl: './reporte-aprobadas.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./reporte-aprobadas.component.css']
@@ -60,8 +59,6 @@ export class ReporteAprobadasComponent implements OnInit {
     this.cdr.detectChanges();
 
     this.entregaService.getReporteEntregasAprobadas(this.proyectoId)
-      .pipe(
-      )
       .subscribe({
         next: (data) => {
           this.reporteResultados = data;
@@ -83,5 +80,7 @@ export class ReporteAprobadasComponent implements OnInit {
       });
   }
 
-  
+  editarCorreccion(entregaId: string): void {
+      this.router.navigate(['/entrega', entregaId]);
+  }
 }

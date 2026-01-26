@@ -1,5 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { EntregaService } from '../../../services/entrega.service';
+import { ProyectoService } from '../../../services/proyecto.service'; // <--- IMPORTAR ESTO
 import { Entrega } from '../../../models/entrega-interface';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe, NgFor, NgIf, CommonModule } from '@angular/common';
@@ -17,20 +18,24 @@ export class EntregaListComponent implements OnInit {
 
   entregas: Entrega[] = [];
   proyectoId!: string;
+  claseId: string | null = null; 
+  nombreProyecto: string = '';  
 
-  constructor(
-    private entregaService: EntregaService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef
-  ) { }
+  private entregaService = inject(EntregaService);
+  private proyectoService = inject(ProyectoService); 
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private cdr = inject(ChangeDetectorRef);
+
+  constructor() { }
 
   ngOnInit(): void {
     this.proyectoId = this.route.snapshot.paramMap.get('proyectoId')!;
-    this.cargarEntregas();
+    this.cargarDatos();
   }
 
-  cargarEntregas(): void {
+  cargarDatos(): void {
+    // 1. Cargar las entregas (lo que ya hacías)
     this.entregaService.obtenerEntregas(this.proyectoId)
       .subscribe({
         next: (data) => {
@@ -39,9 +44,32 @@ export class EntregaListComponent implements OnInit {
         },
         error: (err) => console.error('Error al cargar entregas:', err)
       });
+
+
+    this.proyectoService.getProyectoById(this.proyectoId).subscribe({
+      next: (proyecto: any) => {
+        this.nombreProyecto = proyecto.nombre;
+        
+        if (proyecto.clase && typeof proyecto.clase === 'object') {
+            this.claseId = proyecto.clase._id;
+        } else {
+            this.claseId = proyecto.clase; // Si es solo el string
+        }
+      },
+      error: (err) => console.error('Error al cargar info del proyecto:', err)
+    });
   }
+
   verDetalle(entregaId?: string): void {
     if (!entregaId) return;
     this.router.navigate(['/entregas', entregaId]);
+  }
+
+  volverAClase(): void {
+    if (this.claseId) {
+      this.router.navigate(['/clase', this.claseId]);
+    } else {
+      this.router.navigate(['/inicio']);
+    }
   }
 }

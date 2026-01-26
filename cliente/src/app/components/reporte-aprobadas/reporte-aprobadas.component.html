@@ -3,7 +3,6 @@
 <div class="container-fluid">
   <div class="row flex-nowrap">
 
-    <!-- Sidebar fijo -->
     <div class="col-md-2 bg-light min-vh-100 p-3 sidebar">
       <app-navbar></app-navbar>
     </div>
@@ -22,48 +21,50 @@
 
         <div *ngFor="let entrega of reporteResultados; let i = index" class="accordion-item mb-2 shadow-sm">
 
-          <!-- Cabecera visible -->
           <h2 class="accordion-header" id="heading{{i}}">
             <button class="accordion-button collapsed d-flex justify-content-between align-items-center" type="button"
               data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse' + i" aria-expanded="false"
               [attr.aria-controls]="'collapse' + i">
 
-              <div><strong>{{ entrega.alumnoNombre }}</strong></div>
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-person-circle text-secondary"></i>
+                <strong>{{ entrega.alumnoNombre }}</strong>
+              </div>
 
-              <div class="d-flex align-items-center gap-3">
-                <span class="badge bg-light text-dark px-2 py-1">
-                  {{ entrega.fechaEntrega | date:'short' }}
+              <div class="d-flex align-items-center gap-3 me-3"> <span
+                  class="badge bg-light text-dark px-2 py-1 border">
+                  {{ entrega.fechaEntrega | date:'shortDate' }}
                 </span>
                 <span class="badge fs-6" [ngClass]="{
                         'text-bg-success': entrega.nota != null && entrega.nota >= 6,
                         'text-bg-danger': entrega.nota != null && entrega.nota < 6,
                         'bg-secondary': !entrega.nota
                       }">
-                  {{ entrega.nota != null ? (entrega.nota >= 6 ? 'Aprobada' : 'Desaprobada') : 'Pendiente' }}
+                  Nota: {{ entrega.nota ?? '-' }}
                 </span>
               </div>
             </button>
           </h2>
 
-          <!-- Contenido expandible -->
           <div [id]="'collapse' + i" class="accordion-collapse collapse" [attr.aria-labelledby]="'heading' + i"
             data-bs-parent="#reporteAccordion">
-            <div class="accordion-body">
-              <p>
-                <strong>Nota:</strong>
-                <span [ngClass]="{
-                  'text-success fw-bold': entrega.nota != null && entrega.nota >= 6,
-                  'text-danger fw-bold': entrega.nota != null && entrega.nota < 6
-                }">
-                  {{ entrega.nota ?? '-' }}
-                </span>
-              </p>
-              <p>
-                <strong>Comentario del Profesor:</strong>
-                <span [ngClass]="{'text-muted fst-italic': !entrega.comentarioCorreccion}">
-                  {{ entrega.comentarioCorreccion || 'Sin comentario' }}
-                </span>
-              </p>
+            <div class="accordion-body bg-light">
+
+              <div class="card border-0">
+                <div class="card-body">
+                  <h6 class="fw-bold text-secondary">Devolución del Profesor:</h6>
+                  <p class="fst-italic mb-3">
+                    {{ entrega.comentarioCorreccion || 'Sin comentarios adicionales.' }}
+                  </p>
+
+                  <div class="d-flex justify-content-end border-top pt-3">
+                    <a [routerLink]="['/entregas', entrega.id]" class="btn btn-outline-primary btn-sm">
+                      <i class="bi bi-pencil-square me-1"></i> Editar Corrección
+                    </a>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
 
@@ -73,7 +74,7 @@
 
       <div *ngIf="!isLoading && reporteResultados.length === 0 && !errorMessage"
         class="text-center p-6 bg-warning bg-opacity-25 rounded-lg border border-warning mt-4">
-        <p class="text-lg text-warning">No se encontraron alumnos aprobados en este proyecto.</p>
+        <p class="text-lg text-warning m-0">No se encontraron alumnos aprobados en este proyecto.</p>
       </div>
 
     </div>
