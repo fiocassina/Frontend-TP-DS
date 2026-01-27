@@ -17,6 +17,7 @@ export class ListadoProyectosPendientesComponent implements OnInit {
   proyectosPendientes: any[] = [];
   cargando = true;
   errorMessage: any;
+  proyectoExpandidoId: string | null = null; 
 
   constructor(
     private proyectoService: ProyectosPendientesService,
@@ -35,9 +36,11 @@ export class ListadoProyectosPendientesComponent implements OnInit {
     this.proyectoService.obtenerProyectosPendientes().subscribe({
       next: (res: any[]) => {
         this.proyectosPendientes = res.map(p => ({
+          _id: p._id, 
           nombre: p.nombre,
           descripcion: p.descripcion || 'Sin descripción',
           claseNombre: p.clase?.nombre || 'Sin clase',
+          profesorNombre: p.clase?.profesorId?.nombreCompleto || 'Sin asignar',
           tipoProyectoNombre: p.tipoProyecto?.nombre || 'Sin tipo',
           claseId: p.clase?._id, 
           fechaEntrega: p.fechaEntrega
@@ -52,8 +55,10 @@ export class ListadoProyectosPendientesComponent implements OnInit {
     });
   }
 
-  formatearFecha(fecha: string): string {
-    return new Date(fecha).toLocaleDateString('es-AR');
+  // Función para calcular si venció
+  haVencido(fecha: string): boolean {
+    if (!fecha) return false;
+    return new Date() > new Date(fecha);
   }
 
   irAClase(claseId: string): void {

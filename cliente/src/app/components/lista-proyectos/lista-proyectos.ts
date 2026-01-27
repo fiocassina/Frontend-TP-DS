@@ -28,9 +28,12 @@ export class ListaProyectosComponent implements AfterViewInit {
   comentario: string = '';
   archivoSeleccionado: File | null = null;
   errorMessage: string = '';
-  proyectoSeleccionado: Proyecto | null = null;
-  correccionSeleccionada: Correccion | null = null;
+  proyectoSeleccionado: Proyecto | null = null; 
 
+  correccionSeleccionada: Correccion | null = null;
+  proyectoParaCorreccion: Proyecto | null = null; 
+  entregaSeleccionada: any = null; 
+  proyectoDeLaEntrega: any = null;
   private editarModal: any;
 
   constructor(
@@ -49,6 +52,7 @@ export class ListaProyectosComponent implements AfterViewInit {
   abrirModalCorreccion(proyecto: Proyecto): void {
     if (proyecto.entrega && proyecto.entrega.correccion) {
       this.correccionSeleccionada = proyecto.entrega.correccion;
+      this.proyectoParaCorreccion = proyecto; 
     }
   }
 
@@ -148,5 +152,12 @@ export class ListaProyectosComponent implements AfterViewInit {
         }
       }
     });
+  }
+
+  verMiEntrega(proyecto: Proyecto) {
+    if (proyecto.entrega) {
+      this.entregaSeleccionada = proyecto.entrega;
+      this.proyectoDeLaEntrega = proyecto;
+    }
   }
 }
