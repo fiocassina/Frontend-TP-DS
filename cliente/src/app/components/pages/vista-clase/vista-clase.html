@@ -144,9 +144,9 @@
                 <div *ngIf="mensajeExito" class="alert alert-success mt-3" role="alert">
                   <i class="bi bi-check-circle-fill me-2"></i> {{ mensajeExito }}
                 </div>
-                <app-lista-proyectos [proyectos]="proyectos" [esProfesor]="esProfesor"
-                  (eliminar)="deleteProyecto($event)" (entregaExitosa)="cargarProyectosYEntregas(clase?._id || '')">
-                </app-lista-proyectos>
+<app-lista-proyectos [proyectos]="proyectos" [esProfesor]="esProfesor"
+  (eliminar)="deleteProyecto($event)" 
+  (entregaExitosa)="onEntregaRealizada()"> </app-lista-proyectos>
 
                 <div *ngIf="esProfesor" class="mt-4">
                   <h5 class="card-title text-muted mb-3">GESTIÓN DE TIPOS DE PROYECTO</h5>

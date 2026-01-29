@@ -267,6 +267,23 @@ export class VistaClase implements OnInit {
     this.mostrarModalAlumnos = false;
   }
 
+  onEntregaRealizada(): void {
+
+    this.mensajeExito = '¡Tu entrega se subió correctamente!';
+
+    this.cargarProyectosYEntregas(this.clase?._id || '');
+  
+    this.cd.detectChanges();
+
+    setTimeout(() => {
+      this.mensajeExito = '';
+      this.cd.detectChanges();
+    }, 3000);
+
+  }
+
+
+
   expulsarAlumno(alumnoId: string): void {
     if(!confirm('¿Estás seguro de que querés eliminar a este alumno de la clase?')) return;
 
