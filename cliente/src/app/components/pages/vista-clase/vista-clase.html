@@ -139,8 +139,11 @@
                     <input type="date" class="form-control" [(ngModel)]="nuevoProyecto.fechaEntrega">
                   </div>
                   <button class="btn btn-success btn-sm mt-2" (click)="crearProyecto()">Guardar Proyecto</button>
+                  
                 </div>
-
+                <div *ngIf="mensajeExito" class="alert alert-success mt-3" role="alert">
+                  <i class="bi bi-check-circle-fill me-2"></i> {{ mensajeExito }}
+                </div>
                 <app-lista-proyectos [proyectos]="proyectos" [esProfesor]="esProfesor"
                   (eliminar)="deleteProyecto($event)" (entregaExitosa)="cargarProyectosYEntregas(clase?._id || '')">
                 </app-lista-proyectos>

@@ -58,6 +58,7 @@ export class VistaClase implements OnInit {
 
   modoEdicion: boolean = false;
   claseEditada: Partial<Clase> = {};
+  mensajeExito: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -201,6 +202,7 @@ export class VistaClase implements OnInit {
       next: (res) => {
         this.cargarProyectosYEntregas(this.clase?._id || '');
         this.nuevoProyecto = { nombre: '', descripcion: '', tipoProyecto: {} as TipoProyecto, claseId: this.clase?._id || '', fechaEntrega: '' };
+        this.mensajeExito = 'Proyecto creado correctamente';
         this.mostrarFormularioProyecto = false;
         this.cd.detectChanges();
       },

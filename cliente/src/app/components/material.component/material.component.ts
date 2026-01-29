@@ -22,6 +22,7 @@ export class MaterialComponent implements OnInit {
   nuevoMaterialUrl: string = '';
   selectedFile: File | null = null;
   errorMessage: string = '';
+  mensajeExito: string = '';
 
   private materialesService = inject(MaterialService);
   private tipoMaterialesService = inject(TipoMaterialService);
@@ -88,6 +89,8 @@ export class MaterialComponent implements OnInit {
 
     this.materialesService.createMaterial(formData).subscribe({
       next: (response) => {
+        console.log('Material creado', response);
+        this.mensajeExito = 'El material se cargó correctamente';
         this.nuevoMaterialNombre = '';
         this.nuevoMaterialTipoId = '';
         this.nuevoMaterialUrl = '';
