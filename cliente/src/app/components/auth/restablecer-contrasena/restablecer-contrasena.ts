@@ -1,16 +1,15 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { NgIf, CommonModule } from '@angular/common';
-import { UsuarioService } from '../../../services/usuario.service';
+import { NgIf, CommonModule, NgClass } from '@angular/common';
+import { LoginService } from '../../../services/login.service'; 
 
-// Función validadora para confirmar que las contraseñas coinciden
 export function contrasenaMatchValidator(control: AbstractControl): ValidationErrors | null {
-  const contrasenaNueva = control.get('contrasenaNueva');
-  const confirmarContrasena = control.get('confirmarContrasena');
+  const password = control.get('password');
+  const confirmarPassword = control.get('confirmarPassword');
 
-  if (contrasenaNueva && confirmarContrasena && (confirmarContrasena.dirty || confirmarContrasena.touched)) {
-    return contrasenaNueva.value !== confirmarContrasena.value ? { contrasenaMismatch: true } : null;
+  if (password && confirmarPassword && (confirmarPassword.dirty || confirmarPassword.touched)) {
+    return password.value !== confirmarPassword.value ? { contrasenaMismatch: true } : null;
   }
   return null;
 }
@@ -18,76 +17,104 @@ export function contrasenaMatchValidator(control: AbstractControl): ValidationEr
 @Component({
   selector: 'app-restablecer-contrasena',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterModule, NgIf, CommonModule],
+  imports: [ReactiveFormsModule, RouterModule, NgIf, CommonModule, NgClass],
   templateUrl: './restablecer-contrasena.html',
   styleUrls: ['./restablecer-contrasena.css']
 })
 export class RestablecerContrasenaComponent implements OnInit {
 
-  restablecerForm: any;
+  emailForm!: FormGroup;
+  passwordForm!: FormGroup;
+
+  paso: number = 1; 
   loading = false;
   errorMessage: string | null = null;
   successMessage: string | null = null;
+  emailEnviado: string = ''; 
 
   constructor(
     private formBuilder: FormBuilder,
-    private usuarioService: UsuarioService,
+    private loginService: LoginService, 
     private router: Router,
     private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.restablecerForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      contrasenaActual: ['', [Validators.required]],
-      contrasenaNueva: ['', [Validators.required, Validators.minLength(6)]],
-      confirmarContrasena: ['', [Validators.required]]
+    this.emailForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]]
+    });
+
+    this.passwordForm = this.formBuilder.group({
+      codigo: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmarPassword: ['', [Validators.required]]
     }, { validators: contrasenaMatchValidator });
   }
 
-  get email() { return this.restablecerForm.get('email'); }
-  get contrasenaActual() { return this.restablecerForm.get('contrasenaActual'); }
-  get contrasenaNueva() { return this.restablecerForm.get('contrasenaNueva'); }
-  get confirmarContrasena() { return this.restablecerForm.get('confirmarContrasena'); }
-  get passwordGroup() { return this.restablecerForm; }
+  get emailControl() { return this.emailForm.get('email'); }
+  get codigoControl() { return this.passwordForm.get('codigo'); }
+  get passwordControl() { return this.passwordForm.get('password'); }
+  get confirmarControl() { return this.passwordForm.get('confirmarPassword'); }
 
-  restablecer() {
+  enviarCodigo() {
     this.errorMessage = null;
     this.successMessage = null;
 
-    if (this.restablecerForm.invalid) {
-      this.restablecerForm.markAllAsTouched();
+    if (this.emailForm.invalid) {
+      this.emailForm.markAllAsTouched();
       return;
     }
 
     this.loading = true;
-    const { email, contrasenaActual, contrasenaNueva } = this.restablecerForm.value;
+    const email = this.emailForm.value.email;
 
-    this.usuarioService.restablecerContrasena({ email, contrasenaActual, contrasenaNueva }).subscribe({
+    this.loginService.solicitarCodigo(email).subscribe({
+      next: () => {
+        this.loading = false;
+        this.emailEnviado = email;
+        this.paso = 2; // Avanzamos al siguiente paso
+        this.successMessage = `Código enviado a ${email}. Revisá tu bandeja de entrada.`;
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        this.loading = false;
+        console.error('Error al enviar código:', err);
+        if (err.status === 404) {
+          this.errorMessage = 'El email ingresado no se encuentra registrado.';
+        } else {
+          this.errorMessage = 'Error al enviar el código. Intente nuevamente.';
+        }
+        this.cd.detectChanges();
+      }
+    });
+  }
+
+  cambiarContrasena() {
+    this.errorMessage = null;
+    this.successMessage = null;
+
+    if (this.passwordForm.invalid) {
+      this.passwordForm.markAllAsTouched();
+      return;
+    }
+
+    this.loading = true;
+    const { codigo, password } = this.passwordForm.value;
+
+    this.loginService.restablecerPassword(this.emailEnviado, codigo, password).subscribe({
       next: (res) => {
         this.loading = false;
-        this.restablecerForm.reset();
-
-        sessionStorage.setItem('mensajeExito', res.mensaje || '¡Contraseña restablecida correctamente!');
-
+        alert('¡Contraseña restablecida con éxito! Iniciá sesión con tu nueva clave.'); 
         this.router.navigate(['/login']);
       },
       error: (err) => {
-        console.error('Error al restablecer contraseña:', err);
-
-        if (err.status === 404) {
-          this.errorMessage = err.error?.mensaje || 'El email ingresado no se encuentra registrado.';
-          this.email.setValue('');
-          this.email.markAsTouched();
-        } 
-        else if (err.status === 401) {
-          this.contrasenaActual.setErrors({ incorrecta: true });
-        }
-        else {
-          this.errorMessage = 'Ocurrió un error inesperado. Intente de nuevo más tarde.';
-        }
-
         this.loading = false;
+        console.error('Error al cambiar contraseña:', err);
+        if (err.status === 400) {
+          this.errorMessage = 'El código es incorrecto o ha expirado.';
+        } else {
+          this.errorMessage = 'Ocurrió un error inesperado.';
+        }
         this.cd.detectChanges();
       }
     });

@@ -1,95 +1,120 @@
-<div class="d-flex flex-column justify-content-center align-items-center min-vh-100 bg-gradient-registro p-3 position-relative bg-gradient-restablecerContrasena">
+<div
+  class="d-flex flex-column justify-content-center align-items-center min-vh-100 bg-gradient-registro p-3 position-relative bg-gradient-restablecerContrasena">
+
   <div class="text-center text-white mb-4">
-    <h1 class="display-4 fw-bolder">StudyRoom </h1>
-    <p class="lead mb-0">Restalecer contraseña</p>
+    <h1 class="display-4 fw-bolder">StudyRoom</h1>
+    <p class="lead mb-0">Recuperar Cuenta</p>
   </div>
-  <div 
-    *ngIf="errorMessage"
-    class="alert alert-danger d-flex align-items-center shadow position-absolute"
-    style="
-      top: 40px;
-      left: 60%;
-      transform: translateX(30%);
-      z-index: 10;
-      max-width: 400px;
-      border-radius: 10px;
-      animation: fadeIn 0.3s ease-in-out;
-    "
-    role="alert"
-  >
+
+  <div *ngIf="errorMessage" class="alert alert-danger d-flex align-items-center shadow position-absolute"
+    style="top: 20px; right: 20px; z-index: 1050; max-width: 400px; animation: fadeIn 0.3s;">
     <i class="bi bi-exclamation-triangle-fill me-2"></i>
     {{ errorMessage }}
+    <button type="button" class="btn-close ms-auto" (click)="errorMessage = null"></button>
   </div>
 
-  <!-- Tarjeta principal -->
-  <div class="card shadow-sm p-4 w-100" style="max-width: 400px; border-radius: 12px;">
-    
+  <div *ngIf="successMessage" class="alert alert-success d-flex align-items-center shadow position-absolute"
+    style="top: 20px; right: 20px; z-index: 1050; max-width: 400px; animation: fadeIn 0.3s;">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    {{ successMessage }}
+    <button type="button" class="btn-close ms-auto" (click)="successMessage = null"></button>
+  </div>
 
-    <form [formGroup]="restablecerForm" (ngSubmit)="restablecer()">
-      <p class="text-center small text-muted mb-0">
-        Ingresa tu email, tu contraseña actual y tu nueva contraseña.
-      </p>
+  <div class="card shadow-sm p-4 w-100" style="max-width: 420px; border-radius: 12px;">
 
-      <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input formControlName="email" type="email" class="form-control" id="email" placeholder="ejemplo@correo.com" />
-        <div *ngIf="email.invalid && (email.touched || email.dirty)" class="text-danger small mt-1">
-          <div *ngIf="email.errors?.['required']">El email es obligatorio</div>
-          <div *ngIf="email.errors?.['email']">Formato de email incorrecto</div>
-        </div>
-      </div>
+    <div *ngIf="paso === 1">
+      <form [formGroup]="emailForm" (ngSubmit)="enviarCodigo()">
+        <p class="text-center text-muted mb-4">
+          Ingresá tu correo electrónico y te enviaremos un código de verificación.
+        </p>
 
-      <div class="mb-3">
-        <label for="contrasenaActual" class="form-label">Contraseña Actual</label>
-      
-        <input formControlName="contrasenaActual" type="password" class="form-control" id="contrasenaActual"
-          placeholder="********"
-          [ngClass]="{'is-invalid': contrasenaActual.invalid && (contrasenaActual.touched || contrasenaActual.dirty)}" />
-      
-        <div *ngIf="contrasenaActual.invalid && (contrasenaActual.touched || contrasenaActual.dirty)"
-          class="text-danger small mt-1">
-          <div *ngIf="contrasenaActual.errors?.['required']">La contraseña actual es obligatoria</div>
-      
-          <div *ngIf="contrasenaActual.errors?.['incorrecta']">La contraseña actual es incorrecta.</div>
-        </div>
-      </div>
+        <div class="mb-3">
+          <label for="email" class="form-label fw-bold">Email</label>
+          <input formControlName="email" type="email" class="form-control" id="email" placeholder="ejemplo@correo.com"
+            [ngClass]="{'is-invalid': emailControl?.invalid && (emailControl?.touched || emailControl?.dirty)}" />
 
-      <div class="mb-3">
-        <label for="contrasenaNueva" class="form-label">Nueva Contraseña</label>
-        <input formControlName="contrasenaNueva" type="password" class="form-control" id="contrasenaNueva" placeholder="********" />
-        <div *ngIf="contrasenaNueva.invalid && (contrasenaNueva.touched || contrasenaNueva.dirty)" class="text-danger small mt-1">
-          <div *ngIf="contrasenaNueva.errors?.['required']">La nueva contraseña es obligatoria</div>
-          <div *ngIf="contrasenaNueva.errors?.['minlength']">Debe tener al menos 6 caracteres</div>
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <label for="confirmarContrasena" class="form-label">Confirmar Contraseña</label>
-        <input formControlName="confirmarContrasena" type="password" class="form-control" id="confirmarContrasena" placeholder="********" />
-        <div *ngIf="confirmarContrasena.invalid && (confirmarContrasena.touched || confirmarContrasena.dirty)" class="text-danger small mt-1">
-          <div *ngIf="confirmarContrasena.errors?.['required']">Debe confirmar la contraseña</div>
+          <div *ngIf="emailControl?.invalid && (emailControl?.touched || emailControl?.dirty)" class="invalid-feedback">
+            <div *ngIf="emailControl?.errors?.['required']">El email es obligatorio</div>
+            <div *ngIf="emailControl?.errors?.['email']">Formato de email incorrecto</div>
+          </div>
         </div>
 
-        <div *ngIf="restablecerForm.errors?.['contrasenaMismatch'] && confirmarContrasena.touched" class="text-danger small mt-1">
-          Las contraseñas no coinciden.
+        <button type="submit" class="btn btn-primary w-100 py-2 mb-3 fw-bold" [disabled]="emailForm.invalid || loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+          Enviar Código
+        </button>
+      </form>
+    </div>
+
+    <div *ngIf="paso === 2">
+      <form [formGroup]="passwordForm" (ngSubmit)="cambiarContrasena()">
+        <div class="alert alert-light border text-center mb-3 py-2 small">
+          Enviamos el código a <strong>{{ emailEnviado }}</strong>
         </div>
-      </div>
 
-      <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="restablecerForm.invalid || loading">
-        <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-        Restablecer Contraseña
-      </button>
+        <div class="mb-3">
+          <label for="codigo" class="form-label fw-bold">Código de Verificación</label>
+          <input formControlName="codigo" type="text" class="form-control text-center letter-spacing-2 fw-bold fs-5"
+            id="codigo" placeholder="000000" maxlength="6"
+            [ngClass]="{'is-invalid': codigoControl?.invalid && (codigoControl?.touched || codigoControl?.dirty)}" />
+          <div class="invalid-feedback">
+            Ingresá el código de 6 dígitos.
+          </div>
+        </div>
 
-      <div class="text-center small">
-        <a routerLink="/login" class="text-primary text-decoration-none">Volver al Inicio de Sesión</a>
-      </div>
-    </form>
+        <div class="mb-3">
+          <label for="password" class="form-label fw-bold">Nueva Contraseña</label>
+          <input formControlName="password" type="password" class="form-control" id="password" placeholder="********"
+            [ngClass]="{'is-invalid': passwordControl?.invalid && (passwordControl?.touched || passwordControl?.dirty)}" />
+          <div class="invalid-feedback">
+            <div *ngIf="passwordControl?.errors?.['required']">La contraseña es obligatoria</div>
+            <div *ngIf="passwordControl?.errors?.['minlength']">Mínimo 6 caracteres</div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="confirmarPassword" class="form-label fw-bold">Confirmar Contraseña</label>
+          <input formControlName="confirmarPassword" type="password" class="form-control" id="confirmarPassword"
+            placeholder="********"
+            [ngClass]="{'is-invalid': (confirmarControl?.invalid || passwordForm.errors?.['contrasenaMismatch']) && confirmarControl?.touched}" />
+
+          <div *ngIf="passwordForm.errors?.['contrasenaMismatch'] && confirmarControl?.touched"
+            class="text-danger small mt-1">
+            Las contraseñas no coinciden.
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100 py-2 mb-3 fw-bold"
+          [disabled]="passwordForm.invalid || loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+          Cambiar Contraseña
+        </button>
+      </form>
+    </div>
+
+    <div class="text-center small border-top pt-3 mt-2">
+      <a routerLink="/login" class="text-decoration-none fw-semibold">
+        <i class="bi bi-arrow-left me-1"></i> Volver al Inicio de Sesión
+      </a>
+    </div>
+
   </div>
 </div>
 
 <style>
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+  .letter-spacing-2 {
+    letter-spacing: 5px;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 </style>

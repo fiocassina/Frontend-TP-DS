@@ -8,19 +8,30 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class LoginService {
+  private apiUrl = 'http://localhost:3000/api/usuarios';
 
   constructor(private http: HttpClient, private router: Router) { }
 
   login(credentials: Usuario): Observable<any> {
-    return this.http.post<any>('http://localhost:3000/api/usuarios/login', credentials);
+    return this.http.post<any>(`${this.apiUrl}/login`, credentials);
   }
 
   logout(): void {
     localStorage.removeItem('token'); 
     localStorage.removeItem('usuario'); 
     
-
     this.router.navigate(['/login']);
   }
-  
+
+  solicitarCodigo(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/olvide-contrasena`, { email });
+  }
+
+  restablecerPassword(email: string, codigo: string, nuevaPassword: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/nueva-contrasena`, { 
+      email, 
+      codigo, 
+      nuevaPassword 
+    });
+  }
 }
