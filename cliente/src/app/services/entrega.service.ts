@@ -37,6 +37,17 @@ export class EntregaService {
     return this.http.post<Entrega>(this.baseUrl, formData, { headers });
   }
 
+  editarEntrega(entregaId: string, entregaData: FormData): Observable<any> {
+      const token = this.getToken();
+      return this.http.put(`${this.baseUrl}/${entregaId}`, entregaData);
+    }
+
+  eliminarEntrega(entregaId: string): Observable<any> {
+    const token = this.getToken();
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.delete(`${this.baseUrl}/${entregaId}`, { headers });
+  }
+  
   obtenerEntregas(proyectoId: string): Observable<Entrega[]> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };

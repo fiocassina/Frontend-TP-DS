@@ -120,26 +120,53 @@
                 </div>
 
                 <div *ngIf="mostrarFormularioProyecto && esProfesor" class="mb-3 p-3 border rounded-3 bg-light">
-                  <div class="mb-2">
-                    <label class="form-label">Nombre del proyecto</label>
-                    <input type="text" class="form-control" [(ngModel)]="nuevoProyecto.nombre">
-                  </div>
-                  <div class="mb-2">
-                    <label class="form-label">Descripción</label>
-                    <textarea class="form-control" rows="2" [(ngModel)]="nuevoProyecto.descripcion"></textarea>
-                  </div>
-                  <div class="mb-2">
-                    <label class="form-label">Tipo de proyecto</label>
-                    <select class="form-select" [(ngModel)]="nuevoProyecto.tipoProyecto">
-                      <option *ngFor="let tipo of tiposProyecto" [ngValue]="tipo">{{ tipo.nombre }}</option>
-                    </select>
-                  </div>
-                  <div class="mb-2">
-                    <label class="form-label">Fecha de entrega</label>
-                    <input type="date" class="form-control" [(ngModel)]="nuevoProyecto.fechaEntrega">
-                  </div>
-                  <button class="btn btn-success btn-sm mt-2" (click)="crearProyecto()">Guardar Proyecto</button>
-                  
+                  <form #proyectoForm="ngForm" (ngSubmit)="crearProyecto(proyectoForm)">
+                    <div class="mb-2">
+                      <label class="form-label">Nombre del proyecto</label>
+                      <input type="text" class="form-control" 
+                            name="nombre"
+                            [(ngModel)]="nuevoProyecto.nombre"
+                            #nombre="ngModel" 
+                            required>
+                      <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched || proyectoForm.submitted)"
+                        class="text-danger small mt-1">
+                        El nombre es obligatorio.
+                      </div>
+                    </div>
+                    <div class="mb-2">
+                      <label class="form-label">Descripción</label>
+                      <textarea class="form-control" 
+                                rows="2" 
+                                name="descripcion"
+                                [(ngModel)]="nuevoProyecto.descripcion"></textarea>
+                    </div>
+                    <div class="mb-2">
+                      <label class="form-label">Tipo de proyecto</label>
+                      <select class="form-select" 
+                              name="tipoProyecto"
+                              [(ngModel)]="nuevoProyecto.tipoProyecto"
+                              #tipoProyecto="ngModel"
+                              required>
+                        <option [ngValue]="null" disabled selected>Seleccione un tipo</option>
+                        <option *ngFor="let tipo of tiposProyecto" [ngValue]="tipo">{{ tipo.nombre }}</option>
+                      </select>
+                      <div *ngIf="tipoProyecto.invalid && (tipoProyecto.dirty || tipoProyecto.touched)" class="text-danger small mt-1">
+                        Debes seleccionar un tipo.
+                      </div>
+                    </div>
+                    <div class="mb-2">
+                      <label class="form-label">Fecha de entrega</label>
+                      <input type="date" class="form-control"
+                            name="fechaEntrega" 
+                            [(ngModel)]="nuevoProyecto.fechaEntrega"
+                            #fechaEntrega="ngModel" 
+                            required>
+                      <div *ngIf="fechaEntrega.invalid && (fechaEntrega.dirty || fechaEntrega.touched)" class="text-danger small mt-1">
+                        La fecha es obligatoria.
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-sm mt-2">Guardar Proyecto</button>
+                  </form> 
                 </div>
                 <div *ngIf="mensajeExito" class="alert alert-success mt-3" role="alert">
                   <i class="bi bi-check-circle-fill me-2"></i> {{ mensajeExito }}

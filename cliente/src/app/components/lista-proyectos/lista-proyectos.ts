@@ -29,7 +29,7 @@ export class ListaProyectosComponent implements AfterViewInit {
   archivoSeleccionado: File | null = null;
   errorMessage: string = '';
   proyectoSeleccionado: Proyecto | null = null; 
-
+  proyectoEnEdicionId: string | null = null;
   correccionSeleccionada: Correccion | null = null;
   proyectoParaCorreccion: Proyecto | null = null; 
   entregaSeleccionada: any = null; 
@@ -122,36 +122,62 @@ export class ListaProyectosComponent implements AfterViewInit {
     }
 
     const formData = new FormData();
-    formData.append('proyectoId', proyectoId);
     formData.append('comentario', this.comentario || '');
     if (this.archivoSeleccionado) {
       formData.append('archivoUrl', this.archivoSeleccionado, this.archivoSeleccionado.name);
     }
 
-    this.entregaService.crearEntrega(formData).subscribe({next: (res: any) => {
-        console.log('Entrega realizada:', res);
-        const index = this.proyectos.findIndex(p => p._id === proyectoId);
-      
-        if (index !== -1) {
-          this.proyectos[index].entrega = res.data;
-          this.proyectos[index].entregado = true;
-          this.cd.detectChanges();
+    if (this.proyectoEnEdicionId === proyectoId) { //si estamos editando
+      const proyecto = this.proyectos.find(p => p._id === proyectoId);
+      const entregaId = proyecto?.entrega?._id;
+
+      if(!entregaId) return;
+
+      this.entregaService.editarEntrega(entregaId, formData).subscribe({
+        next: (res: any) => {
+          // Actualizamos vista
+          const index = this.proyectos.findIndex(p => p._id === proyectoId);
+          if (index !== -1) {
+            this.proyectos[index].entrega = res.data; // Actualizamos datos nuevos
+            this.proyectos[index].entregado = true;   // Nos aseguramos que se vea entregado
           }
-          this.comentario = '';
-          this.archivoSeleccionado = null;
-          this.errorMessage = '';
-          this.proyectoExpandidoId = null;
-          this.entregaExitosa.emit();
+          this.cancelarEdicion(); // Salimos del modo edición
+          this.cd.detectChanges();
         },
-      error: (err) => {
-        console.error('Error al entregar:', err);
-        if (err.status === 400) {
-          this.errorMessage = err.error.message || 'Ya has entregado este proyecto.';
-        } else {
-          this.errorMessage = 'Error al entregar el proyecto.';
+        error: (err) => {
+          this.errorMessage = 'Error al editar la entrega.';
         }
-      }
+      });
+
+    }
+    else { //si estamos creando
+      formData.append('proyectoId', proyectoId); 
+      this.entregaService.crearEntrega(formData).subscribe({next: (res: any) => {
+          console.log('Entrega realizada:', res);
+          const index = this.proyectos.findIndex(p => p._id === proyectoId);
+        
+          if (index !== -1) {
+            this.proyectos[index].entrega = res.data;
+            this.proyectos[index].entregado = true;
+            this.cd.detectChanges();
+            }
+            this.comentario = '';
+            this.archivoSeleccionado = null;
+            this.errorMessage = '';
+            this.proyectoExpandidoId = null;
+            this.entregaExitosa.emit();
+          },
+        error: (err) => {
+          console.error('Error al entregar:', err);
+          if (err.status === 400) {
+            this.errorMessage = err.error.message || 'Ya has entregado este proyecto.';
+          } else {
+            this.errorMessage = 'Error al entregar el proyecto.';
+          }
+        }
     });
+
+  }
   }
 
   verMiEntrega(proyecto: Proyecto) {
@@ -160,4 +186,42 @@ export class ListaProyectosComponent implements AfterViewInit {
       this.proyectoDeLaEntrega = proyecto;
     }
   }
+
+  eliminarEntrega(proyectoId: string, entregaId: string): void {
+    
+    if (confirm('¿Está seguro de que desea eliminar su entrega? Esta acción no se puede deshacer.')) {
+      
+      this.entregaService.eliminarEntrega(entregaId).subscribe({
+        next: () => {
+          const index = this.proyectos.findIndex(p => p._id === proyectoId);
+          if (index !== -1) {
+            this.proyectos[index].entregado = false;
+            this.proyectos[index].entrega = undefined; 
+            this.cd.detectChanges();
+          }
+          this.cd.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error al eliminar entrega:', err);
+          this.errorMessage = 'No se pudo eliminar la entrega.';
+        }
+      });
+    }
+  }
+
+  iniciarEdicion(proyecto: any) {
+    this.proyectoEnEdicionId = proyecto._id;
+    
+    this.comentario = proyecto.entrega.comentario;
+    this.archivoSeleccionado = null; 
+  }
+
+  cancelarEdicion() {
+    this.proyectoEnEdicionId = null;
+    this.comentario = '';
+    this.archivoSeleccionado = null;
+    this.errorMessage = '';
+  }
+
+
 }

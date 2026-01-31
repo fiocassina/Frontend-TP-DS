@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, Inject, PLATFORM_ID, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Clase } from '../../../models/clase-interface';
 import { ClaseService } from '../../../services/clase.service';
 import { EncabezadoComponent } from '../../encabezado/encabezado.component';
@@ -48,10 +48,10 @@ export class VistaClase implements OnInit {
   mostrarFormularioMaterial: boolean = false; 
   mostrarModalAlumnos: boolean = false;
   alumnos: any[] = [];
-  nuevoProyecto = {
+  nuevoProyecto: any = {
     nombre: '',
     descripcion: '',
-    tipoProyecto: {} as TipoProyecto,
+    tipoProyecto: null,
     claseId: '',
     fechaEntrega: ''
   };
@@ -144,7 +144,7 @@ export class VistaClase implements OnInit {
         });
       },
       error: (err) => {
-        // Acá también silenciamos si falla por permisos
+        
         if (err.status !== 403 && err.status !== 401) {
             console.error('Error cargando proyectos:', err);
             this.errorMessage = 'No se pudieron cargar los proyectos.';
@@ -186,7 +186,13 @@ export class VistaClase implements OnInit {
     });
   }
 
-  crearProyecto(): void {
+  crearProyecto(form?: NgForm): void {
+    if (form && form.invalid) {
+    Object.values(form.controls).forEach(control => {
+      control.markAsTouched();
+    });
+    return;
+    }
     if (!this.nuevoProyecto.nombre || !this.nuevoProyecto.tipoProyecto?._id || !this.nuevoProyecto.fechaEntrega) return;
     const fechaInput = this.nuevoProyecto.fechaEntrega; 
     const [year, month, day] = fechaInput.split('-').map(Number);
@@ -201,9 +207,12 @@ export class VistaClase implements OnInit {
     }).subscribe({
       next: (res) => {
         this.cargarProyectosYEntregas(this.clase?._id || '');
-        this.nuevoProyecto = { nombre: '', descripcion: '', tipoProyecto: {} as TipoProyecto, claseId: this.clase?._id || '', fechaEntrega: '' };
+        this.nuevoProyecto = { nombre: '', descripcion: '', tipoProyecto: null, claseId: this.clase?._id || '', fechaEntrega: '' };
         this.mensajeExito = 'Proyecto creado correctamente';
         this.mostrarFormularioProyecto = false;
+        if (form) {
+        form.resetForm(); 
+        }
         this.cd.detectChanges();
       },
       error: (err) => console.error('Error al crear proyecto', err)
