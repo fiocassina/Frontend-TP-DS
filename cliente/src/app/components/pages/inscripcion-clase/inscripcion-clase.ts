@@ -6,6 +6,7 @@ import { ClaseService } from '../../../services/clase.service';
 import { FormsModule } from '@angular/forms';
 import { EncabezadoComponent } from '../../encabezado/encabezado.component';
 import { NavbarComponent } from '../../navbar/navbar';
+
 @Component({
   selector: 'app-inscripcion-clase',
   standalone: true,
@@ -23,6 +24,7 @@ export class InscripcionClase implements OnInit {
   inscripcionForm: FormGroup;
   isLoading = false;
   errorMessage: string | null = null;
+  successMessage: string | null = null; // <--- 1. AGREGADO
 
   constructor(
     private fb: FormBuilder,
@@ -39,6 +41,7 @@ export class InscripcionClase implements OnInit {
 
   onSubmit(): void {
     this.errorMessage = null;
+    this.successMessage = null; // <--- Limpiar éxito previo
 
     if (this.inscripcionForm.invalid) return;
 
@@ -48,11 +51,19 @@ export class InscripcionClase implements OnInit {
 
     this.claseService.inscribirse(clave).subscribe({
       next: (res) => {
-        this.router.navigate(['/inicio']);
+        // --- 2. CAMBIO AQUÍ ---
+        this.isLoading = false;
+        this.successMessage = '¡Te has unido a la clase correctamente! Redirigiendo...';
+        this.cd.detectChanges();
+
+        // Esperamos 2 segundos
+        setTimeout(() => {
+          this.router.navigate(['/inicio']);
+        }, 2000);
+        // ----------------------
       },
       error: (err) => {
         console.error('Error de inscripción:', err);
-
       
         if (err.status === 403) {
           this.errorMessage = err.error?.mensaje || 'No puede ingresar a esta clase porque es el profesor.';

@@ -3,33 +3,37 @@
 <div class="container-fluid">
   <div class="row flex-nowrap">
 
-    <!-- Sidebar / Navbar -->
     <div class="col-md-2 bg-light min-vh-100 p-3 sidebar">
       <app-navbar></app-navbar>
     </div>
 
-    <!-- Contenido principal -->
     <div class="col py-3 d-flex justify-content-center align-items-center vh-100">
 
       <div class="card p-4 shadow-lg" style="width: 28rem;">
         <div class="card-body">
           <h3 class="card-title text-center mb-4">Crear clase</h3>
 
-          <div *ngIf="isLoading" class="text-center">
+          <div *ngIf="isLoading" class="text-center mb-3">
             <div class="spinner-border text-primary" role="status">
               <span class="visually-hidden">Cargando...</span>
             </div>
-            <p>Creando la clase...</p>
+            <p class="mt-2 text-muted">Creando la clase...</p>
           </div>
 
           <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
-            {{ errorMessage }}
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorMessage }}
           </div>
 
-          <form [formGroup]="claseForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+          <div *ngIf="successMessage" class="alert alert-success text-center" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> {{ successMessage }}
+          </div>
+
+          <form [formGroup]="claseForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading && !successMessage">
+
             <div class="mb-3">
               <label for="nombreClase" class="form-label">Nombre de la clase <span class="text-danger">*</span></label>
-              <input type="text" id="nombreClase" class="form-control" formControlName="nombre">
+              <input type="text" id="nombreClase" class="form-control" formControlName="nombre"
+                placeholder="Ej: Matemática Avanzada">
               <div
                 *ngIf="claseForm.get('nombre')?.invalid && (claseForm.get('nombre')?.touched || claseForm.get('nombre')?.dirty)"
                 class="form-text text-danger">
@@ -39,7 +43,8 @@
 
             <div class="mb-3">
               <label for="materia" class="form-label">Materia <span class="text-danger">*</span></label>
-              <input type="text" id="materia" class="form-control" formControlName="materia">
+              <input type="text" id="materia" class="form-control" formControlName="materia"
+                placeholder="Ej: Análisis II">
               <div
                 *ngIf="claseForm.get('materia')?.invalid && (claseForm.get('materia')?.touched || claseForm.get('materia')?.dirty)"
                 class="form-text text-danger">
@@ -49,12 +54,13 @@
 
             <div class="mb-3">
               <label for="descripcion" class="form-label">Descripción</label>
-              <textarea id="descripcion" class="form-control" formControlName="descripcion" rows="3"></textarea>
+              <textarea id="descripcion" class="form-control" formControlName="descripcion" rows="3"
+                placeholder="Breve descripción de la cursada..."></textarea>
             </div>
 
             <div class="d-grid gap-2">
               <button type="submit" class="btn btn-primary" [disabled]="claseForm.invalid">
-                Crear
+                Crear Clase
               </button>
               <button type="button" class="btn btn-secondary" (click)="goBack()">
                 Cancelar

@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Necesario para directivas como *ngIf
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; 
+import { CommonModule } from '@angular/common'; 
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ClaseService } from '../../../services/clase.service'; 
 import { Clase } from '../../../models/clase-interface';
 import { EncabezadoComponent } from '../../encabezado/encabezado.component';
 import { NavbarComponent } from '../../navbar/navbar';
-
 
 @Component({
   selector: 'app-create-class-form',
@@ -16,7 +15,7 @@ import { NavbarComponent } from '../../navbar/navbar';
     ReactiveFormsModule,
     EncabezadoComponent,
     NavbarComponent,
-],
+  ],
   templateUrl: './create-class-form.html',
   styleUrl: './create-class-form.css'
 })
@@ -24,16 +23,16 @@ export class CreateClassForm implements OnInit {
   claseForm!: FormGroup; 
   isLoading: boolean = false;
   errorMessage: string | null = null;
-
+  successMessage: string | null = null;
   
   constructor(
     private fb: FormBuilder,
     private claseService: ClaseService,
-    private router: Router
+    private router: Router,
+    private cd: ChangeDetectorRef 
   ) {}
 
   ngOnInit(): void {
-    
     this.claseForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       materia: ['', [Validators.required]],
@@ -54,25 +53,34 @@ export class CreateClassForm implements OnInit {
 
     this.isLoading = true;
     this.errorMessage = null;
-
+    this.successMessage = null;
+    
     const nuevaClase = this.claseForm.value as Omit<Clase, 'clave' | '_id'>;
 
-
-this.claseService.crearClase(nuevaClase).subscribe({
-  next: (response) => {
-    if (response && response.data) {
-      const claseCreada = response.data;
-      this.isLoading = false;
-      this.router.navigate(['/inicio']); 
-    } else {
-      this.errorMessage = 'Error inesperado al crear la clase.';
-      this.isLoading = false;
-    }
-  },
-  error: (error) => {
-    this.errorMessage = 'Hubo un error al crear la clase. Intenta de nuevo.';
-    this.isLoading = false;
-  }
-});
+    this.claseService.crearClase(nuevaClase).subscribe({
+      next: (response) => {
+        if (response && response.data) {
+          
+          this.isLoading = false;
+          this.successMessage = '¡Clase creada con éxito! Redirigiendo...';
+          
+          this.cd.detectChanges(); 
+          
+          setTimeout(() => {
+            this.router.navigate(['/inicio']); 
+          }, 2000);
+          
+        } else {
+          this.errorMessage = 'Error inesperado al crear la clase.';
+          this.isLoading = false;
+          this.cd.detectChanges();
+        }
+      },
+      error: (error) => {
+        this.errorMessage = 'Hubo un error al crear la clase. Intenta de nuevo.';
+        this.isLoading = false;
+        this.cd.detectChanges();
+      }
+    });
   }
 }
