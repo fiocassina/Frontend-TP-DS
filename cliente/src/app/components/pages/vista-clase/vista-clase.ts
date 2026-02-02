@@ -47,6 +47,11 @@ export class VistaClase implements OnInit {
   mostrarTiposProyecto: boolean = false;
   mostrarFormularioMaterial: boolean = false; 
   mostrarModalAlumnos: boolean = false;
+  mensajeErrorFormulario: string | null = null;
+  tipoProyectoBusqueda: string = '';
+  sugerenciasFiltradas: TipoProyecto[] = [];
+  mostrarSugerencias: boolean = false;
+
   alumnos: any[] = [];
   nuevoProyecto: any = {
     nombre: '',
@@ -90,13 +95,11 @@ export class VistaClase implements OnInit {
     this.claseService.getClaseById(claseId).subscribe({
       next: (data) => {
         this.clase = data;
-        // Asignamos los alumnos para el modal
         this.alumnos = data.alumnos || []; 
         
         this.nuevoProyecto.claseId = data._id || '';
         this.esProfesor = this.esUsuarioProfesor(data);
         
-        // Cargamos el resto de las cosas
         this.cargarProyectosYEntregas(claseId);
         this.cargarTiposMaterial(); 
       },
@@ -113,7 +116,6 @@ export class VistaClase implements OnInit {
     });
   }
   
-
   cargarProyectosYEntregas(claseId: string): void {
     this.proyectoService.getProyectosClase(claseId).subscribe({
       next: (proyectos) => {
@@ -144,7 +146,6 @@ export class VistaClase implements OnInit {
         });
       },
       error: (err) => {
-        
         if (err.status !== 403 && err.status !== 401) {
             console.error('Error cargando proyectos:', err);
             this.errorMessage = 'No se pudieron cargar los proyectos.';
@@ -185,15 +186,70 @@ export class VistaClase implements OnInit {
       error: (err) => console.error('Error cargando tipos de proyecto:', err)
     });
   }
+  
+  onBusquedaChange(): void {
+    const termino = this.tipoProyectoBusqueda.toLowerCase();
+    
+    if (!termino) {
+      this.sugerenciasFiltradas = [];
+      this.mostrarSugerencias = false;
+      this.nuevoProyecto.tipoProyecto = null;
+      return;
+    }
+
+    // Filtra por nombre
+    this.sugerenciasFiltradas = this.tiposProyecto.filter(tipo => 
+      tipo.nombre.toLowerCase().includes(termino)
+    );
+
+    this.mostrarSugerencias = this.sugerenciasFiltradas.length > 0;
+    
+    this.nuevoProyecto.tipoProyecto = null; 
+  }
+
+  seleccionarSugerencia(tipo: TipoProyecto): void {
+    this.tipoProyectoBusqueda = tipo.nombre; 
+    this.nuevoProyecto.tipoProyecto = tipo;  
+    this.mostrarSugerencias = false;         
+    this.mensajeErrorFormulario = null;      
+  }
+
+  onBlurInput(): void {
+    setTimeout(() => {
+      this.mostrarSugerencias = false;
+      this.validarSeleccionFinal();
+    }, 200);
+  }
+
+  validarSeleccionFinal(): void {
+    const coincidenciaExacta = this.tiposProyecto.find(
+      t => t.nombre.toLowerCase() === this.tipoProyectoBusqueda.toLowerCase()
+    );
+    this.nuevoProyecto.tipoProyecto = coincidenciaExacta || null;
+  }
 
   crearProyecto(form?: NgForm): void {
-    if (form && form.invalid) {
-    Object.values(form.controls).forEach(control => {
-      control.markAsTouched();
-    });
-    return;
+    this.validarSeleccionFinal();
+    this.mensajeErrorFormulario = null;
+    this.mensajeExito = '';
+
+    if (form && (form.invalid || !this.nuevoProyecto.tipoProyecto)) {
+      Object.values(form.controls).forEach(control => {
+        control.markAsTouched();
+      });
+      
+      if (!this.nuevoProyecto.tipoProyecto) {
+        this.mensajeErrorFormulario = 'El tipo de proyecto ingresado no es válido. Seleccioná uno de la lista.';
+      } else {
+        this.mensajeErrorFormulario = 'Por favor, completa todos los campos obligatorios.';
+      }
+      
+      this.cd.detectChanges();
+      return;
     }
+
     if (!this.nuevoProyecto.nombre || !this.nuevoProyecto.tipoProyecto?._id || !this.nuevoProyecto.fechaEntrega) return;
+    
     const fechaInput = this.nuevoProyecto.fechaEntrega; 
     const [year, month, day] = fechaInput.split('-').map(Number);
     const fechaLocal = new Date(year, month - 1, day);
@@ -208,14 +264,21 @@ export class VistaClase implements OnInit {
       next: (res) => {
         this.cargarProyectosYEntregas(this.clase?._id || '');
         this.nuevoProyecto = { nombre: '', descripcion: '', tipoProyecto: null, claseId: this.clase?._id || '', fechaEntrega: '' };
+        
+        this.tipoProyectoBusqueda = ''; // Limpiar input
         this.mensajeExito = 'Proyecto creado correctamente';
+        
         this.mostrarFormularioProyecto = false;
         if (form) {
-        form.resetForm(); 
+          form.resetForm(); 
         }
         this.cd.detectChanges();
       },
-      error: (err) => console.error('Error al crear proyecto', err)
+      error: (err) => {
+          console.error(err);
+          this.mensajeErrorFormulario = 'Ocurrió un error al guardar el proyecto.';
+          this.cd.detectChanges();
+      }
     });
   }
 
@@ -267,7 +330,6 @@ export class VistaClase implements OnInit {
     });
   }
 
-  //metodos para el modal de alumnos
   abrirModal(): void {
     this.mostrarModalAlumnos = true;
   }
@@ -277,21 +339,14 @@ export class VistaClase implements OnInit {
   }
 
   onEntregaRealizada(): void {
-
     this.mensajeExito = '¡Tu entrega se subió correctamente!';
-
     this.cargarProyectosYEntregas(this.clase?._id || '');
-  
     this.cd.detectChanges();
-
     setTimeout(() => {
       this.mensajeExito = '';
       this.cd.detectChanges();
     }, 3000);
-
   }
-
-
 
   expulsarAlumno(alumnoId: string): void {
     if(!confirm('¿Estás seguro de que querés eliminar a este alumno de la clase?')) return;
@@ -299,9 +354,7 @@ export class VistaClase implements OnInit {
     if (this.clase && this.clase._id) {
       this.claseService.expulsarAlumno(this.clase._id, alumnoId).subscribe({
         next: () => {
-          // Filtramos la lista local para sacarlo visualmente
           this.alumnos = this.alumnos.filter(a => a._id !== alumnoId);
-          // También actualizamos el contador en el objeto clase si queremos
           if(this.clase && this.clase.alumnos) {
             this.clase.alumnos = this.alumnos;
           }

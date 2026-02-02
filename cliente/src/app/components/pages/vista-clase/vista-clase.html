@@ -120,60 +120,68 @@
                 </div>
 
                 <div *ngIf="mostrarFormularioProyecto && esProfesor" class="mb-3 p-3 border rounded-3 bg-light">
-                  <form #proyectoForm="ngForm" (ngSubmit)="crearProyecto(proyectoForm)">
+                  <form #proyectoForm="ngForm" (ngSubmit)="crearProyecto(proyectoForm)" autocomplete="off">
+
                     <div class="mb-2">
                       <label class="form-label">Nombre del proyecto</label>
-                      <input type="text" class="form-control" 
-                            name="nombre"
-                            [(ngModel)]="nuevoProyecto.nombre"
-                            #nombre="ngModel" 
-                            required>
+                      <input type="text" class="form-control" name="nombre" [(ngModel)]="nuevoProyecto.nombre"
+                        #nombre="ngModel" required>
                       <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched || proyectoForm.submitted)"
                         class="text-danger small mt-1">
                         El nombre es obligatorio.
                       </div>
                     </div>
+
                     <div class="mb-2">
                       <label class="form-label">Descripción</label>
-                      <textarea class="form-control" 
-                                rows="2" 
-                                name="descripcion"
-                                [(ngModel)]="nuevoProyecto.descripcion"></textarea>
+                      <textarea class="form-control" rows="2" name="descripcion"
+                        [(ngModel)]="nuevoProyecto.descripcion"></textarea>
                     </div>
-                    <div class="mb-2">
+
+                    <div class="mb-2 position-relative autocomplete-container">
                       <label class="form-label">Tipo de proyecto</label>
-                      <select class="form-select" 
-                              name="tipoProyecto"
-                              [(ngModel)]="nuevoProyecto.tipoProyecto"
-                              #tipoProyecto="ngModel"
-                              required>
-                        <option [ngValue]="null" disabled selected>Seleccione un tipo</option>
-                        <option *ngFor="let tipo of tiposProyecto" [ngValue]="tipo">{{ tipo.nombre }}</option>
-                      </select>
-                      <div *ngIf="tipoProyecto.invalid && (tipoProyecto.dirty || tipoProyecto.touched)" class="text-danger small mt-1">
-                        Debes seleccionar un tipo.
+
+                      <input type="text" class="form-control" name="tipoProyectoBusqueda"
+                        [(ngModel)]="tipoProyectoBusqueda" (input)="onBusquedaChange()" (blur)="onBlurInput()"
+                        placeholder="Escribí para buscar (ej: Web)" required>
+
+                      <ul *ngIf="mostrarSugerencias" class="sugerencias-lista">
+                        <li *ngFor="let tipo of sugerenciasFiltradas" class="sugerencia-item"
+                          (click)="seleccionarSugerencia(tipo)">
+
+                          <strong>{{ tipo.nombre }}</strong>
+                          <br><small class="text-muted">{{ tipo.descripcion | slice:0:40 }}...</small>
+                        </li>
+                      </ul>
+
+                      <div *ngIf="proyectoForm.submitted && !nuevoProyecto.tipoProyecto" class="text-danger small mt-1">
+                        Campo obligatorio.
                       </div>
                     </div>
                     <div class="mb-2">
                       <label class="form-label">Fecha de entrega</label>
-                      <input type="date" class="form-control"
-                            name="fechaEntrega" 
-                            [(ngModel)]="nuevoProyecto.fechaEntrega"
-                            #fechaEntrega="ngModel" 
-                            required>
-                      <div *ngIf="fechaEntrega.invalid && (fechaEntrega.dirty || fechaEntrega.touched)" class="text-danger small mt-1">
+                      <input type="date" class="form-control" name="fechaEntrega"
+                        [(ngModel)]="nuevoProyecto.fechaEntrega" #fechaEntrega="ngModel" required>
+                      <div *ngIf="fechaEntrega.invalid && (fechaEntrega.dirty || fechaEntrega.touched)"
+                        class="text-danger small mt-1">
                         La fecha es obligatoria.
                       </div>
                     </div>
+
+                    <div *ngIf="mensajeErrorFormulario" class="alert alert-danger mt-2 py-2 small" role="alert">
+                      <i class="bi bi-exclamation-circle-fill me-2"></i> {{ mensajeErrorFormulario }}
+                    </div>
+
                     <button type="submit" class="btn btn-success btn-sm mt-2">Guardar Proyecto</button>
-                  </form> 
+                  </form>
                 </div>
+
                 <div *ngIf="mensajeExito" class="alert alert-success mt-3" role="alert">
                   <i class="bi bi-check-circle-fill me-2"></i> {{ mensajeExito }}
                 </div>
-<app-lista-proyectos [proyectos]="proyectos" [esProfesor]="esProfesor"
-  (eliminar)="deleteProyecto($event)" 
-  (entregaExitosa)="onEntregaRealizada()"> </app-lista-proyectos>
+
+                <app-lista-proyectos [proyectos]="proyectos" [esProfesor]="esProfesor"
+                  (eliminar)="deleteProyecto($event)" (entregaExitosa)="onEntregaRealizada()"> </app-lista-proyectos>
 
                 <div *ngIf="esProfesor" class="mt-4">
                   <h5 class="card-title text-muted mb-3">GESTIÓN DE TIPOS DE PROYECTO</h5>
