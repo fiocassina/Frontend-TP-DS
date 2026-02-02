@@ -17,6 +17,7 @@
                 </h2>
               </div>
               <div class="card-body">
+
                 <div *ngIf="loading" class="text-center my-4">
                   <div class="spinner-border text-primary" role="status">
                     <span class="visually-hidden">Cargando...</span>
@@ -25,25 +26,28 @@
                 </div>
 
                 <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
-                  {{ errorMessage }}
+                  <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorMessage }}
                 </div>
 
-                <form [formGroup]="tipoProyectoForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+                <div *ngIf="successMessage" class="alert alert-success text-center" role="alert">
+                  <i class="bi bi-check-circle-fill me-2"></i> {{ successMessage }}
+                </div>
+
+                <form [formGroup]="tipoProyectoForm" (ngSubmit)="onSubmit()" *ngIf="!loading && !successMessage">
                   <div class="mb-3">
                     <label for="nombre" class="form-label">Nombre</label>
                     <input type="text" class="form-control" [ngClass]="{
                           'is-invalid': tipoProyectoForm.get('nombre')?.invalid && tipoProyectoForm.get('nombre')?.touched,
                           'is-valid': tipoProyectoForm.get('nombre')?.valid && tipoProyectoForm.get('nombre')?.touched
                         }" id="nombre" formControlName="nombre"
-                    placeholder="Ej. Trabajo Práctico, Monografía, Exposición" />
+                      placeholder="Ej. Trabajo Práctico, Monografía, Exposición" />
                     <div *ngIf="tipoProyectoForm.get('nombre')?.touched && tipoProyectoForm.get('nombre')?.errors"
                       class="invalid-feedback">
                       <div *ngIf="tipoProyectoForm.get('nombre')?.errors?.['required']">El nombre es requerido.</div>
                       <div *ngIf="tipoProyectoForm.get('nombre')?.errors?.['minlength']">El nombre debe tener al menos 3
                         caracteres.</div>
                       <div *ngIf="tipoProyectoForm.get('nombre')?.errors?.['maxlength']">El nombre no debe exceder los
-                        50
-                        caracteres.</div>
+                        50 caracteres.</div>
                     </div>
                   </div>
 
@@ -58,14 +62,11 @@
                       *ngIf="tipoProyectoForm.get('descripcion')?.touched && tipoProyectoForm.get('descripcion')?.errors"
                       class="invalid-feedback">
                       <div *ngIf="tipoProyectoForm.get('descripcion')?.errors?.['required']">La descripción es
-                        requerida.
-                      </div>
+                        requerida.</div>
                       <div *ngIf="tipoProyectoForm.get('descripcion')?.errors?.['minlength']">La descripción debe tener
-                        al
-                        menos 5 caracteres.</div>
+                        al menos 5 caracteres.</div>
                       <div *ngIf="tipoProyectoForm.get('descripcion')?.errors?.['maxlength']">La descripción no debe
-                        exceder
-                        los 200 caracteres.</div>
+                        exceder los 200 caracteres.</div>
                     </div>
                   </div>
 

@@ -26,6 +26,7 @@ export class TipoProyectoForm implements OnInit {
   loading: boolean = false;
   isSubmitting: boolean = false;
   errorMessage: string | null = null;
+  successMessage: string | null = null; 
   claseIdRegreso: string | null = null;
 
   constructor(
@@ -73,14 +74,18 @@ export class TipoProyectoForm implements OnInit {
     }
 
     this.isSubmitting = true;
+    this.errorMessage = null;
+    this.successMessage = null;
     const tipoProyectoData = this.tipoProyectoForm.value as TipoProyecto;
 
-    const handleSuccess = () => {
+    const handleSuccess = (action: string) => {
       this.isSubmitting = false;   
+      this.successMessage = `¡Tipo de proyecto ${action === 'actualizar' ? 'actualizado' : 'creado'} con éxito! Redirigiendo...`;
       this.cd.detectChanges();     
+      
       setTimeout(() => {
         this.goBack();
-      }, 1);             
+      }, 2000);             
     };
 
     const handleError = (action: string) => {
@@ -91,12 +96,12 @@ export class TipoProyectoForm implements OnInit {
 
     if (this.isEditMode && this.tipoProyectoId) {
       this.tipoProyectoService.updateTipoProyecto(this.tipoProyectoId, tipoProyectoData).subscribe({
-        next: handleSuccess,
+        next: () => handleSuccess('actualizar'),
         error: () => handleError('actualizar')
       });
     } else {
       this.tipoProyectoService.createTipoProyecto(tipoProyectoData).subscribe({
-        next: handleSuccess,
+        next: () => handleSuccess('crear'),
         error: () => handleError('crear')
       });
     }
@@ -106,7 +111,6 @@ export class TipoProyectoForm implements OnInit {
     if (this.claseIdRegreso) {
       this.router.navigate(['/clase', this.claseIdRegreso]);
     } else {
-      console.error("no se encontro identificador de clase, redirigiendo al inicio.");
       this.router.navigate(['/inicio']);
     }
   }

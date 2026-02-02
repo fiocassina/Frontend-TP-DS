@@ -1,22 +1,24 @@
 import { CommonModule } from '@angular/common';
-// CAMBIO: Añadimos Input
-import { Component, OnInit, Input } from '@angular/core'; 
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core'; 
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms'; 
 import { TipoProyecto } from '../../models/tipo-proyecto-interface';
 import { TipoProyectoService } from '../../services/tipo-proyecto.service';
-import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-tipo-proyecto-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './tipo-proyecto-list.html',
   styleUrls: ['./tipo-proyecto-list.css']
 })
 export class TipoProyectoList implements OnInit {
   @Input() claseId: string | undefined;
 
-  tiposProyecto: TipoProyecto[] = [];
+  tiposProyecto: TipoProyecto[] = [];         // Lista completa
+  tiposFiltrados: TipoProyecto[] = [];        // Lista que se ve en pantalla
+  terminoBusqueda: string = '';               // Lo que escribe el usuario
+
   isLoading: boolean = true;
   errorMessage: string | null = null;
 
@@ -34,6 +36,7 @@ export class TipoProyectoList implements OnInit {
     this.tipoProyectoService.getTiposProyecto().subscribe({
       next: (data) => {
         this.tiposProyecto = data;
+        this.filtrar(); 
         this.isLoading = false;
         this.cdr.detectChanges();
       },
@@ -46,12 +49,25 @@ export class TipoProyectoList implements OnInit {
     });
   }
 
+  // Función de búsqueda
+  filtrar(): void {
+    if (!this.terminoBusqueda) {
+      this.tiposFiltrados = this.tiposProyecto;
+    } else {
+      const termino = this.terminoBusqueda.toLowerCase();
+      this.tiposFiltrados = this.tiposProyecto.filter(tipo => 
+        tipo.nombre.toLowerCase().includes(termino) || 
+        tipo.descripcion.toLowerCase().includes(termino)
+      );
+    }
+  }
+
   eliminarTipoProyecto(id: string): void {
     if (confirm('¿Estás seguro de que quieres eliminar este tipo de proyecto?')) {
       this.tipoProyectoService.eliminarTipoProyecto(id).subscribe({
         next: () => {
           this.tiposProyecto = this.tiposProyecto.filter(tipo => tipo._id !== id);
-          this.obtenerTiposProyecto();
+          this.filtrar(); 
         },
         error: (error) => {
           console.error('Error al eliminar el tipo de proyecto', error);
