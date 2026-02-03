@@ -58,25 +58,39 @@
                     <i class="bi bi-pencil-fill me-1"></i> Corregir
                   </button>
 
-                  <span *ngSwitchCase="'aprobada'"
-                    class="badge fs-6 text-bg-success d-inline-flex align-items-center gap-2"
-                    (click)="verDetalle(entrega._id)" style="cursor: pointer;" title="Clic para editar la corrección">
-                    Aprobada
-                    <span class="badge bg-white text-success rounded-pill">
-                      {{ entrega.correccion?.nota }}
+                  <div *ngSwitchCase="'aprobada'" class="d-flex align-items-center justify-content-center gap-2">
+                    <span class="badge fs-6 text-bg-success d-inline-flex align-items-center gap-2">
+                      Aprobada
+                      <span class="badge bg-white text-success rounded-pill">
+                        {{ entrega.correccion?.nota }}
+                      </span>
                     </span>
-                    <i class="bi bi-pencil-square ms-1 opacity-50"></i>
-                  </span>
+                    <button class="btn btn-sm btn-warning" (click)="verDetalle(entrega._id)"
+                      title="Editar corrección">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" (click)="eliminarCorreccion(entrega)"
+                      title="Eliminar corrección">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
 
-                  <span *ngSwitchCase="'desaprobada'"
-                    class="badge fs-6 text-bg-danger d-inline-flex align-items-center gap-2"
-                    (click)="verDetalle(entrega._id)" style="cursor: pointer;" title="Clic para editar la corrección">
-                    Desaprobada
-                    <span class="badge bg-white text-danger rounded-pill">
-                      {{ entrega.correccion?.nota }}
+                  <div *ngSwitchCase="'desaprobada'" class="d-flex align-items-center justify-content-center gap-2">
+                    <span class="badge fs-6 text-bg-danger d-inline-flex align-items-center gap-2">
+                      Desaprobada
+                      <span class="badge bg-white text-danger rounded-pill">
+                        {{ entrega.correccion?.nota }}
+                      </span>
                     </span>
-                    <i class="bi bi-pencil-square ms-1 opacity-50"></i>
-                  </span>
+                    <button class="btn btn-sm btn-warning" (click)="verDetalle(entrega._id)"
+                      title="Editar corrección">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" (click)="eliminarCorreccion(entrega)"
+                      title="Eliminar corrección">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
 
                 </td>
               </tr>

@@ -95,5 +95,12 @@ editarCorreccion(correccionId: string, nota: number, comentario: string): Observ
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     const body = { nota, comentario };
-    return this.http.put(`${this.correccionesUrl}/${correccionId}`, body, { headers });  }
+    return this.http.put(`${this.correccionesUrl}/${correccionId}`, body, { headers });  
+  }
+
+  eliminarCorreccion(correccionId: string): Observable<any> {
+    const token = this.getToken();
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.delete(`${this.correccionesUrl}/${correccionId}`, { headers });
+  }
 }

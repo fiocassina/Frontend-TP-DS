@@ -72,4 +72,26 @@ export class EntregaListComponent implements OnInit {
       this.router.navigate(['/inicio']);
     }
   }
+
+  eliminarCorreccion(entrega: Entrega): void {
+    if (!entrega.correccion?._id) {
+      alert('No hay corrección que eliminar.');
+      return;
+    }
+
+    if (!confirm('¿Estás seguro de que deseas eliminar esta corrección? La entrega volverá al estado pendiente.')) {
+      return;
+    }
+
+    this.entregaService.eliminarCorreccion(entrega.correccion._id).subscribe({
+      next: () => {
+        alert('Corrección eliminada con éxito');
+        this.cargarDatos();
+      },
+      error: (err) => {
+        console.error('Error al eliminar:', err);
+        alert('Error al eliminar la corrección.');
+      }
+    });
+  }
 }

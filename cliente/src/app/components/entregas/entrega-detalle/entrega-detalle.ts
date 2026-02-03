@@ -51,7 +51,7 @@ export class EntregaDetalleComponent implements OnInit {
 
     // Validación de la nota
     if (this.entrega === null || this.nota === null || this.nota < 1 || this.nota > 10) {
-      this.errorMessage = 'La nota debe ser un número entre 1 y 10, y la entrega debe ser válida.';
+      this.errorMessage = 'Debe ingresar una nota válida entre 1 y 10.';
       return;
     }
 
@@ -108,8 +108,30 @@ export class EntregaDetalleComponent implements OnInit {
 
   volver(): void {
     
-    // Si vino de "Reporte de Aprobadas", vuelve ahí.
-    // Si vino de "Lista de Entregas", vuelve ahí.
+    // Si vino de "Reporte de Aprobadas", vuelve ahí
+    // Si vino de "Lista de Entregas", vuelve ahí
     window.history.back();
+  }
+
+  eliminarCorreccion(): void {
+    if (!this.entrega?.correccion?._id) {
+      this.errorMessage = 'No hay corrección que eliminar.';
+      return;
+    }
+
+    if (!confirm('¿Estás seguro de que deseas eliminar esta corrección? La entrega volverá al estado pendiente.')) {
+      return;
+    }
+
+    this.entregaService.eliminarCorreccion(this.entrega.correccion._id).subscribe({
+      next: () => {
+        alert('Corrección eliminada con éxito');
+        this.volver();
+      },
+      error: (err) => {
+        console.error('Error al eliminar:', err);
+        this.errorMessage = 'Error al eliminar la corrección.';
+      }
+    });
   }
 }
