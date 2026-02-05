@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { CreateClassForm } from './create-class-form';
+import { RouterTestingModule } from '@angular/router/testing';      
+import { HttpClientTestingModule } from '@angular/common/http/testing';import { CreateClassForm } from './create-class-form';
 
 describe('CreateClassForm', () => {
   let component: CreateClassForm;
@@ -8,7 +8,7 @@ describe('CreateClassForm', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CreateClassForm]
+      imports: [CreateClassForm, HttpClientTestingModule, RouterTestingModule]
     })
     .compileComponents();
 
