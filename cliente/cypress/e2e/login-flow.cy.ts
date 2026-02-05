@@ -1,3 +1,4 @@
+/// <reference types="cypress" />
 describe('Prueba de Flujo de Login (E2E)', () => {
 
   beforeEach(() => {
@@ -16,21 +17,23 @@ describe('Prueba de Flujo de Login (E2E)', () => {
       password: 'password123'
     };
 
-    cy.get('input#email').type(usuarioValido.email);
-    cy.get('input#password').type(usuarioValido.password);
+    cy.get('input#email').type(usuarioValido.email, { delay: 100 });
+    cy.get('input#password').type(usuarioValido.password, { delay: 100 });
     cy.get('button[type="submit"]').click();
 
     cy.url().should('include', '/inicio');
+    cy.wait(2000);
   });
 
   it('Debe mostrar alerta con credenciales inválidas', () => {
     cy.on('window:alert', (str) => {
-      expect(str).to.equal('Email o contraseña incorrecta');
+      expect(str).to.equal('Email o contraseña incorrecta' );
     });
 
-    cy.get('input#email').type('usuario@falso.com');
-    cy.get('input#password').type('claveincorrecta');
+    cy.get('input#email').type('usuario@falso.com', { delay: 100 });
+    cy.get('input#password').type('claveincorrecta', { delay: 100 });
     cy.get('button[type="submit"]').click();
+    cy.wait(2000);
   });
 
 });

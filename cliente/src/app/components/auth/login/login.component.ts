@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgIf, CommonModule } from '@angular/common';
@@ -18,12 +18,14 @@ export class LoginComponent implements OnInit {
   loginForm: any;
   mostrarRegistroExitoso: boolean = false;
   mostrarRestablecimientoExitoso: boolean = false;
+  mensajeError: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private loginService: LoginService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cd: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -72,8 +74,10 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/inicio']);
       },
       error: (err) => {
-        alert('Email o contraseña incorrecta');
         console.error(err);
+        this.mensajeError = 'Email o contraseña incorrecta';
+        this.cd.detectChanges();
+        
       }
     });
   }

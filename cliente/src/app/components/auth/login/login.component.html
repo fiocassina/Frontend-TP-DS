@@ -59,7 +59,7 @@
           </a>
         </div>
       </div>
-
+      <div *ngIf="mensajeError" class="alert alert-danger">{{ mensajeError }}</div>
       <button type="submit" class="btn btn-primary w-100 mb-3">Iniciar Sesión</button>
 
       <div class="text-center small">
