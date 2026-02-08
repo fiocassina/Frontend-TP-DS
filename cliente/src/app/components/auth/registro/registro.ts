@@ -22,7 +22,7 @@ export class RegistroComponent implements OnInit {
 
   ngOnInit(): void {
     this.registroForm = this.formBuilder.group({
-      nombreCompleto: ['', [Validators.required, Validators.minLength(6)]],
+      nombreCompleto: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email]],
       
       password: ['', [Validators.required, Validators.minLength(6)]],
