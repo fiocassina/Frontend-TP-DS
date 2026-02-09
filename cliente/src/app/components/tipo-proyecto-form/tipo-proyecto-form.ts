@@ -88,21 +88,27 @@ export class TipoProyectoForm implements OnInit {
       }, 2000);             
     };
 
-    const handleError = (action: string) => {
-      this.errorMessage = `Error al ${action} el tipo de proyecto.`;
+    const handleError = (action: string, error: any) => {
       this.isSubmitting = false;
+      // Chequeamos si es duplicado
+      if (error.status === 409) {
+        this.errorMessage = 'Ya existe un tipo de proyecto con ese nombre. Por favor, escribe uno diferente o utiliza el existente.';
+      } else {
+        this.errorMessage = `Error al ${action} el tipo de proyecto. Intenta nuevamente.`;
+      }
+      
       this.cd.detectChanges();
     };
 
     if (this.isEditMode && this.tipoProyectoId) {
       this.tipoProyectoService.updateTipoProyecto(this.tipoProyectoId, tipoProyectoData).subscribe({
         next: () => handleSuccess('actualizar'),
-        error: () => handleError('actualizar')
+        error: (err) => handleError('actualizar', err)
       });
     } else {
       this.tipoProyectoService.createTipoProyecto(tipoProyectoData).subscribe({
         next: () => handleSuccess('crear'),
-        error: () => handleError('crear')
+        error: (err) => handleError('crear', err)
       });
     }
   }
