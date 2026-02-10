@@ -7,7 +7,7 @@
     </div>
 
     <div class="col py-3">
-      <h1 class="mb-4">Mi Perfil</h1>
+      <h1 class="mb-4">Mi perfil</h1>
 
       <!-- Error -->
       <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
@@ -18,13 +18,13 @@
           <div class="card-header d-flex justify-content-between align-items-center">
             Datos de la cuenta
             <button *ngIf="!modoEdicion" class="btn btn-primary btn-sm" (click)="activarModoEdicion()">
-              Editar Perfil
+              Editar perfil
             </button>
           </div>
           <div class="card-body">
             <div *ngIf="!modoEdicion">
               <div class="mb-3">
-                <strong>Nombre Completo:</strong>
+                <strong>Nombre completo:</strong>
                 <p>{{ usuario.nombreCompleto }}</p>
               </div>
               <div>
@@ -32,10 +32,10 @@
                 <p>{{ usuario.email }}</p>
               </div>
             </div>
-
+            
             <div *ngIf="modoEdicion">
               <div class="mb-3">
-                <label for="nombreCompleto" class="form-label">Nombre Completo</label>
+                <label for="nombreCompleto" class="form-label">Nombre completo</label>
                 <input 
                   type="text" 
                   id="nombreCompleto" 
@@ -70,16 +70,19 @@
               </div>
               <div class="d-flex justify-content-end">
                 <button class="btn btn-secondary me-2" (click)="cancelarEdicion()">Cancelar</button>
-                <button class="btn btn-success" (click)="guardarCambios()">Guardar Cambios</button>
+                <button class="btn btn-success" (click)="guardarCambios()">Guardar cambios</button>
               </div>
             </div>
           </div>
         </div>
-
+        <button type="button" class="btn btn-warning btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#modalPassword"
+          (click)="limpiarFormularioPassword()">
+          <i class="bi bi-key"></i> Cambiar contraseña
+        </button>
         <!-- Zona de peligro -->
         <div *ngIf="!modoEdicion" class="card border-danger mt-4">
           <div class="card-header bg-danger text-white">
-            Zona de Peligro
+            Zona de peligro
           </div>
           <div class="card-body">
             <p>
@@ -104,6 +107,76 @@
           <p class="mt-2 text-muted">Cargando perfil...</p>
         </div>
       </ng-template>
+
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modalPassword" tabindex="-1" aria-labelledby="modalPasswordLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Cambiar contraseña</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" #botonCerrar></button>
+      </div>
+
+      <div class="modal-body">
+
+        <div *ngIf="messagePassword" class="alert alert-success">{{ messagePassword }}</div>
+        <div *ngIf="errorPassword" class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorPassword }}</div>
+
+        <form #passForm="ngForm">
+
+          <div class="mb-3">
+            <label for="currentPassword" class="form-label">Contraseña Actual</label>
+            <input 
+              type="password" 
+              class="form-control" 
+              id="currentPassword" 
+              name="currentPassword"
+              [(ngModel)]="passwords.actual" 
+              required>
+          </div>
+
+          <div class="mb-3">
+            <label for="newPassword" class="form-label">Nueva Contraseña</label>
+            <input type="password" class="form-control" id="newPassword" name="newPassword" [(ngModel)]="passwords.nueva" required
+              minlength="6" pattern="(?=.*[0-9])(?=.*[A-Z]).*" #nuevaInput="ngModel"
+              [class.is-invalid]="(nuevaInput.touched || nuevaInput.dirty) && nuevaInput.invalid">
+            <div *ngIf="nuevaInput.touched || nuevaInput.dirty" class="text-danger small mt-1" style="min-height: 18px;">
+          
+              <div *ngIf="nuevaInput.errors?.['required']">
+                La contraseña es obligatoria
+              </div>
+          
+              <div
+                *ngIf="!nuevaInput.errors?.['required'] && (nuevaInput.errors?.['minlength'] || nuevaInput.errors?.['pattern'])">
+                Debe tener al menos 6 caracteres, una mayúscula y un número
+              </div>
+          
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Repetir Nueva Contraseña</label>
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+              [(ngModel)]="passwords.confirmar" required>
+            <div *ngIf="passwords.nueva !== passwords.confirmar && passwords.confirmar" class="text-danger small mt-1">
+              Las contraseñas no coinciden.
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+
+        <button type="button" class="btn btn-primary" (click)="cambiarPassword()"
+          [disabled]="passForm.invalid || passwords.nueva !== passwords.confirmar">
+          Actualizar
+        </button>
+      </div>
 
     </div>
   </div>
