@@ -71,13 +71,19 @@ export class ClasesListComponent implements OnInit {
   
     this.claseService.eliminarClase(claseId).subscribe({
       next: (res) => {
+        // Filtramos visualmente para que desaparezca sin recargar
         this.clasesAMostrar = this.clasesAMostrar.filter(c => c._id !== claseId);
         this.clasesComoProfe = this.clasesComoProfe.filter(c => c._id !== claseId);
+        this.clasesComoAlumno = this.clasesComoAlumno.filter(c => c._id !== claseId);
+        
         this.cd.detectChanges();
+        alert('Clase eliminada correctamente.');
       },
       error: (err) => {
         console.error('Error al eliminar clase:', err);
-        alert('No se pudo eliminar la clase. Intenta de nuevo.');
+        const mensajeBackend = err.error?.message || 'No se pudo eliminar la clase. Intenta de nuevo.';
+        
+        alert(mensajeBackend); 
       }
     });
   }

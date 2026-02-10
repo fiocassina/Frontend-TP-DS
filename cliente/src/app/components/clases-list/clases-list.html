@@ -26,7 +26,7 @@
 
             <p *ngIf="esVistaProfesor" class="clave">Clave: {{ clase.clave }}</p>
             <p *ngIf="!esVistaProfesor" class="profesor">
-              Profesor: {{ clase.profesorId.nombreCompleto }}
+              Profesor: {{ clase.profesorId.nombreCompleto || 'Desconocido' }}
             </p>
 
             <button [routerLink]="['/clase', clase._id]" class="btn-enter">Entrar</button>

@@ -188,25 +188,27 @@ export class ListaProyectosComponent implements AfterViewInit {
   }
 
   eliminarEntrega(proyectoId: string, entregaId: string): void {
-    
-    if (confirm('¿Está seguro de que desea eliminar su entrega? Esta acción no se puede deshacer.')) {
-      
-      this.entregaService.eliminarEntrega(entregaId).subscribe({
-        next: () => {
-          const index = this.proyectos.findIndex(p => p._id === proyectoId);
-          if (index !== -1) {
-            this.proyectos[index].entregado = false;
-            this.proyectos[index].entrega = undefined; 
-            this.cd.detectChanges();
-          }
-          this.cd.detectChanges();
-        },
-        error: (err) => {
-          console.error('Error al eliminar entrega:', err);
-          this.errorMessage = 'No se pudo eliminar la entrega.';
-        }
-      });
+    if (!confirm('¿Está seguro de que desea eliminar su entrega? Esta acción no se puede deshacer.')) {
+      return;
     }
+      
+    this.entregaService.eliminarEntrega(entregaId).subscribe({
+      next: () => {
+        const index = this.proyectos.findIndex(p => p._id === proyectoId);
+        if (index !== -1) {
+          this.proyectos[index].entregado = false;
+          this.proyectos[index].entrega = undefined; 
+          this.cd.detectChanges();
+        }
+        alert('Entrega eliminada correctamente.');
+      },
+      error: (err) => {
+        console.error('Error al eliminar entrega:', err);
+        const mensajeBackend = err.error?.message || 'No se pudo eliminar la entrega.';
+        
+        alert(mensajeBackend);
+      }
+    });
   }
 
   iniciarEdicion(proyecto: any) {
