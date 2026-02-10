@@ -24,8 +24,7 @@ export class RegistroComponent implements OnInit {
     this.registroForm = this.formBuilder.group({
       nombreCompleto: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email]],
-      
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/(?=.*[A-Z])(?=.*[0-9])/)]],
       
     });
   }

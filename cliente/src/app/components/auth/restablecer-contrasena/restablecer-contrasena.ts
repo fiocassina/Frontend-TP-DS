@@ -46,7 +46,7 @@ export class RestablecerContrasenaComponent implements OnInit {
 
     this.passwordForm = this.formBuilder.group({
       codigo: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/(?=.*[A-Z])(?=.*[0-9])/)]],
       confirmarPassword: ['', [Validators.required]]
     }, { validators: contrasenaMatchValidator });
   }

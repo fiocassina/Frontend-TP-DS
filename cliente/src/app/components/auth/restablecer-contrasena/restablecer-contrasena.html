@@ -68,7 +68,7 @@
             [ngClass]="{'is-invalid': passwordControl?.invalid && (passwordControl?.touched || passwordControl?.dirty)}" />
           <div class="invalid-feedback">
             <div *ngIf="passwordControl?.errors?.['required']">La contraseña es obligatoria</div>
-            <div *ngIf="passwordControl?.errors?.['minlength']">Mínimo 6 caracteres</div>
+            <div *ngIf="!passwordControl?.errors?.['required'] && (passwordControl?.errors?.['minlength'] || passwordControl?.errors?.['pattern'])">Mínimo 6 caracteres, una mayúscula y un número</div>
           </div>
         </div>
 
