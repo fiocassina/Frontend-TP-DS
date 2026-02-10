@@ -56,25 +56,24 @@ export class ListaProyectosComponent implements AfterViewInit {
     }
   }
 
-  deleteProyecto(proyectoId: string) {
-    if (!confirm('¿Estás seguro de que quieres eliminar este proyecto? Esta acción no se puede deshacer.')) {
-      return;
-    }
-
-    this.proyectoService.deleteProyecto(proyectoId).subscribe({
-      next: () => {
-        this.proyectos = this.proyectos.filter(p => p._id !== proyectoId);
-        this.cd.detectChanges();
-        alert('Proyecto eliminado con éxito.');
-      },
-      error: (err) => {
-        console.error('Error al eliminar proyecto:', err);
-
-        const mensajeBackend = err.error?.message || 'Ocurrió un error al intentar eliminar el proyecto.';
-        alert(mensajeBackend);
-      }
-    });
+deleteProyecto(proyectoId: string) {
+  if (!confirm('¿Estás seguro de que quieres eliminar este proyecto? Esta acción no se puede deshacer.')) {
+    return;
   }
+
+  this.proyectoService.deleteProyecto(proyectoId).subscribe({
+    next: () => {
+      this.proyectos = this.proyectos.filter(p => p._id !== proyectoId);
+      this.cd.detectChanges();
+      alert('Proyecto eliminado con éxito.');
+    },
+    error: (err) => {
+      console.error('Error al eliminar proyecto:', err);
+      const mensajeBackend = err.error?.message || 'Ocurrió un error al intentar eliminar el proyecto.';
+      alert(mensajeBackend);
+    }
+  });
+}
 
   abrirModalEditar(proyecto: Proyecto): void {
     this.proyectoSeleccionado = { ...proyecto };

@@ -33,7 +33,7 @@ export class ReporteAprobadasComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef); 
 
   proyectoId: string = '';
-  nombreProyecto: string = 'Reporte de Alumnos Aprobados';
+  nombreProyecto: string = 'Listado de Alumnos Aprobados';
 
   reporteResultados: ReporteEntrega[] = [];
   isLoading: boolean = false;

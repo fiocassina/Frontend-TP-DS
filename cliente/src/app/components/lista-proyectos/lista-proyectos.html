@@ -3,7 +3,21 @@
     <div class="card h-100 shadow-sm border-0 rounded-4 hoverable">
       <div class="card-body d-flex flex-column">
 
-        <h5 class="card-title">{{ proyecto.nombre }}</h5>
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <h5 class="card-title mb-0 me-2">{{ proyecto.nombre }}</h5>
+
+          <div *ngIf="esProfesor" class="d-flex gap-1">
+            <button class="btn btn-outline-secondary btn-sm p-1 px-2" (click)="abrirModalEditar(proyecto)"
+              data-bs-toggle="modal" data-bs-target="#editarProyectoModal" title="Editar Proyecto">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btn-outline-danger btn-sm p-1 px-2" (click)="deleteProyecto(proyecto._id)"
+              title="Eliminar Proyecto">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+
         <h6 class="card-subtitle mb-2 text-muted">{{ proyecto.tipoProyecto.nombre }}</h6>
         <p class="card-text">
           <small class="text-muted">
@@ -15,92 +29,84 @@
         <div class="mt-auto d-flex flex-column gap-2">
 
           <ng-container *ngIf="esProfesor">
-            <div class="d-flex gap-2 align-items-center">
-              <button class="btn btn-outline-primary btn-sm" (click)="verEntregas(proyecto._id)">
-                Ver todas las entregas
-              </button>
-              <button class="btn btn-outline-secondary btn-sm" (click)="abrirModalEditar(proyecto)"
-                data-bs-toggle="modal" data-bs-target="#editarProyectoModal">
-                <i class="bi bi-pencil"></i>
-              </button>
-              <button class="btn btn-danger btn-sm" (click)="deleteProyecto(proyecto._id)">
-                <i class="bi bi-trash"></i>
-              </button>
-            </div>
+            <button class="btn btn-primary btn-sm w-100" (click)="verEntregas(proyecto._id)">
+              <i class="bi bi-folder2-open me-2"></i>Ver todas las entregas
+            </button>
+          
             <a [routerLink]="['/reporte-aprobadas', proyecto._id]"
-              class="text-decoration-underline text-success fw-bold cursor-pointer small">
-              Ver alumnos aprobados
+              class="d-block text-center mt-2 text-success fw-bold text-decoration-underline cursor-pointer small">
+              Ver listado de alumnos aprobados
             </a>
           </ng-container>
 
           <ng-container *ngIf="!esProfesor">
             <ng-container *ngIf="!proyecto.entregado">
               <ng-container *ngIf="!haVencido(proyecto); else fechaVencida">
-                <button class="btn btn-success btn-sm" (click)="toggleEntrega(proyecto._id)">
+                <button class="btn btn-success btn-sm w-100" (click)="toggleEntrega(proyecto._id)">
                   Entregar proyecto
                 </button>
               </ng-container>
               <ng-template #fechaVencida>
-                <button class="btn btn-danger btn-sm" disabled>
+                <button class="btn btn-danger btn-sm w-100" disabled>
                   Plazo de entrega vencido
                 </button>
               </ng-template>
             </ng-container>
 
             <ng-container *ngIf="proyecto.entregado" [ngSwitch]="proyecto.entrega?.estado">
-              
 
-              <div *ngSwitchCase="'aprobada'" class="d-flex flex-column align-items-start gap-2">
+              <div *ngSwitchCase="'aprobada'" class="d-flex flex-column align-items-start gap-2 w-100">
                 <span class="badge bg-success">Entrega Aprobada</span>
-                <div class="d-flex gap-2">
-                  <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#correccionModal"
-                    (click)="abrirModalCorreccion(proyecto)">
+                <div class="d-flex gap-2 w-100">
+                  <button class="btn btn-outline-success btn-sm flex-grow-1" data-bs-toggle="modal"
+                    data-bs-target="#correccionModal" (click)="abrirModalCorreccion(proyecto)">
                     <i class="bi bi-check-circle me-1"></i>Ver Corrección
                   </button>
                   <button class="btn btn-light btn-sm border" data-bs-toggle="modal" data-bs-target="#verEntregaModal"
                     (click)="verMiEntrega(proyecto)">
-                    <i class="bi bi-eye me-1"></i>Ver mi entrega
+                    <i class="bi bi-eye"></i>
                   </button>
                 </div>
               </div>
-              
-              <div *ngSwitchCase="'desaprobada'" class="d-flex flex-column align-items-start gap-2">
+
+              <div *ngSwitchCase="'desaprobada'" class="d-flex flex-column align-items-start gap-2 w-100">
                 <span class="badge bg-warning text-dark">Entrega desaprobada</span>
-                <div class="d-flex gap-2">
-                  <button class="btn btn-outline-warning text-dark btn-sm" data-bs-toggle="modal" data-bs-target="#correccionModal"
-                    (click)="abrirModalCorreccion(proyecto)">
+                <div class="d-flex gap-2 w-100">
+                  <button class="btn btn-outline-warning text-dark btn-sm flex-grow-1" data-bs-toggle="modal"
+                    data-bs-target="#correccionModal" (click)="abrirModalCorreccion(proyecto)">
                     <i class="bi bi-exclamation-circle me-1"></i>Ver Corrección
                   </button>
                   <button class="btn btn-light btn-sm border" data-bs-toggle="modal" data-bs-target="#verEntregaModal"
                     (click)="verMiEntrega(proyecto)">
-                    <i class="bi bi-eye me-1"></i>Ver mi entrega
+                    <i class="bi bi-eye"></i>
                   </button>
                 </div>
               </div>
-              
-              <div *ngSwitchCase="'pendiente'" class="d-flex flex-column align-items-start gap-1">
+
+              <div *ngSwitchCase="'pendiente'" class="d-flex flex-column align-items-start gap-1 w-100">
                 <span class="badge bg-primary">Proyecto Entregado</span>
                 <small class="text-muted">Pendiente de aprobación</small>
-                <button class="btn btn-light btn-sm border mt-1" data-bs-toggle="modal" data-bs-target="#verEntregaModal"
-                  (click)="verMiEntrega(proyecto)">
-                  <i class="bi bi-eye me-1"></i>Ver mi entrega
-                </button>
-                <div class="d-flex gap-2">
-                
-                  <button class="btn btn-outline-danger btn-sm flex-grow-1"
-                    (click)="eliminarEntrega(proyecto._id, proyecto.entrega?._id || '')">
-                    <i class="bi bi-trash"></i>
+
+                <div class="d-flex gap-2 w-100 mt-1">
+                  <button class="btn btn-light btn-sm border flex-grow-1" data-bs-toggle="modal"
+                    data-bs-target="#verEntregaModal" (click)="verMiEntrega(proyecto)">
+                    <i class="bi bi-eye me-1"></i> Ver entrega
                   </button>
-                
-                  <button class="btn btn-outline-warning btn-sm" (click)="iniciarEdicion(proyecto)" title="Editar entrega">
+
+                  <button class="btn btn-outline-warning btn-sm" (click)="iniciarEdicion(proyecto)"
+                    title="Editar entrega">
                     <i class="bi bi-pencil"></i>
                   </button>
-                
+
+                  <button class="btn btn-outline-danger btn-sm"
+                    (click)="eliminarEntrega(proyecto._id, proyecto.entrega?._id || '')" title="Eliminar entrega">
+                    <i class="bi bi-trash"></i>
+                  </button>
                 </div>
               </div>
 
               <ng-container *ngIf="!proyecto.entregado || proyectoEnEdicionId === proyecto._id">
-                <div class="mt-3 p-3 border rounded bg-light">
+                <div class="mt-3 p-3 border rounded bg-light w-100">
                   <div class="mb-3">
                     <textarea class="form-control" rows="3" [(ngModel)]="comentario"
                       placeholder="Escribe un comentario..."></textarea>
@@ -108,13 +114,16 @@
                   <div class="mb-3">
                     <input type="file" class="form-control" (change)="onFileSelected($event)">
                   </div>
-                  <small class="text-muted">Si no desea seleccionar un archivo ahora, se mantendrá el archivo anterior.</small>
-                  <div class="d-flex gap-2 mt-2">
-                    <button class="btn btn-primary btn-sm" (click)="entregarProyecto(proyecto._id)">
+                  <small class="text-muted d-block mb-2" *ngIf="proyectoEnEdicionId === proyecto._id">
+                    Si no desea seleccionar un archivo nuevo, se mantendrá el anterior.
+                  </small>
+                  <div class="d-flex gap-2">
+                    <button class="btn btn-primary btn-sm flex-grow-1" (click)="entregarProyecto(proyecto._id)">
                       {{ proyectoEnEdicionId === proyecto._id ? 'Guardar Cambios' : 'Entregar Proyecto' }}
                     </button>
-              
-                    <button *ngIf="proyectoEnEdicionId === proyecto._id" class="btn btn-secondary btn-sm" (click)="cancelarEdicion()">
+
+                    <button *ngIf="proyectoEnEdicionId === proyecto._id" class="btn btn-secondary btn-sm"
+                      (click)="cancelarEdicion()">
                       Cancelar
                     </button>
                   </div>
@@ -122,6 +131,7 @@
               </ng-container>
             </ng-container>
           </ng-container>
+
         </div>
 
         <div *ngIf="proyectoExpandidoId === proyecto._id" class="mt-3 p-3 border rounded bg-light">
@@ -135,10 +145,10 @@
             <input type="file" class="form-control" (change)="onFileSelected($event)"
               accept=".pdf,.png,.jpg,.jpeg,.gif">
           </div>
-          <button class="btn btn-primary btn-sm mt-2" (click)="entregarProyecto(proyecto._id)">
+          <button class="btn btn-primary btn-sm mt-2 w-100" (click)="entregarProyecto(proyecto._id)">
             Entregar
           </button>
-          <div *ngIf="errorMessage" class="text-danger mt-2">{{ errorMessage }}</div>
+          <div *ngIf="errorMessage" class="text-danger mt-2 small">{{ errorMessage }}</div>
         </div>
 
       </div>
@@ -147,7 +157,7 @@
 </div>
 
 <ng-template #noProyectos>
-  <p class="text-muted">Aquí se mostrarán los proyectos de la clase.</p>
+  <p class="text-muted text-center mt-4">Aquí se mostrarán los proyectos de la clase.</p>
 </ng-template>
 
 <div class="modal fade" id="editarProyectoModal" #editarModal tabindex="-1" aria-hidden="true">
@@ -235,6 +245,7 @@
     </div>
   </div>
 </div>
+
 <div class="modal fade" id="verEntregaModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg rounded-4">
