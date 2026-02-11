@@ -8,6 +8,7 @@ export interface Proyecto {
   tipoProyecto: TipoProyecto;
   claseId: string;
   fechaEntrega: string; // ISO string
+  estado: 'activo' | 'cancelado' | 'finalizado';
   createdAt?: string;
   updatedAt?: string;
 

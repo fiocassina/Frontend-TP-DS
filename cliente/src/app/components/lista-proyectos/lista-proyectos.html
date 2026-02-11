@@ -1,12 +1,29 @@
+<ul class="nav nav-tabs mb-4 border-bottom-0" *ngIf="tieneCancelados()">
+  <li class="nav-item">
+    <a class="nav-link" [class.active]="tabActual === 'generales'" (click)="tabActual = 'generales'"
+      style="cursor: pointer;">
+      <i class></i>General
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-danger" 
+      [class.active]="tabActual === 'cancelados'" 
+      (click)="tabActual = 'cancelados'"
+      style="cursor: pointer;">
+      <i class></i>Cancelados
+    </a>
+  </li>
+</ul>
 <div *ngIf="proyectos.length > 0; else noProyectos" class="row mt-3">
-  <div class="col-md-6 mb-3" *ngFor="let proyecto of proyectos">
+  <div class="col-md-6 mb-3" *ngFor="let proyecto of proyectosFiltrados">
     <div class="card h-100 shadow-sm border-0 rounded-4 hoverable">
       <div class="card-body d-flex flex-column">
 
         <div class="d-flex justify-content-between align-items-start mb-2">
           <h5 class="card-title mb-0 me-2">{{ proyecto.nombre }}</h5>
+          <span *ngIf="proyecto.estado === 'cancelado'" class="badge bg-danger mt-1">Cancelado</span>
 
-          <div *ngIf="esProfesor" class="d-flex gap-1">
+          <div *ngIf="esProfesor && proyecto.estado !== 'cancelado'" class="d-flex gap-1">
             <button class="btn btn-outline-secondary btn-sm p-1 px-2" (click)="abrirModalEditar(proyecto)"
               data-bs-toggle="modal" data-bs-target="#editarProyectoModal" title="Editar Proyecto">
               <i class="bi bi-pencil"></i>
@@ -28,12 +45,12 @@
 
         <div class="mt-auto d-flex flex-column gap-2">
 
-          <ng-container *ngIf="esProfesor">
+          <ng-container *ngIf="esProfesor ">
             <button class="btn btn-primary btn-sm w-100" (click)="verEntregas(proyecto._id)">
               <i class="bi bi-folder2-open me-2"></i>Ver todas las entregas
             </button>
           
-            <a [routerLink]="['/reporte-aprobadas', proyecto._id]"
+            <a *ngIf="proyecto.estado !== 'cancelado'" [routerLink]="['/reporte-aprobadas', proyecto._id]"
               class="d-block text-center mt-2 text-success fw-bold text-decoration-underline cursor-pointer small">
               Ver listado de alumnos aprobados
             </a>

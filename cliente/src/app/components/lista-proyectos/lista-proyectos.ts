@@ -34,6 +34,7 @@ export class ListaProyectosComponent implements AfterViewInit {
   proyectoParaCorreccion: Proyecto | null = null; 
   entregaSeleccionada: any = null; 
   proyectoDeLaEntrega: any = null;
+  tabActual: 'generales' | 'cancelados' = 'generales';
   private editarModal: any;
 
   constructor(
@@ -49,6 +50,16 @@ export class ListaProyectosComponent implements AfterViewInit {
     }
   }
 
+  get proyectosFiltrados(): Proyecto[] {
+    if (!this.proyectos) return [];
+    
+    if (this.tabActual === 'generales') {
+      return this.proyectos.filter(p => p.estado !== 'cancelado');
+    } else {
+      return this.proyectos.filter(p => p.estado === 'cancelado');
+    }
+  }
+
   abrirModalCorreccion(proyecto: Proyecto): void {
     if (proyecto.entrega && proyecto.entrega.correccion) {
       this.correccionSeleccionada = proyecto.entrega.correccion;
@@ -57,21 +68,32 @@ export class ListaProyectosComponent implements AfterViewInit {
   }
 
 deleteProyecto(proyectoId: string) {
-  if (!confirm('¿Estás seguro de que quieres eliminar este proyecto? Esta acción no se puede deshacer.')) {
+  if (!confirm('¿Estás seguro de que quieres eliminar este proyecto? Si tiene entregas, sólo se cancelará.')) {
     return;
   }
 
   this.proyectoService.deleteProyecto(proyectoId).subscribe({
-    next: () => {
-      this.proyectos = this.proyectos.filter(p => p._id !== proyectoId);
-      this.cd.detectChanges();
-      alert('Proyecto eliminado con éxito.');
-    },
-    error: (err) => {
-      console.error('Error al eliminar proyecto:', err);
-      const mensajeBackend = err.error?.message || 'Ocurrió un error al intentar eliminar el proyecto.';
-      alert(mensajeBackend);
-    }
+    next: (res: any) => {
+        
+        if (res.tipo === 'CANCELADO') {
+          const proyecto = this.proyectos.find(p => p._id === proyectoId);
+          if (proyecto) {
+            proyecto.estado = 'cancelado';
+          }
+          alert(res.mensaje);
+          
+        } else {
+          this.proyectos = this.proyectos.filter(p => p._id !== proyectoId);
+          alert('Proyecto eliminado permanentemente.');
+        }
+
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al eliminar proyecto:', err);
+        const mensajeBackend = err.error?.message || 'Error al eliminar.';
+        alert(mensajeBackend);
+      }
   });
 }
 
@@ -240,5 +262,8 @@ deleteProyecto(proyectoId: string) {
     this.errorMessage = '';
   }
 
+  tieneCancelados(): boolean {
+  return this.proyectos ? this.proyectos.some(p => p.estado === 'cancelado') : false;
+}
 
 }
