@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NavbarComponent } from '../navbar/navbar';
 import { EncabezadoComponent } from '../encabezado/encabezado.component';
+import { ProyectoService } from '../../services/proyecto.service';
 
 interface ReporteEntrega {
   id: string; 
@@ -30,6 +31,7 @@ export class ReporteAprobadasComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private entregaService = inject(EntregaService);
+  private proyectoService = inject(ProyectoService);
   private cdr = inject(ChangeDetectorRef); 
 
   proyectoId: string = '';
@@ -40,11 +42,20 @@ export class ReporteAprobadasComponent implements OnInit {
   errorMessage: string | null = null;
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('proyectoId');
-
+    const id = this.route.snapshot.paramMap.get('proyectoId') || this.route.snapshot.paramMap.get('id');
+    
     if (id) {
       this.proyectoId = id;
       this.cargarReporteAutomatico();
+      this.proyectoService.getProyectoById(id).subscribe({
+        next: (proyecto) => {
+          if (proyecto && proyecto.nombre) {
+            this.nombreProyecto = `Alumnos Aprobados del Proyecto: ${proyecto.nombre}`;
+            this.cdr.detectChanges(); 
+          }
+        },
+        error: (err) => console.error('No se pudo cargar el nombre del proyecto', err)
+      });
     } else {
       this.errorMessage = 'No se encontró el ID del proyecto.';
       this.router.navigate(['/proyectos']);
