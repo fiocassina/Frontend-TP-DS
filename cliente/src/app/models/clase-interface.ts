@@ -7,6 +7,7 @@ export interface Clase {
   profesorId: {
         _id: string;
         nombreCompleto: string; 
+        activo?: boolean;
     };
   alumnos: string[];
 }

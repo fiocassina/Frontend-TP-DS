@@ -60,7 +60,14 @@
 
                 <div *ngIf="!modoEdicion">
                   <div class="mb-3 mt-3">
-                    <p class="mb-1"><strong>Profesor:</strong> {{ clase?.profesorId?.nombreCompleto || 'No asignado' }}
+                    <p class="mb-1">
+                      <strong>Profesor:</strong>
+                      {{ clase?.profesorId?.nombreCompleto || 'No asignado' }}
+                  
+                      <span *ngIf="clase?.profesorId?.activo === false" class="badge bg-danger ms-2"
+                        title="Este usuario ya no tiene acceso al sistema">
+                        (Inactivo)
+                      </span>
                     </p>
                     <p class="mb-1"><strong>Alumnos inscritos:</strong> {{ alumnos.length }}</p>
                   </div>
