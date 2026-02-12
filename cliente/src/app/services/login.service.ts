@@ -15,6 +15,12 @@ export class LoginService {
   login(credentials: Usuario): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, credentials);
   }
+  estaLogueado(): boolean {
+    if (typeof localStorage !== 'undefined') {
+      return !!localStorage.getItem('token'); // Devuelve true si hay token
+    }
+    return false;
+  }
 
   logout(): void {
     localStorage.removeItem('token'); 

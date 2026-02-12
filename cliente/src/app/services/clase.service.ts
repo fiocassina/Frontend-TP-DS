@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Clase } from '../models/clase-interface';
+import { map } from 'rxjs';
 
 interface ClasesResponse {
   clasesComoProfe: Clase[];
@@ -63,5 +64,12 @@ export class ClaseService {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.delete(`${this.apiUrl}/${claseId}/alumnos/${alumnoId}`, { headers });
+  }
+
+  verificarSoyAlumno(): Observable<boolean> {
+    const token = this.getToken();
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.get<{ esAlumno: boolean }>(`${this.apiUrl}/verificar-alumno`, { headers })
+      .pipe(map(response => response.esAlumno));
   }
 }
