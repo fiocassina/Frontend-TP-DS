@@ -1,6 +1,5 @@
 .bg-gradient-login {
   background: linear-gradient(#1A2B5B, #4682B4);
-  /*#082567 el anterior era este el mas oscuro, le puse el mismo q el del encabezado p q se parezcan los colores*/
 }
 
 .card {
@@ -9,4 +8,28 @@
 
 .text-primary:hover {
   text-decoration: underline;
+}
+
+.input-sin-borde-derecho {
+  border-right: none;
+}
+
+/* Estilo personalizado para el ojo */
+.btn-ojito {
+  background-color: white;
+  border: 1px solid #ced4da;
+  border-left: none;
+  color: #6c757d;
+  z-index: 10;
+}
+
+.btn-ojito:hover {
+  color: #212529;
+  background-color: white;
+  border-color: #ced4da;
+}
+
+.btn-ojito:focus {
+  box-shadow: none;
+  border-color: #ced4da;
 }

@@ -1,6 +1,5 @@
 <div class="d-flex flex-column align-items-center min-vh-100 bg-gradient-registro p-3 position-relative">
-  
-  
+
   <div *ngIf="errorMessage" class="alert alert-warning d-flex align-items-center shadow position-absolute" style="
       top: 40px;
       left: 60%;
@@ -18,9 +17,8 @@
     <h1 class="display-4 fw-bolder">StudyRoom </h1>
     <p class="lead mb-0">Ingrese sus datos para registrarse</p>
   </div>
-  <!-- Tarjeta principal -->
+
   <div class="card shadow-sm p-4 w-100" style="max-width: 400px; border-radius: 12px;">
-    
 
     <form [formGroup]="registroForm" (ngSubmit)="registrar()">
       <div class="mb-3">
@@ -44,20 +42,45 @@
 
       <div class="mb-3">
         <label for="password" class="form-label">Contraseña</label>
-        <input id="password" formControlName="password" type="password" class="form-control">
-
-        
-        <div *ngIf="password.touched || password.dirty" class="text-danger small mt-1" style="min-height: 18px;">
-          <div *ngIf="password.errors?.['required']">
-            La contraseña es obligatoria
-          </div>
+        <div class="input-group">
+          <input [type]="mostrarPassword ? 'text' : 'password'" id="password" formControlName="password"
+            class="form-control input-sin-borde-derecho">
+          <button class="btn btn-ojito" type="button" (click)="togglePassword()">
+            <i class="bi" [ngClass]="mostrarPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </button>
+        </div>
+      
+        <div *ngIf="password.touched || password.dirty" class="text-danger small mt-1">
+          <div *ngIf="password.errors?.['required']">La contraseña es obligatoria</div>
           <div *ngIf="!password.errors?.['required'] && (password.errors?.['minlength'] || password.errors?.['pattern'])">
             Debe tener al menos 6 caracteres, una mayúscula y un número
           </div>
         </div>
       </div>
+      
+      <div class="mb-3">
+        <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+        <div class="input-group">
+          <input [type]="mostrarConfirmPassword ? 'text' : 'password'" id="confirmPassword" formControlName="confirmPassword"
+            class="form-control input-sin-borde-derecho">
+          <button class="btn btn-ojito" type="button" (click)="toggleConfirmPassword()">
+            <i class="bi" [ngClass]="mostrarConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </button>
+        </div>
+      
+        <div *ngIf="registroForm.errors?.['noCoinciden'] && (confirmPassword.touched || confirmPassword.dirty)"
+          class="text-danger small mt-1">
+          Las contraseñas no coinciden.
+        </div>
+        <div *ngIf="confirmPassword.errors?.['required'] && (confirmPassword.touched || confirmPassword.dirty)"
+          class="text-danger small mt-1">
+          Debes confirmar la contraseña.
+        </div>
+      </div>
 
-      <button type="submit" class="btn btn-primary w-100 mb-3">Registrarse</button>
+      <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="loading">
+        {{ loading ? 'Registrando...' : 'Registrarse' }}
+      </button>
 
       <div class="text-center small">
         <span>¿Ya estás registrado? </span>
