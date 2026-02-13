@@ -13,17 +13,23 @@ interface ClasesResponse {
   selector: 'app-clases-list',
   standalone: true,
   imports: [CommonModule, RouterLink],
-  templateUrl: './clases-list.html',
+  templateUrl: './clases-list.html', // Asegurate que la extensión sea correcta (.html)
   styleUrls: ['./clases-list.css']
 })
 export class ClasesListComponent implements OnInit {
 
+  // Listas de Clases ACTIVAS
   clasesComoProfe: Clase[] = [];
   clasesComoAlumno: Clase[] = [];
-  
+
+  // Listas de Clases ARCHIVADAS (Nuevas)
+  archivadasProfe: Clase[] = [];
+  archivadasAlumno: Clase[] = [];
+
+  // Variables de Estado
   clasesAMostrar: Clase[] = []; 
   esVistaProfesor: boolean = false; 
-  
+  modoArchivadas: boolean = false; // Nueva bandera: ¿Estamos viendo el archivo?
   errorMessage: string | null = null;
 
   constructor(
@@ -35,20 +41,21 @@ export class ClasesListComponent implements OnInit {
     this.loadClases();
   }
 
+  // Carga las clases ACTIVAS (Tu lógica original)
   loadClases(): void {
     this.claseService.getMisClases().subscribe({
       next: (data: ClasesResponse) => {
         this.clasesComoProfe = data.clasesComoProfe || [];
         this.clasesComoAlumno = data.clasesComoAlumno || [];
         
+        // Lógica inteligente para decidir qué mostrar al inicio
         if (this.clasesComoProfe.length > 0) {
-          this.clasesAMostrar = this.clasesComoProfe;
           this.esVistaProfesor = true;
         } else {
-          this.clasesAMostrar = this.clasesComoAlumno;
           this.esVistaProfesor = false;
         }
-
+        
+        this.actualizarListaVisible(); // Usamos el helper centralizado
         this.cd.detectChanges();
       },
       error: (err) => {
@@ -58,33 +65,79 @@ export class ClasesListComponent implements OnInit {
       }
     });
   }
+
+  // Nueva: Carga las clases ARCHIVADAS del backend
+  loadArchivadas(): void {
+    this.claseService.getClasesArchivadas().subscribe({
+      next: (data: any) => { // data trae { clasesComoProfe, clasesComoAlumno }
+        this.archivadasProfe = data.clasesComoProfe || [];
+        this.archivadasAlumno = data.clasesComoAlumno || [];
+        
+        this.actualizarListaVisible(); // Refrescamos la vista
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al cargar archivadas:', err);
+        alert('Error al cargar el historial de clases.');
+      }
+    });
+  }
   
+  // Modificado: Cambia entre la pestaña "Alumno" y "Profesor"
   cambiarVista(): void {
     this.esVistaProfesor = !this.esVistaProfesor;
-    this.clasesAMostrar = this.esVistaProfesor ? this.clasesComoProfe : this.clasesComoAlumno;
+    this.actualizarListaVisible(); // Helper centralizado
+  }
+
+  // Nuevo: El interruptor para ver/ocultar archivadas
+  toggleModoArchivadas(): void {
+    this.modoArchivadas = !this.modoArchivadas;
+
+    // Si activamos el modo y las listas están vacías, vamos a buscarlas al servidor
+    if (this.modoArchivadas && this.archivadasProfe.length === 0 && this.archivadasAlumno.length === 0) {
+      this.loadArchivadas();
+    } else {
+      this.actualizarListaVisible();
+    }
+  }
+
+  // Helper Privado: El "Cerebro" que decide qué lista poner en pantalla
+  private actualizarListaVisible(): void {
+    if (this.esVistaProfesor) {
+      // Si estoy en pestaña PROFE: ¿Muestro las viejas o las nuevas?
+      this.clasesAMostrar = this.modoArchivadas ? this.archivadasProfe : this.clasesComoProfe;
+    } else {
+      // Si estoy en pestaña ALUMNO: ¿Muestro las viejas o las nuevas?
+      this.clasesAMostrar = this.modoArchivadas ? this.archivadasAlumno : this.clasesComoAlumno;
+    }
     this.cd.detectChanges();
   }
-  onEliminarClase(claseId: string): void {
-    if (!confirm('¿Estás seguro de que quieres eliminar esta clase? Esta acción no se puede deshacer.')) {
+
+  // Tu método original (perfecto como estaba)
+  onArchivarClase(claseId: string): void {
+    if (!confirm('¿Estás seguro de que quieres archivar esta clase? Ya no podrás crear proyectos ni agregar alumnos.')) {
       return;
     }
   
-    this.claseService.eliminarClase(claseId).subscribe({
+    this.claseService.archivarClase(claseId).subscribe({
       next: (res) => {
-        // Filtramos visualmente para que desaparezca sin recargar
-        this.clasesAMostrar = this.clasesAMostrar.filter(c => c._id !== claseId);
+        // Sacamos la clase de las listas de ACTIVAS
         this.clasesComoProfe = this.clasesComoProfe.filter(c => c._id !== claseId);
         this.clasesComoAlumno = this.clasesComoAlumno.filter(c => c._id !== claseId);
         
-        this.cd.detectChanges();
-        alert('Clase eliminada correctamente.');
+        // (Opcional) Podrías moverla a la lista de archivadas localmente si quisieras
+        // pero con sacarla de la vista basta por ahora.
+
+        this.actualizarListaVisible(); // Actualizamos lo que ve el usuario
+        
+        alert('Clase archivada correctamente.');
       },
       error: (err) => {
-        console.error('Error al eliminar clase:', err);
-        const mensajeBackend = err.error?.message || 'No se pudo eliminar la clase. Intenta de nuevo.';
-        
+        console.error('Error al archivar clase:', err);
+        const mensajeBackend = err.error?.message || 'No se pudo archivar la clase.';
         alert(mensajeBackend); 
       }
     });
   }
+
 }

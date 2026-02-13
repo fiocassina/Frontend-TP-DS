@@ -33,6 +33,7 @@
   transition: transform 0.2s ease;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .class-card:hover {
@@ -102,4 +103,29 @@
   border: none;
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-icon-archivar {
+  position: absolute !important;
+  top: 15px !important;
+  right: 15px !important;
+  display: inline-block !important;
+  width: auto !important;
+  height: auto !important;
+  font-size: 1.2rem;
+  color: #6c757d;
+  cursor: pointer !important;
+  z-index: 20;
+  transition: all 0.2s ease;
+}
+
+.btn-icon-archivar:hover {/*esto hace que el icono se destaque al pasar el mouse*/
+  color: #dc3545;
+  transform: scale(1.2);
+}
+
+.archivada-bg {
+  background-color: #f8f9fa !important;
+  border: 1px dashed #dee2e6 !important;
+  opacity: 0.8;
 }
