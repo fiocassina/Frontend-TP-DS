@@ -46,6 +46,10 @@ export class UsuarioService {
   return this.http.put(`${this.apiUrl}/perfil`, data, { headers: this.getAuthHeaders() });
   }
 
+cambiarPasswordAutenticado(datos: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/cambiar-password-autenticado`, datos, { headers: this.getAuthHeaders() });
+}
+
   desactivarPerfil(): Observable<any> {
     return this.http.delete(`${this.apiUrl}/perfil`, { headers: this.getAuthHeaders() });
   }

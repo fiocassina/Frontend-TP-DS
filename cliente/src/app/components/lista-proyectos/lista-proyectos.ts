@@ -34,6 +34,7 @@ export class ListaProyectosComponent implements AfterViewInit {
   proyectoParaCorreccion: Proyecto | null = null; 
   entregaSeleccionada: any = null; 
   proyectoDeLaEntrega: any = null;
+  tabActual: 'generales' | 'cancelados' = 'generales';
   private editarModal: any;
 
   constructor(
@@ -49,6 +50,16 @@ export class ListaProyectosComponent implements AfterViewInit {
     }
   }
 
+  get proyectosFiltrados(): Proyecto[] {
+    if (!this.proyectos) return [];
+    
+    if (this.tabActual === 'generales') {
+      return this.proyectos.filter(p => p.estado !== 'cancelado');
+    } else {
+      return this.proyectos.filter(p => p.estado === 'cancelado');
+    }
+  }
+
   abrirModalCorreccion(proyecto: Proyecto): void {
     if (proyecto.entrega && proyecto.entrega.correccion) {
       this.correccionSeleccionada = proyecto.entrega.correccion;
@@ -56,9 +67,35 @@ export class ListaProyectosComponent implements AfterViewInit {
     }
   }
 
-  deleteProyecto(proyectoId: string) {
-    this.eliminar.emit(proyectoId);
+deleteProyecto(proyectoId: string) {
+  if (!confirm('¿Estás seguro de que quieres eliminar este proyecto? Si tiene entregas, sólo se cancelará.')) {
+    return;
   }
+
+  this.proyectoService.deleteProyecto(proyectoId).subscribe({
+    next: (res: any) => {
+        
+        if (res.tipo === 'CANCELADO') {
+          const proyecto = this.proyectos.find(p => p._id === proyectoId);
+          if (proyecto) {
+            proyecto.estado = 'cancelado';
+          }
+          alert(res.mensaje);
+          
+        } else {
+          this.proyectos = this.proyectos.filter(p => p._id !== proyectoId);
+          alert('Proyecto eliminado permanentemente.');
+        }
+
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al eliminar proyecto:', err);
+        const mensajeBackend = err.error?.message || 'Error al eliminar.';
+        alert(mensajeBackend);
+      }
+  });
+}
 
   abrirModalEditar(proyecto: Proyecto): void {
     this.proyectoSeleccionado = { ...proyecto };
@@ -188,25 +225,27 @@ export class ListaProyectosComponent implements AfterViewInit {
   }
 
   eliminarEntrega(proyectoId: string, entregaId: string): void {
-    
-    if (confirm('¿Está seguro de que desea eliminar su entrega? Esta acción no se puede deshacer.')) {
-      
-      this.entregaService.eliminarEntrega(entregaId).subscribe({
-        next: () => {
-          const index = this.proyectos.findIndex(p => p._id === proyectoId);
-          if (index !== -1) {
-            this.proyectos[index].entregado = false;
-            this.proyectos[index].entrega = undefined; 
-            this.cd.detectChanges();
-          }
-          this.cd.detectChanges();
-        },
-        error: (err) => {
-          console.error('Error al eliminar entrega:', err);
-          this.errorMessage = 'No se pudo eliminar la entrega.';
-        }
-      });
+    if (!confirm('¿Está seguro de que desea eliminar su entrega? Esta acción no se puede deshacer.')) {
+      return;
     }
+      
+    this.entregaService.eliminarEntrega(entregaId).subscribe({
+      next: () => {
+        const index = this.proyectos.findIndex(p => p._id === proyectoId);
+        if (index !== -1) {
+          this.proyectos[index].entregado = false;
+          this.proyectos[index].entrega = undefined; 
+          this.cd.detectChanges();
+        }
+        alert('Entrega eliminada correctamente.');
+      },
+      error: (err) => {
+        console.error('Error al eliminar entrega:', err);
+        const mensajeBackend = err.error?.message || 'No se pudo eliminar la entrega.';
+        
+        alert(mensajeBackend);
+      }
+    });
   }
 
   iniciarEdicion(proyecto: any) {
@@ -223,5 +262,8 @@ export class ListaProyectosComponent implements AfterViewInit {
     this.errorMessage = '';
   }
 
+  tieneCancelados(): boolean {
+  return this.proyectos ? this.proyectos.some(p => p.estado === 'cancelado') : false;
+}
 
 }

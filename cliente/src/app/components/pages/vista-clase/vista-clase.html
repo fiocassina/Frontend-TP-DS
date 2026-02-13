@@ -60,7 +60,14 @@
 
                 <div *ngIf="!modoEdicion">
                   <div class="mb-3 mt-3">
-                    <p class="mb-1"><strong>Profesor:</strong> {{ clase?.profesorId?.nombreCompleto || 'No asignado' }}
+                    <p class="mb-1">
+                      <strong>Profesor:</strong>
+                      {{ clase?.profesorId?.nombreCompleto || 'No asignado' }}
+                  
+                      <span *ngIf="clase?.profesorId?.activo === false" class="badge bg-danger ms-2"
+                        title="Este usuario ya no tiene acceso al sistema">
+                        (Inactivo)
+                      </span>
                     </p>
                     <p class="mb-1"><strong>Alumnos inscritos:</strong> {{ alumnos.length }}</p>
                   </div>
@@ -130,57 +137,62 @@
 
                 <div *ngIf="mostrarFormularioProyecto && esProfesor" class="mb-3 p-3 border rounded-3 bg-light">
                   <form #proyectoForm="ngForm" (ngSubmit)="crearProyecto(proyectoForm)" autocomplete="off">
-
+                  
                     <div class="mb-2">
                       <label class="form-label">Nombre del proyecto</label>
-                      <input type="text" class="form-control" name="nombre" [(ngModel)]="nuevoProyecto.nombre"
-                        #nombre="ngModel" required>
+                      <input type="text" class="form-control" name="nombre" [(ngModel)]="nuevoProyecto.nombre" #nombre="ngModel" required
+                        minlength="3" maxlength="50">
+                  
                       <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched || proyectoForm.submitted)"
                         class="text-danger small mt-1">
-                        El nombre es obligatorio.
+                        <div *ngIf="nombre.errors?.['required']">El nombre es obligatorio.</div>
+                        <div *ngIf="nombre.errors?.['minlength']">Mínimo 3 caracteres.</div>
                       </div>
                     </div>
-
+                  
                     <div class="mb-2">
                       <label class="form-label">Descripción</label>
-                      <textarea class="form-control" rows="2" name="descripcion"
-                        [(ngModel)]="nuevoProyecto.descripcion"></textarea>
+                      <textarea class="form-control" rows="2" name="descripcion" [(ngModel)]="nuevoProyecto.descripcion"
+                        #descripcion="ngModel" required minlength="5" maxlength="200"></textarea>
+                  
+                      <div *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched || proyectoForm.submitted)"
+                        class="text-danger small mt-1">
+                        <div *ngIf="descripcion.errors?.['required']">La descripción es obligatoria.</div>
+                        <div *ngIf="descripcion.errors?.['minlength']">Mínimo 5 caracteres.</div>
+                      </div>
                     </div>
-
+                  
                     <div class="mb-2 position-relative autocomplete-container">
                       <label class="form-label">Tipo de proyecto</label>
-
-                      <input type="text" class="form-control" name="tipoProyectoBusqueda"
-                        [(ngModel)]="tipoProyectoBusqueda" (input)="onBusquedaChange()" (blur)="onBlurInput()"
-                        placeholder="Escribí para buscar (ej: Web)" required>
-
+                  
+                      <input type="text" class="form-control" name="tipoProyectoBusqueda" [(ngModel)]="tipoProyectoBusqueda"
+                        (input)="onBusquedaChange()" (blur)="onBlurInput()" placeholder="Escribí para buscar (ej: Web)" required>
+                  
                       <ul *ngIf="mostrarSugerencias" class="sugerencias-lista">
-                        <li *ngFor="let tipo of sugerenciasFiltradas" class="sugerencia-item"
-                          (click)="seleccionarSugerencia(tipo)">
-
+                        <li *ngFor="let tipo of sugerenciasFiltradas" class="sugerencia-item" (click)="seleccionarSugerencia(tipo)">
                           <strong>{{ tipo.nombre }}</strong>
                           <br><small class="text-muted">{{ tipo.descripcion | slice:0:40 }}...</small>
                         </li>
                       </ul>
-
+                  
                       <div *ngIf="proyectoForm.submitted && !nuevoProyecto.tipoProyecto" class="text-danger small mt-1">
-                        Campo obligatorio.
+                        Campo obligatorio. Seleccioná una opción de la lista.
                       </div>
                     </div>
+                  
                     <div class="mb-2">
                       <label class="form-label">Fecha de entrega</label>
-                      <input type="date" class="form-control" name="fechaEntrega"
-                        [(ngModel)]="nuevoProyecto.fechaEntrega" #fechaEntrega="ngModel" required>
-                      <div *ngIf="fechaEntrega.invalid && (fechaEntrega.dirty || fechaEntrega.touched)"
-                        class="text-danger small mt-1">
+                      <input type="date" class="form-control" name="fechaEntrega" [(ngModel)]="nuevoProyecto.fechaEntrega"
+                        #fechaEntrega="ngModel" required>
+                      <div *ngIf="fechaEntrega.invalid && (fechaEntrega.dirty || fechaEntrega.touched)" class="text-danger small mt-1">
                         La fecha es obligatoria.
                       </div>
                     </div>
-
+                  
                     <div *ngIf="mensajeErrorFormulario" class="alert alert-danger mt-2 py-2 small" role="alert">
                       <i class="bi bi-exclamation-circle-fill me-2"></i> {{ mensajeErrorFormulario }}
                     </div>
-
+                  
                     <button type="submit" class="btn btn-success btn-sm mt-2">Guardar Proyecto</button>
                   </form>
                 </div>
@@ -190,7 +202,7 @@
                 </div>
 
                 <app-lista-proyectos [proyectos]="proyectos" [esProfesor]="esProfesor"
-                  (eliminar)="deleteProyecto($event)" (entregaExitosa)="onEntregaRealizada()"> </app-lista-proyectos>
+                  (entregaExitosa)="onEntregaRealizada()"> </app-lista-proyectos>
 
                 <div *ngIf="esProfesor" class="mt-4">
                   <h5 class="card-title text-muted mb-3">GESTIÓN DE TIPOS DE PROYECTO</h5>

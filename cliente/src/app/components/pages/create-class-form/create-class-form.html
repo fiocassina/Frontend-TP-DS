@@ -20,10 +20,6 @@
             <p class="mt-2 text-muted">Creando la clase...</p>
           </div>
 
-          <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorMessage }}
-          </div>
-
           <div *ngIf="successMessage" class="alert alert-success text-center" role="alert">
             <i class="bi bi-check-circle-fill me-2"></i> {{ successMessage }}
           </div>
@@ -32,12 +28,19 @@
 
             <div class="mb-3">
               <label for="nombreClase" class="form-label">Nombre de la clase <span class="text-danger">*</span></label>
+            
               <input type="text" id="nombreClase" class="form-control" formControlName="nombre"
-                placeholder="Ej: Matemática Avanzada">
-              <div
-                *ngIf="claseForm.get('nombre')?.invalid && (claseForm.get('nombre')?.touched || claseForm.get('nombre')?.dirty)"
-                class="form-text text-danger">
+                placeholder="Ej: Matemática Avanzada"
+                [class.is-invalid]="(claseForm.get('nombre')?.invalid && (claseForm.get('nombre')?.touched || claseForm.get('nombre')?.dirty)) || errorMessage"
+                (input)="errorMessage = ''">
+            
+              <div *ngIf="claseForm.get('nombre')?.invalid && (claseForm.get('nombre')?.touched || claseForm.get('nombre')?.dirty)"
+                class="invalid-feedback">
                 El nombre de la clase es obligatorio.
+              </div>
+            
+              <div *ngIf="errorMessage" class="invalid-feedback d-block">
+                <i class="bi bi-exclamation-triangle-fill me-1"></i> {{ errorMessage }}
               </div>
             </div>
 

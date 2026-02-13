@@ -19,7 +19,8 @@ export class EntregaListComponent implements OnInit {
   entregas: Entrega[] = [];
   proyectoId!: string;
   claseId: string | null = null; 
-  nombreProyecto: string = '';  
+  nombreProyecto: string = ''; 
+  proyecto: any; 
 
   private entregaService = inject(EntregaService);
   private proyectoService = inject(ProyectoService); 
@@ -35,7 +36,6 @@ export class EntregaListComponent implements OnInit {
   }
 
   cargarDatos(): void {
-    // 1. Cargar las entregas (lo que ya hacías)
     this.entregaService.obtenerEntregas(this.proyectoId)
       .subscribe({
         next: (data) => {
@@ -48,6 +48,7 @@ export class EntregaListComponent implements OnInit {
 
     this.proyectoService.getProyectoById(this.proyectoId).subscribe({
       next: (proyecto: any) => {
+        this.proyecto = proyecto;
         this.nombreProyecto = proyecto.nombre;
         
         if (proyecto.clase && typeof proyecto.clase === 'object') {
@@ -55,6 +56,7 @@ export class EntregaListComponent implements OnInit {
         } else {
             this.claseId = proyecto.clase; // Si es solo el string
         }
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Error al cargar info del proyecto:', err)
     });
@@ -62,6 +64,10 @@ export class EntregaListComponent implements OnInit {
 
   verDetalle(entregaId?: string): void {
     if (!entregaId) return;
+    if (this.proyecto?.estado === 'cancelado') {
+    alert('No se pueden realizar correcciones en un proyecto cancelado.');
+    return;
+  }
     this.router.navigate(['/entregas', entregaId]);
   }
 
@@ -74,6 +80,10 @@ export class EntregaListComponent implements OnInit {
   }
 
   eliminarCorreccion(entrega: Entrega): void {
+    if (this.proyecto?.estado === 'cancelado') {
+    alert('Las correcciones de proyectos cancelados están bloqueadas.');
+    return;
+    }
     if (!entrega.correccion?._id) {
       alert('No hay corrección que eliminar.');
       return;

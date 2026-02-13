@@ -76,11 +76,16 @@ export class CreateClassForm implements OnInit {
           this.cd.detectChanges();
         }
       },
-      error: (error) => {
-        this.errorMessage = 'Hubo un error al crear la clase. Intenta de nuevo.';
-        this.isLoading = false;
-        this.cd.detectChanges();
+      error: (err) => {
+      console.error('Error al crear:', err);
+      this.isLoading = false;
+      if (err.status === 400) {
+        this.errorMessage = err.error.message || 'Error de validación.';
+      } else {
+        this.errorMessage = 'Ocurrió un error inesperado. Intente nuevamente.';
       }
+      this.cd.detectChanges();
+    }
     });
   }
 }

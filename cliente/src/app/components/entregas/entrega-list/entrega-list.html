@@ -52,12 +52,21 @@
                   </span>
                 </td>
                 <td class="text-center" [ngSwitch]="entrega.estado">
-
-                  <button *ngSwitchCase="'pendiente'" class="btn btn-sm btn-primary shadow-sm"
-                    (click)="verDetalle(entrega._id)">
-                    <i class="bi bi-pencil-fill me-1"></i> Corregir
-                  </button>
-
+                
+                  <div *ngSwitchCase="'pendiente'" class="d-flex align-items-center justify-content-center gap-2">
+                
+                    <button *ngIf="proyecto?.estado !== 'cancelado'" class="btn btn-sm btn-primary shadow-sm"
+                      (click)="verDetalle(entrega._id)">
+                      <i class="bi bi-pencil-fill me-1"></i> Corregir
+                    </button>
+                
+                    <ng-container *ngIf="proyecto?.estado === 'cancelado'">
+                      <span class="badge fs-6 bg-secondary">Pendiente</span>
+                      <i class="bi bi-lock text-muted" title="Proyecto cancelado"></i>
+                    </ng-container>
+                
+                  </div>
+                
                   <div *ngSwitchCase="'aprobada'" class="d-flex align-items-center justify-content-center gap-2">
                     <span class="badge fs-6 text-bg-success d-inline-flex align-items-center gap-2">
                       Aprobada
@@ -65,16 +74,19 @@
                         {{ entrega.correccion?.nota }}
                       </span>
                     </span>
-                    <button class="btn btn-sm btn-warning" (click)="verDetalle(entrega._id)"
-                      title="Editar corrección">
-                      <i class="bi bi-pencil-square"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger" (click)="eliminarCorreccion(entrega)"
-                      title="Eliminar corrección">
-                      <i class="bi bi-trash"></i>
-                    </button>
+                
+                    <ng-container *ngIf="proyecto?.estado !== 'cancelado'">
+                      <button class="btn btn-sm btn-warning" (click)="verDetalle(entrega._id)" title="Editar corrección">
+                        <i class="bi bi-pencil-square"></i>
+                      </button>
+                      <button class="btn btn-sm btn-danger" (click)="eliminarCorreccion(entrega)" title="Eliminar corrección">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </ng-container>
+                
+                    <i *ngIf="proyecto?.estado === 'cancelado'" class="bi bi-lock text-muted" title="Proyecto cancelado"></i>
                   </div>
-
+                
                   <div *ngSwitchCase="'desaprobada'" class="d-flex align-items-center justify-content-center gap-2">
                     <span class="badge fs-6 text-bg-danger d-inline-flex align-items-center gap-2">
                       Desaprobada
@@ -82,16 +94,19 @@
                         {{ entrega.correccion?.nota }}
                       </span>
                     </span>
-                    <button class="btn btn-sm btn-warning" (click)="verDetalle(entrega._id)"
-                      title="Editar corrección">
-                      <i class="bi bi-pencil-square"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger" (click)="eliminarCorreccion(entrega)"
-                      title="Eliminar corrección">
-                      <i class="bi bi-trash"></i>
-                    </button>
+                
+                    <ng-container *ngIf="proyecto?.estado !== 'cancelado'">
+                      <button class="btn btn-sm btn-warning" (click)="verDetalle(entrega._id)" title="Editar corrección">
+                        <i class="bi bi-pencil-square"></i>
+                      </button>
+                      <button class="btn btn-sm btn-danger" (click)="eliminarCorreccion(entrega)" title="Eliminar corrección">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </ng-container>
+                
+                    <i *ngIf="proyecto?.estado === 'cancelado'" class="bi bi-lock text-muted" title="Proyecto cancelado"></i>
                   </div>
-
+                
                 </td>
               </tr>
               <tr *ngIf="entregas.length === 0">

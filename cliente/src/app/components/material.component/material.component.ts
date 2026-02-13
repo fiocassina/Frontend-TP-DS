@@ -91,15 +91,23 @@ export class MaterialComponent implements OnInit {
       next: (response) => {
         console.log('Material creado', response);
         this.mensajeExito = 'El material se cargó correctamente';
+        
         this.nuevoMaterialNombre = '';
         this.nuevoMaterialTipoId = '';
         this.nuevoMaterialUrl = '';
         this.selectedFile = null;
         this.errorMessage = '';
+        
         this.materialAgregado.emit();
       },
       error: (err: any) => {
-        this.errorMessage = 'Error al agregar el material.';
+        console.error('Error subiendo material:', err);
+        
+        if (err.status === 400 && err.error && err.error.message) {
+            this.errorMessage = err.error.message;
+        } else {
+            this.errorMessage = 'Ocurrió un error al subir el material. Intenta nuevamente.';
+        }
       }
     });
   }

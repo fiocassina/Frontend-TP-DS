@@ -1,14 +1,19 @@
-<nav class="nav flex-column">
+<nav class="nav-container d-flex flex-column gap-1">
+
   <a class="nav-link nav-item" routerLink="/inicio" routerLinkActive="active">
     Inicio
   </a>
+
   <a class="nav-link nav-item" routerLink="/perfil" routerLinkActive="active">
     Mi perfil
   </a>
-  <a class="nav-link nav-item" routerLink="/listadoProyPend" routerLinkActive="active">
+
+  <a *ngIf="esAlumno" class="nav-link nav-item" routerLink="/listadoProyPend" routerLinkActive="active">
     Entregas pendientes
   </a>
+
   <a class="nav-link nav-item text-danger" style="cursor: pointer;" (click)="cerrarSesion()">
     Cerrar Sesión
   </a>
+
 </nav>

@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Usuario } from '../../../models/usuario-interface';
 import { UsuarioService } from '../../../services/usuario.service';
 import { EncabezadoComponent } from '../../encabezado/encabezado.component';
 import { NavbarComponent } from '../../navbar/navbar';
-import { ChangeDetectorRef } from '@angular/core';
 
 
 @Component({
@@ -17,11 +16,20 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrls: ['./perfil.css']
 })
 export class PerfilComponent implements OnInit {
+  @ViewChild('passForm') passForm!: NgForm;
+  @ViewChild('botonCerrar') botonCerrar!: ElementRef;
   usuario: Usuario | null = null;
   usuarioEditado: Partial<Usuario> = {};
   modoEdicion = false;
   cargando = true; 
   errorMessage = '';
+  passwords = {
+    actual: '',
+    nueva: '',
+    confirmar: ''
+  };
+  messagePassword: string | null = null;
+  errorPassword: string | null = null;
 
   constructor(private usuarioService: UsuarioService, private router: Router, private cd: ChangeDetectorRef) {}
 
@@ -99,4 +107,72 @@ export class PerfilComponent implements OnInit {
       });
     }
   }
+
+  limpiarFormularioPassword() {
+    if (this.passForm) {
+      this.passForm.resetForm(); 
+    }
+    this.passwords = { actual: '', nueva: '', confirmar: '' };
+    this.messagePassword = null;
+    this.errorPassword = null;
+  }
+
+  cambiarPassword() {
+    if (this.passwords.nueva !== this.passwords.confirmar) {
+      this.errorPassword = 'Las contraseñas nuevas no coinciden.';
+      return;
+    }
+    
+    if (this.passwords.nueva.length < 6) {
+      this.errorPassword = 'La contraseña debe tener al menos 6 caracteres.';
+      return;
+    }
+    const tieneMayuscula = /[A-Z]/.test(this.passwords.nueva);
+    const tieneNumero = /[0-9]/.test(this.passwords.nueva);
+
+    if (!tieneMayuscula || !tieneNumero) {
+      this.errorPassword = 'La contraseña debe tener al menos una letra mayúscula y un número.';
+      return;
+    }
+
+    //this.loadingPassword = true;
+    this.errorPassword = null;
+    this.messagePassword = null;
+
+    const datosParaBack = {
+      currentPassword: this.passwords.actual, 
+      newPassword: this.passwords.nueva       
+    };
+
+    this.usuarioService.cambiarPasswordAutenticado(datosParaBack).subscribe({
+      next: (res) => {
+        this.messagePassword = res.mensaje || 'Contraseña actualizada con éxito';
+        this.cd.detectChanges();
+        // limpiamos los campos
+        setTimeout(() => {
+          this.passForm.resetForm();
+          this.botonCerrar.nativeElement.click();
+          this.messagePassword = null;
+          this.cd.detectChanges();
+        }, 3000);
+      },
+      error: (err) => {
+        console.error(err);
+        
+        if (err.status === 422) {
+          this.errorPassword = 'La contraseña actual es incorrecta.';
+        } else if (err.status === 400) {
+          this.errorPassword = err.error.mensaje || 'Datos inválidos.'; 
+        }
+          else if (err.status === 401 ) {
+          return;
+        }        
+        else {
+          this.errorPassword = 'Ocurrió un error al cambiar la contraseña.';
+        }
+        this.cd.detectChanges();
+      }
+    });
+  }
+
 }

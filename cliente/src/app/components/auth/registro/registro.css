@@ -9,3 +9,28 @@
 .text-primary:hover {
   text-decoration: underline;
 }
+.input-sin-borde-derecho {
+  border-right: none;
+}
+
+/* Estilo personalizado para el ojo */
+.btn-ojito {
+  background-color: white;
+  border: 1px solid #ced4da;
+  border-left: none;
+  color: #6c757d;
+  z-index: 10;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.btn-ojito:hover {
+  color: #212529;
+  background-color: white;
+  border-color: #ced4da;
+}
+
+.btn-ojito:focus {
+  box-shadow: none;
+  border-color: #ced4da;
+}

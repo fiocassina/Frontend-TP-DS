@@ -278,23 +278,12 @@ export class VistaClase implements OnInit {
       },
       error: (err) => {
           console.error(err);
-          this.mensajeErrorFormulario = 'Ocurrió un error al guardar el proyecto.';
+          this.mensajeErrorFormulario = err.error?.error || 'Ocurrió un error al guardar el proyecto.';
           this.cd.detectChanges();
       }
     });
   }
 
-  deleteProyecto(proyectoId: string): void {
-    if (confirm('¿Estás seguro de que deseas eliminar este proyecto? Esta acción no se puede deshacer.')) {
-      this.proyectoService.deleteProyecto(proyectoId).subscribe({
-        next: () => {
-        this.proyectos = this.proyectos.filter(p => p._id !== proyectoId);
-        this.cd.detectChanges(); 
-      },
-        error: (err) => console.error('Error al eliminar proyecto', err)
-      });
-    }
-  }
 
   nombreTipoProyecto(proyecto: Proyecto): string {
     const tipo = this.tiposProyecto.find(t => t._id === proyecto.tipoProyecto?._id);
