@@ -47,9 +47,16 @@
         </div>
       </div>
 
-      <div class="mb-3">
+<div class="mb-3">
         <label for="password" class="form-label">Contraseña</label>
-        <input formControlName="password" type="password" class="form-control" id="password">
+        <div class="input-group">
+          <input [type]="mostrarPassword ? 'text' : 'password'" formControlName="password"
+            class="form-control border-end-0" id="password">
+          <button class="btn bg-white border border-start-0 text-muted" type="button" (click)="togglePassword()">
+            <i class="bi" [ngClass]="mostrarPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </button>
+        </div>
+      
         <div *ngIf="password.invalid && (password.touched || password.dirty)" class="text-danger small mt-1">
           <div *ngIf="password.errors?.['required']">La contraseña es obligatoria</div>
         </div>

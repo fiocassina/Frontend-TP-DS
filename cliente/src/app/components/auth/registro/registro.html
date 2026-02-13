@@ -1,26 +1,19 @@
 <div class="d-flex flex-column align-items-center min-vh-100 bg-gradient-registro p-3 position-relative">
-  
-  
+
   <div *ngIf="errorMessage" class="alert alert-warning d-flex align-items-center shadow position-absolute" style="
-      top: 40px;
-      left: 60%;
-      transform: translateX(30%);
-      z-index: 10;
-      max-width: 400px;
-      border-radius: 10px;
-      animation: fadeIn 0.3s ease-in-out;
+      top: 40px; left: 60%; transform: translateX(30%); z-index: 10; max-width: 400px; border-radius: 10px; animation: fadeIn 0.3s ease-in-out;
     " role="alert">
     <i class="bi bi-exclamation-triangle-fill me-2"></i>
     {{ errorMessage }}
+    <button type="button" class="btn-close ms-3" (click)="errorMessage = null"></button>
   </div>
 
   <div class="text-center text-white mb-4">
     <h1 class="display-4 fw-bolder">StudyRoom </h1>
     <p class="lead mb-0">Ingrese sus datos para registrarse</p>
   </div>
-  <!-- Tarjeta principal -->
+
   <div class="card shadow-sm p-4 w-100" style="max-width: 400px; border-radius: 12px;">
-    
 
     <form [formGroup]="registroForm" (ngSubmit)="registrar()">
       <div class="mb-3">
@@ -44,20 +37,24 @@
 
       <div class="mb-3">
         <label for="password" class="form-label">Contraseña</label>
-        <input id="password" formControlName="password" type="password" class="form-control">
+        <div class="input-group">
+          <input [type]="mostrarPassword ? 'text' : 'password'" id="password" formControlName="password" class="form-control border-end-0">
+          <button class="btn bg-white border border-start-0 text-muted" type="button" (click)="togglePassword()">
+            <i class="bi" [ngClass]="mostrarPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </button>
+        </div>
 
-        
-        <div *ngIf="password.touched || password.dirty" class="text-danger small mt-1" style="min-height: 18px;">
-          <div *ngIf="password.errors?.['required']">
-            La contraseña es obligatoria
-          </div>
-          <div *ngIf="!password.errors?.['required'] && password.errors?.['minlength']">
-            Debe tener al menos 6 caracteres
-          </div>
+        <div *ngIf="password?.touched || password?.dirty" class="text-danger small mt-1">
+          <div *ngIf="password?.hasError('required')">La contraseña es obligatoria.</div>
+          <div *ngIf="password?.hasError('minlength') && !password?.hasError('required')">• Debe tener al menos 6 caracteres.</div>
+          <div *ngIf="faltaMayuscula && !password?.hasError('required')">• Falta al menos una letra mayúscula.</div>
+          <div *ngIf="faltaNumero && !password?.hasError('required')">• Falta al menos un número.</div>
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary w-100 mb-3">Registrarse</button>
+      <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="loading">
+        {{ loading ? 'Registrando...' : 'Registrarse' }}
+      </button>
 
       <div class="text-center small">
         <span>¿Ya estás registrado? </span>
@@ -73,7 +70,6 @@
       opacity: 0;
       transform: translateY(-10px);
     }
-
     to {
       opacity: 1;
       transform: translateY(0);

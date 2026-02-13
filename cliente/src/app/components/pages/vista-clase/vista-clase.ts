@@ -64,6 +64,8 @@ export class VistaClase implements OnInit {
   modoEdicion: boolean = false;
   claseEditada: Partial<Clase> = {};
   mensajeExito: string = '';
+  mensajeSalida: string = '';
+  saliendo: boolean = false; 
 
   constructor(
     private route: ActivatedRoute,
@@ -265,7 +267,7 @@ export class VistaClase implements OnInit {
         this.cargarProyectosYEntregas(this.clase?._id || '');
         this.nuevoProyecto = { nombre: '', descripcion: '', tipoProyecto: null, claseId: this.clase?._id || '', fechaEntrega: '' };
         
-        this.tipoProyectoBusqueda = ''; // Limpiar input
+        this.tipoProyectoBusqueda = ''; 
         this.mensajeExito = 'Proyecto creado correctamente';
         
         this.mostrarFormularioProyecto = false;
@@ -299,6 +301,32 @@ export class VistaClase implements OnInit {
     return tipo ? tipo.nombre : 'Sin tipo';
   }
 
+  salirDeLaClase(): void {
+    const confirmacion = window.confirm('¿Estás seguro de que querés darte de baja de esta clase? Ya no podrás ver sus materiales ni entregar proyectos.');
+    
+    if (confirmacion && this.clase?._id) {
+      this.saliendo = true;
+      this.cd.detectChanges(); 
+
+      this.claseService.salirDeClase(this.clase._id).subscribe({
+        next: (res) => {
+          this.mensajeSalida = 'Te diste de baja de la clase exitosamente. Redirigiendo al inicio...';
+          this.cd.detectChanges(); 
+          
+
+          setTimeout(() => {
+            this.router.navigate(['/inicio']); 
+          }, 1000);
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Ocurrió un error al intentar salir de la clase.');
+          this.saliendo = false;
+          this.cd.detectChanges(); 
+        }
+      });
+    }
+  }
   activarModoEdicion(): void {
     if (this.clase) {
       this.claseEditada = {

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { NgIf, CommonModule } from '@angular/common';
+// Agregamos NgClass acá
+import { NgIf, CommonModule, NgClass } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LoginService } from '../../../services/login.service';
 import { Usuario } from '../../../models/usuario-interface';
@@ -10,7 +11,8 @@ import { HttpClientModule } from '@angular/common/http';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf, RouterModule, HttpClientModule, CommonModule],
+  // Agregamos NgClass a los imports
+  imports: [ReactiveFormsModule, NgIf, RouterModule, HttpClientModule, CommonModule, NgClass],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -18,6 +20,9 @@ export class LoginComponent implements OnInit {
   loginForm: any;
   mostrarRegistroExitoso: boolean = false;
   mostrarRestablecimientoExitoso: boolean = false;
+
+  // VARIABLE DEL OJITO
+  mostrarPassword = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -55,6 +60,10 @@ export class LoginComponent implements OnInit {
   }
 }
 
+  // FUNCIÓN DEL OJITO
+  togglePassword() {
+    this.mostrarPassword = !this.mostrarPassword;
+  }
 
   login() {
     if (this.loginForm.invalid) {
@@ -85,5 +94,3 @@ export class LoginComponent implements OnInit {
     return this.loginForm.get('password');
   }
 }
-
-

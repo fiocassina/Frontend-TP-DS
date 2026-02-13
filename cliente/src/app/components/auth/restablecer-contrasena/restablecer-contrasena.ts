@@ -32,6 +32,10 @@ export class RestablecerContrasenaComponent implements OnInit {
   successMessage: string | null = null;
   emailEnviado: string = ''; 
 
+  // VARIABLES DE LOS OJITOS
+  mostrarPassword = false;
+  mostrarConfirmarPassword = false;
+
   constructor(
     private formBuilder: FormBuilder,
     private loginService: LoginService, 
@@ -46,7 +50,8 @@ export class RestablecerContrasenaComponent implements OnInit {
 
     this.passwordForm = this.formBuilder.group({
       codigo: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      // Agregado el Validators.pattern para validar mayúscula y número
+      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/(?=.*[A-Z])(?=.*[0-9])/)]],
       confirmarPassword: ['', [Validators.required]]
     }, { validators: contrasenaMatchValidator });
   }
@@ -55,6 +60,21 @@ export class RestablecerContrasenaComponent implements OnInit {
   get codigoControl() { return this.passwordForm.get('codigo'); }
   get passwordControl() { return this.passwordForm.get('password'); }
   get confirmarControl() { return this.passwordForm.get('confirmarPassword'); }
+
+  // Detectores para la lista de validación visual
+  get faltaMayuscula(): boolean {
+    if (!this.passwordControl?.value) return false; 
+    return !/[A-Z]/.test(this.passwordControl.value);
+  }
+
+  get faltaNumero(): boolean {
+    if (!this.passwordControl?.value) return false;
+    return !/[0-9]/.test(this.passwordControl.value);
+  }
+
+  // FUNCIONES DE LOS OJITOS
+  togglePassword() { this.mostrarPassword = !this.mostrarPassword; }
+  toggleConfirmarPassword() { this.mostrarConfirmarPassword = !this.mostrarConfirmarPassword; }
 
   enviarCodigo() {
     this.errorMessage = null;
@@ -99,7 +119,8 @@ export class RestablecerContrasenaComponent implements OnInit {
     }
 
     this.loading = true;
-    const { codigo, password } = this.passwordForm.value;
+    const codigo = this.passwordForm.value.codigo.trim();
+    const password = this.passwordForm.value.password;
 
     this.loginService.restablecerPassword(this.emailEnviado, codigo, password).subscribe({
       next: (res) => {
@@ -111,7 +132,7 @@ export class RestablecerContrasenaComponent implements OnInit {
         this.loading = false;
         console.error('Error al cambiar contraseña:', err);
         if (err.status === 400) {
-          this.errorMessage = 'El código es incorrecto o ha expirado.';
+          this.errorMessage = err.error.message || err.error.mensaje || 'El código es incorrecto o ha expirado.';
         } else {
           this.errorMessage = 'Ocurrió un error inesperado.';
         }

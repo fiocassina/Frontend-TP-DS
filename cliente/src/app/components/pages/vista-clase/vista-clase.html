@@ -89,6 +89,15 @@
                     <button class="btn btn-success" (click)="guardarCambios()">Guardar Cambios</button>
                   </div>
                 </div>
+                <div *ngIf="!esProfesor" class="mt-4 text-center border-top pt-3">
+                    <button (click)="salirDeLaClase()" class="btn btn-outline-danger btn-sm rounded-pill px-4" [disabled]="saliendo">
+                      <i class="bi bi-box-arrow-right me-2"></i> Darme de baja de la clase
+                    </button>
+                    
+                    <div *ngIf="mensajeSalida" class="alert alert-success mt-3 mb-0 small text-center" style="animation: fadeIn 0.3s;" role="alert">
+                      <i class="bi bi-check-circle-fill me-2"></i> {{ mensajeSalida }}
+                    </div>
+                  </div>
               </div>
             </div>
 
