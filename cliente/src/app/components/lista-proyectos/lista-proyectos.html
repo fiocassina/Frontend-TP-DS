@@ -23,7 +23,7 @@
           <h5 class="card-title mb-0 me-2">{{ proyecto.nombre }}</h5>
           <span *ngIf="proyecto.estado === 'cancelado'" class="badge bg-danger mt-1">Cancelado</span>
 
-          <div *ngIf="esProfesor && proyecto.estado !== 'cancelado'" class="d-flex gap-1">
+          <div *ngIf="esProfesor && !claseArchivada && proyecto.estado !== 'cancelado'" class="d-flex gap-1">
             <button class="btn btn-outline-secondary btn-sm p-1 px-2" (click)="abrirModalEditar(proyecto)"
               data-bs-toggle="modal" data-bs-target="#editarProyectoModal" title="Editar Proyecto">
               <i class="bi bi-pencil"></i>
@@ -50,14 +50,14 @@
               <i class="bi bi-folder2-open me-2"></i>Ver todas las entregas
             </button>
           
-            <a *ngIf="proyecto.estado !== 'cancelado'" [routerLink]="['/reporte-aprobadas', proyecto._id]"
+            <a *ngIf="proyecto.estado !== 'cancelado' && !claseArchivada" [routerLink]="['/reporte-aprobadas', proyecto._id]"
               class="d-block text-center mt-2 text-success fw-bold text-decoration-underline cursor-pointer small">
               Ver listado de alumnos aprobados
             </a>
           </ng-container>
 
           <ng-container *ngIf="!esProfesor">
-            <ng-container *ngIf="!proyecto.entregado && proyecto.estado !== 'cancelado'">
+            <ng-container *ngIf="!proyecto.entregado && proyecto.estado !== 'cancelado' && !claseArchivada">
               <ng-container *ngIf="!haVencido(proyecto); else fechaVencida">
                 <button class="btn btn-success btn-sm w-100" (click)="toggleEntrega(proyecto._id)">
                   Entregar proyecto
@@ -110,7 +110,7 @@
                     <i class="bi bi-eye me-1"></i> Ver entrega
                   </button>
 
-                  <ng-container *ngIf="proyecto.estado !== 'cancelado'">
+                  <ng-container *ngIf="proyecto.estado !== 'cancelado' && !claseArchivada">
                     <button class="btn btn-outline-warning btn-sm" (click)="iniciarEdicion(proyecto)"
                       title="Editar entrega">
                       <i class="bi bi-pencil"></i>

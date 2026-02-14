@@ -60,7 +60,7 @@ export class VistaClase implements OnInit {
     claseId: '',
     fechaEntrega: ''
   };
-
+  estaArchivada: boolean = false;
   modoEdicion: boolean = false;
   claseEditada: Partial<Clase> = {};
   mensajeExito: string = '';
@@ -98,12 +98,13 @@ export class VistaClase implements OnInit {
       next: (data) => {
         this.clase = data;
         this.alumnos = data.alumnos || []; 
-        
+        this.estaArchivada = data.archivada === true;
         this.nuevoProyecto.claseId = data._id || '';
         this.esProfesor = this.esUsuarioProfesor(data);
         
         this.cargarProyectosYEntregas(claseId);
         this.cargarTiposMaterial(); 
+        this.cd.detectChanges();
       },
       error: (err) => {
         if (err.status === 403 || err.status === 401) {
@@ -366,8 +367,11 @@ export class VistaClase implements OnInit {
   }
 
   expulsarAlumno(alumnoId: string): void {
+    if (this.estaArchivada) {
+    alert('No se pueden expulsar alumnos de una clase archivada.');
+    return;
+    }
     if(!confirm('¿Estás seguro de que querés eliminar a este alumno de la clase?')) return;
-
     if (this.clase && this.clase._id) {
       this.claseService.expulsarAlumno(this.clase._id, alumnoId).subscribe({
         next: () => {
@@ -380,7 +384,8 @@ export class VistaClase implements OnInit {
         },
         error: (err) => {
           console.error(err);
-          alert('Error al expulsar alumno. Intenta nuevamente.');
+          const mensajeError = err.error?.message || 'Error al expulsar alumno. Intenta nuevamente.';
+          alert(mensajeError);
         }
       });
     }

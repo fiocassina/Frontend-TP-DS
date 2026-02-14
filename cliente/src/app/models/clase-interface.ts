@@ -10,4 +10,5 @@ export interface Clase {
         activo?: boolean;
     };
   alumnos: string[];
+  archivada?: boolean;
 }

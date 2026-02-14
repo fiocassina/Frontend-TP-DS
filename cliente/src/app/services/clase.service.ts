@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Clase } from '../models/clase-interface';
+import { map } from 'rxjs';
 
 interface ClasesResponse {
   clasesComoProfe: Clase[];
@@ -41,13 +42,19 @@ export class ClaseService {
     return this.http.get<ClasesResponse>(`${this.apiUrl}/`, { headers });
   }
 
+getClasesArchivadas(): Observable<{ clasesComoProfe: any[], clasesComoAlumno: any[] }> {
+    const token = this.getToken();
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.get<any>(`${this.apiUrl}/archivadas`, { headers });
+  }
+
   getClaseById(id: string): Observable<Clase> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.get<Clase>(`${this.apiUrl}/${id}`, { headers });
   }
 
-  eliminarClase(id: string): Observable<any> {
+  archivarClase(id: string): Observable<any> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.delete<any>(`${this.apiUrl}/${id}`, { headers });
@@ -63,6 +70,13 @@ export class ClaseService {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.delete(`${this.apiUrl}/${claseId}/alumnos/${alumnoId}`, { headers });
+  }
+
+  verificarSoyAlumno(): Observable<boolean> {
+    const token = this.getToken();
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.get<{ esAlumno: boolean }>(`${this.apiUrl}/verificar-alumno`, { headers })
+      .pipe(map(response => response.esAlumno));
   }
 
   salirDeClase(claseId: string): Observable<any> {

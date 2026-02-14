@@ -52,7 +52,7 @@
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                   <h5 class="card-title text-muted">INFORMACION DE CLASE</h5>
-                  <button *ngIf="esProfesor && !modoEdicion" (click)="activarModoEdicion()"
+                  <button *ngIf="esProfesor && !estaArchivada && !modoEdicion" (click)="activarModoEdicion()"
                     class="btn btn-outline-primary btn-sm">
                     <i class="bi bi-pencil-square"></i> Editar clase
                   </button>
@@ -108,7 +108,7 @@
               </div>
             </div>
 
-            <button *ngIf="esProfesor" class="btn btn-primary mb-3 w-100"
+            <button *ngIf="esProfesor && !estaArchivada" class="btn btn-primary mb-3 w-100"
               (click)="mostrarFormularioMaterial = !mostrarFormularioMaterial">
               {{ mostrarFormularioMaterial ? 'Cerrar agregar material' : 'Agregar nuevo material' }}
             </button>
@@ -118,7 +118,7 @@
             </app-material>
             <div class="mt-4">
               <h5 class="text-muted mb-3">MATERIALES</h5>
-              <app-lista-materiales [claseId]="clase?._id || ''" [esProfesor]="esProfesor"></app-lista-materiales>
+              <app-lista-materiales [claseId]="clase?._id || ''" [esProfesor]="esProfesor && !estaArchivada"></app-lista-materiales>
             </div>
 
           </div>
@@ -129,7 +129,7 @@
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
                   <h5 class="card-title text-muted mb-0">PROYECTOS</h5>
-                  <button *ngIf="esProfesor" class="btn btn-primary btn-sm"
+                  <button *ngIf="esProfesor && !estaArchivada" class="btn btn-primary btn-sm"
                     (click)="mostrarFormularioProyecto = !mostrarFormularioProyecto">
                     {{ mostrarFormularioProyecto ? 'Ocultar formulario' : 'Crear Proyecto' }}
                   </button>
@@ -201,10 +201,10 @@
                   <i class="bi bi-check-circle-fill me-2"></i> {{ mensajeExito }}
                 </div>
 
-                <app-lista-proyectos [proyectos]="proyectos" [esProfesor]="esProfesor"
+                <app-lista-proyectos [proyectos]="proyectos" [esProfesor]="esProfesor" [claseArchivada]="estaArchivada"
                   (entregaExitosa)="onEntregaRealizada()"> </app-lista-proyectos>
 
-                <div *ngIf="esProfesor" class="mt-4">
+                <div *ngIf="esProfesor && !estaArchivada" class="mt-4">
                   <h5 class="card-title text-muted mb-3">GESTIÓN DE TIPOS DE PROYECTO</h5>
                   <button class="btn btn-outline-primary btn-sm mb-3"
                     (click)="mostrarTiposProyecto = !mostrarTiposProyecto">
@@ -259,7 +259,7 @@
               </div>
             </div>
 
-            <div class="d-flex gap-2">
+            <div *ngIf="!estaArchivada" class="d-flex gap-2">
 
               <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{alumno.email}}" target="_blank"
                 class="btn btn-outline-secondary btn-sm d-flex align-items-center" title="Enviar Email">

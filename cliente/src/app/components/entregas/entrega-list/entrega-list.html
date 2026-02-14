@@ -55,14 +55,14 @@
                 
                   <div *ngSwitchCase="'pendiente'" class="d-flex align-items-center justify-content-center gap-2">
                 
-                    <button *ngIf="proyecto?.estado !== 'cancelado'" class="btn btn-sm btn-primary shadow-sm"
+                    <button *ngIf="proyecto?.estado !== 'cancelado' && !estaArchivada" class="btn btn-sm btn-primary shadow-sm"
                       (click)="verDetalle(entrega._id)">
                       <i class="bi bi-pencil-fill me-1"></i> Corregir
                     </button>
                 
-                    <ng-container *ngIf="proyecto?.estado === 'cancelado'">
+                    <ng-container *ngIf="proyecto?.estado === 'cancelado' || estaArchivada">
                       <span class="badge fs-6 bg-secondary">Pendiente</span>
-                      <i class="bi bi-lock text-muted" title="Proyecto cancelado"></i>
+                      <i class="bi bi-lock text-muted" title="estaArchivada ? 'Clase archivada' : 'Proyecto cancelado'"></i>
                     </ng-container>
                 
                   </div>
@@ -75,7 +75,7 @@
                       </span>
                     </span>
                 
-                    <ng-container *ngIf="proyecto?.estado !== 'cancelado'">
+                    <ng-container *ngIf="proyecto?.estado !== 'cancelado' && !estaArchivada">
                       <button class="btn btn-sm btn-warning" (click)="verDetalle(entrega._id)" title="Editar corrección">
                         <i class="bi bi-pencil-square"></i>
                       </button>
@@ -84,7 +84,7 @@
                       </button>
                     </ng-container>
                 
-                    <i *ngIf="proyecto?.estado === 'cancelado'" class="bi bi-lock text-muted" title="Proyecto cancelado"></i>
+                    <i *ngIf="proyecto?.estado === 'cancelado' || estaArchivada" class="bi bi-lock text-muted" title="Proyecto cancelado o clase archivada"></i>
                   </div>
                 
                   <div *ngSwitchCase="'desaprobada'" class="d-flex align-items-center justify-content-center gap-2">
@@ -95,7 +95,7 @@
                       </span>
                     </span>
                 
-                    <ng-container *ngIf="proyecto?.estado !== 'cancelado'">
+                    <ng-container *ngIf="proyecto?.estado !== 'cancelado' && !estaArchivada">
                       <button class="btn btn-sm btn-warning" (click)="verDetalle(entrega._id)" title="Editar corrección">
                         <i class="bi bi-pencil-square"></i>
                       </button>
@@ -104,7 +104,7 @@
                       </button>
                     </ng-container>
                 
-                    <i *ngIf="proyecto?.estado === 'cancelado'" class="bi bi-lock text-muted" title="Proyecto cancelado"></i>
+                    <i *ngIf="proyecto?.estado === 'cancelado' || estaArchivada" class="bi bi-lock text-muted" title="Proyecto cancelado o clase archivada"></i>
                   </div>
                 
                 </td>

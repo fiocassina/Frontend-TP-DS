@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject, Input } from '@angular/core';
 import { EntregaService } from '../../../services/entrega.service';
 import { ProyectoService } from '../../../services/proyecto.service'; // <--- IMPORTAR ESTO
 import { Entrega } from '../../../models/entrega-interface';
@@ -15,12 +15,12 @@ import { NavbarComponent } from '../../navbar/navbar';
   styleUrls: ['./entrega-list.css']
 })
 export class EntregaListComponent implements OnInit {
-
   entregas: Entrega[] = [];
   proyectoId!: string;
   claseId: string | null = null; 
   nombreProyecto: string = ''; 
   proyecto: any; 
+  estaArchivada: boolean = false;
 
   private entregaService = inject(EntregaService);
   private proyectoService = inject(ProyectoService); 
@@ -50,12 +50,13 @@ export class EntregaListComponent implements OnInit {
       next: (proyecto: any) => {
         this.proyecto = proyecto;
         this.nombreProyecto = proyecto.nombre;
-        
         if (proyecto.clase && typeof proyecto.clase === 'object') {
-            this.claseId = proyecto.clase._id;
+        this.claseId = proyecto.clase._id;
+        this.estaArchivada = proyecto.clase.archivada === true;
         } else {
-            this.claseId = proyecto.clase; // Si es solo el string
-        }
+        this.claseId = proyecto.clase;
+        this.estaArchivada = proyecto.claseArchivada === true; 
+    }
         this.cdr.detectChanges();
       },
       error: (err) => console.error('Error al cargar info del proyecto:', err)
@@ -64,8 +65,8 @@ export class EntregaListComponent implements OnInit {
 
   verDetalle(entregaId?: string): void {
     if (!entregaId) return;
-    if (this.proyecto?.estado === 'cancelado') {
-    alert('No se pueden realizar correcciones en un proyecto cancelado.');
+    if (this.proyecto?.estado === 'cancelado' || this.estaArchivada) {
+    alert('No se pueden realizar correcciones en una clase archivada o proyecto cancelado.');
     return;
   }
     this.router.navigate(['/entregas', entregaId]);
@@ -80,8 +81,8 @@ export class EntregaListComponent implements OnInit {
   }
 
   eliminarCorreccion(entrega: Entrega): void {
-    if (this.proyecto?.estado === 'cancelado') {
-    alert('Las correcciones de proyectos cancelados están bloqueadas.');
+    if (this.proyecto?.estado === 'cancelado'|| this.estaArchivada) {
+    alert('Las acciones en clases archivadas o proyectos cancelados están bloqueadas.');
     return;
     }
     if (!entrega.correccion?._id) {

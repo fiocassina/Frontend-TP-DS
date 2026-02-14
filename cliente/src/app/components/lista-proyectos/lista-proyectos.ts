@@ -21,6 +21,7 @@ export class ListaProyectosComponent implements AfterViewInit {
   @Input() esProfesor: boolean = false;
   @Output() eliminar = new EventEmitter<string>();
   @Output() entregaExitosa = new EventEmitter<void>();
+  @Input() claseArchivada: boolean = false;
 
   @ViewChild('editarModal') editarModalElement!: ElementRef;
 
@@ -153,6 +154,10 @@ deleteProyecto(proyectoId: string) {
   }
 
   entregarProyecto(proyectoId: string) {
+    if (this.claseArchivada) {
+    this.errorMessage = 'La clase está archivada. No se pueden realizar o editar entregas.';
+    return;
+  }
     if (!this.comentario && !this.archivoSeleccionado) {
       this.errorMessage = 'Debes agregar un comentario o un archivo.';
       return;
@@ -182,7 +187,7 @@ deleteProyecto(proyectoId: string) {
           this.cd.detectChanges();
         },
         error: (err) => {
-          this.errorMessage = 'Error al editar la entrega.';
+          this.errorMessage = err.error?.message || 'Error al editar la entrega.';
         }
       });
 
@@ -208,9 +213,13 @@ deleteProyecto(proyectoId: string) {
           console.error('Error al entregar:', err);
           if (err.status === 400) {
             this.errorMessage = err.error.message || 'Ya has entregado este proyecto.';
-          } else {
+          } else if (err.status === 403) {
+            this.errorMessage = err.error.message || 'No puedes entregar: La clase está archivada.';
+           }
+          else {
             this.errorMessage = 'Error al entregar el proyecto.';
           }
+          this.cd.detectChanges();
         }
     });
 

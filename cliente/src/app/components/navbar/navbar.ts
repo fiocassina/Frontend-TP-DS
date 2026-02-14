@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd, Event, RouterModule } from '@angular/router'; // Importamos Router y eventos
 import { CommonModule } from '@angular/common'; 
 import { filter } from 'rxjs/operators';
@@ -21,7 +21,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   constructor(
     private loginService: LoginService,
     private claseService: ClaseService,
-    private router: Router 
+    private router: Router,
+    private cd: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -59,15 +60,18 @@ export class NavbarComponent implements OnInit, OnDestroy {
         if (typeof localStorage !== 'undefined') {
           localStorage.setItem('esAlumno', resultado ? 'true' : 'false');
         }
+        this.cd.detectChanges();
       },
       error: (err) => console.error(err)
     });
   }
 
   cerrarSesion() {
+    if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
     if (typeof localStorage !== 'undefined') {
       localStorage.removeItem('esAlumno');
     }
     this.loginService.logout();
+    }
   }
 }
