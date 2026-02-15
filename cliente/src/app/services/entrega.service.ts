@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Entrega } from '../models/entrega-interface';
 import { Proyecto } from '../models/proyecto-interface.js';
+import { environment } from '../../environments/environment';
 
 interface ReporteEntrega {
   id: string; 
@@ -19,8 +20,8 @@ interface ReporteEntrega {
   providedIn: 'root'
 })
 export class EntregaService {
-  private baseUrl = 'http://localhost:3000/api/entregas';
-  private correccionesUrl = 'http://localhost:3000/api/correcciones';
+  private baseUrl = `${environment.apiUrl}/entregas`;
+  private correccionesUrl = `${environment.apiUrl}/correcciones`;
 
   constructor(private http: HttpClient) {}
 

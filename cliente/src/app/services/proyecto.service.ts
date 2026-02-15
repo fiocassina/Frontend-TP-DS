@@ -4,12 +4,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TipoProyecto } from '../models/tipo-proyecto-interface';
 import { Proyecto } from '../models/proyecto-interface';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProyectoService {
-  private apiUrl = 'http://localhost:3000/api/proyectos';
+  private apiUrl = `${environment.apiUrl}/proyectos`;
 
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID);

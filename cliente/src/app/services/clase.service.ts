@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Clase } from '../models/clase-interface';
 import { map } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 interface ClasesResponse {
   clasesComoProfe: Clase[];
@@ -13,7 +14,7 @@ interface ClasesResponse {
   providedIn: 'root'
 })
 export class ClaseService {
-  private apiUrl = 'http://localhost:3000/api/clases';
+  private apiUrl = `${environment.apiUrl}/clases`;
 
   constructor(private http: HttpClient) { }
 

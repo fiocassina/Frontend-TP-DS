@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NuevoUsuario, Usuario } from '../models/usuario-interface';
+import { environment } from '../../environments/environment';
 
 export interface RestablecerContrasenaPayload {
   email: string;
@@ -14,7 +15,7 @@ export interface RestablecerContrasenaPayload {
   providedIn: 'root'
 })
 export class UsuarioService {
-  private apiUrl = 'http://localhost:3000/api/usuarios';
+  private apiUrl = `${environment.apiUrl}/usuarios`;
 
   constructor(private http: HttpClient) {}
 

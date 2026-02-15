@@ -4,12 +4,13 @@ import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Proyecto } from '../models/proyecto-interface';
 import { isPlatformBrowser } from '@angular/common';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProyectosPendientesService {
-  private baseUrl = 'http://localhost:3000/api/proyectos'; 
+  private baseUrl = `${environment.apiUrl}/proyectos`;
 
   constructor(
     private http: HttpClient,

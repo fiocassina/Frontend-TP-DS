@@ -3,12 +3,14 @@ import { Usuario } from '../models/usuario-interface';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';  
 import { Router } from '@angular/router'; 
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-  private apiUrl = 'http://localhost:3000/api/usuarios';
+    private apiUrl = `${environment.apiUrl}/usuarios`;
+
 
   constructor(private http: HttpClient, private router: Router) { }
 
