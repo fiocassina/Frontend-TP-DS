@@ -1,15 +1,14 @@
 <app-encabezado></app-encabezado>
 
 <div class="container-fluid">
-  <div class="row flex-nowrap">
-
-    <div class="col-md-2 bg-light min-vh-100 p-3 sidebar">
+  <div class="row">
+    <div class="col-12 col-md-3 col-lg-2 bg-light p-3 sidebar">
       <app-navbar></app-navbar>
     </div>
 
     <div class="col py-3 d-flex justify-content-center align-items-center vh-100">
 
-      <div class="card p-4 shadow-lg" style="width: 28rem;">
+      <div class="card p-4 shadow-lg w-100" style="max-width: 28rem;">
         <div class="card-body">
           <h3 class="card-title text-center mb-4">Crear clase</h3>
 
@@ -28,17 +27,18 @@
 
             <div class="mb-3">
               <label for="nombreClase" class="form-label">Nombre de la clase <span class="text-danger">*</span></label>
-            
+
               <input type="text" id="nombreClase" class="form-control" formControlName="nombre"
                 placeholder="Ej: Matemática Avanzada"
                 [class.is-invalid]="(claseForm.get('nombre')?.invalid && (claseForm.get('nombre')?.touched || claseForm.get('nombre')?.dirty)) || errorMessage"
                 (input)="errorMessage = ''">
-            
-              <div *ngIf="claseForm.get('nombre')?.invalid && (claseForm.get('nombre')?.touched || claseForm.get('nombre')?.dirty)"
+
+              <div
+                *ngIf="claseForm.get('nombre')?.invalid && (claseForm.get('nombre')?.touched || claseForm.get('nombre')?.dirty)"
                 class="invalid-feedback">
                 El nombre de la clase es obligatorio.
               </div>
-            
+
               <div *ngIf="errorMessage" class="invalid-feedback d-block">
                 <i class="bi bi-exclamation-triangle-fill me-1"></i> {{ errorMessage }}
               </div>

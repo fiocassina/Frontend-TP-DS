@@ -1,9 +1,8 @@
 <app-encabezado></app-encabezado>
 
 <div class="container-fluid">
-  <div class="row flex-nowrap">
-
-    <div class="col-md-2 bg-light min-vh-100 p-3 sidebar">
+  <div class="row">
+    <div class="col-12 col-md-3 col-lg-2 bg-light p-3 sidebar">
       <app-navbar></app-navbar>
     </div>
 
@@ -21,101 +20,111 @@
 
       <div class="card shadow-sm border-0">
         <div class="card-body p-0">
-          <table class="table table-hover align-middle mb-0">
-            <thead class="table-light">
-              <tr>
-                <th scope="col">Alumno</th>
-                <th scope="col">Comentario</th>
-                <th scope="col">Archivo</th>
-                <th scope="col">Fecha</th>
-                <th scope="col" class="text-center">Estado / Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let entrega of entregas">
-                <td>{{ entrega.alumno.nombreCompleto }}</td>
-                <td>
-                  <span [ngClass]="{'text-muted fst-italic': !entrega.comentario}">
-                    {{ entrega.comentario || 'Sin comentario' }}
-                  </span>
-                </td>
-                <td>
-                  <a *ngIf="entrega.archivoUrl" [href]="'http://localhost:3000' + entrega.archivoUrl" target="_blank"
-                    class="btn btn-outline-secondary btn-sm">
-                    📎 Ver archivo
-                  </a>
-                  <span *ngIf="!entrega.archivoUrl" class="text-muted">Sin archivo</span>
-                </td>
-                <td>
-                  <span class="badge bg-light text-dark px-2 py-1">
-                    {{ entrega.fechaEntrega ? (entrega.fechaEntrega | date:'short') : 'Sin fecha' }}
-                  </span>
-                </td>
-                <td class="text-center" [ngSwitch]="entrega.estado">
-                
-                  <div *ngSwitchCase="'pendiente'" class="d-flex align-items-center justify-content-center gap-2">
-                
-                    <button *ngIf="proyecto?.estado !== 'cancelado' && !estaArchivada" class="btn btn-sm btn-primary shadow-sm"
-                      (click)="verDetalle(entrega._id)">
-                      <i class="bi bi-pencil-fill me-1"></i> Corregir
-                    </button>
-                
-                    <ng-container *ngIf="proyecto?.estado === 'cancelado' || estaArchivada">
-                      <span class="badge fs-6 bg-secondary">Pendiente</span>
-                      <i class="bi bi-lock text-muted" title="estaArchivada ? 'Clase archivada' : 'Proyecto cancelado'"></i>
-                    </ng-container>
-                
-                  </div>
-                
-                  <div *ngSwitchCase="'aprobada'" class="d-flex align-items-center justify-content-center gap-2">
-                    <span class="badge fs-6 text-bg-success d-inline-flex align-items-center gap-2">
-                      Aprobada
-                      <span class="badge bg-white text-success rounded-pill">
-                        {{ entrega.correccion?.nota }}
-                      </span>
+
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col">Alumno</th>
+                  <th scope="col">Comentario</th>
+                  <th scope="col">Archivo</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col" class="text-center">Estado / Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let entrega of entregas">
+                  <td>{{ entrega.alumno.nombreCompleto }}</td>
+                  <td>
+                    <span [ngClass]="{'text-muted fst-italic': !entrega.comentario}">
+                      {{ entrega.comentario || 'Sin comentario' }}
                     </span>
-                
-                    <ng-container *ngIf="proyecto?.estado !== 'cancelado' && !estaArchivada">
-                      <button class="btn btn-sm btn-warning" (click)="verDetalle(entrega._id)" title="Editar corrección">
-                        <i class="bi bi-pencil-square"></i>
-                      </button>
-                      <button class="btn btn-sm btn-danger" (click)="eliminarCorreccion(entrega)" title="Eliminar corrección">
-                        <i class="bi bi-trash"></i>
-                      </button>
-                    </ng-container>
-                
-                    <i *ngIf="proyecto?.estado === 'cancelado' || estaArchivada" class="bi bi-lock text-muted" title="Proyecto cancelado o clase archivada"></i>
-                  </div>
-                
-                  <div *ngSwitchCase="'desaprobada'" class="d-flex align-items-center justify-content-center gap-2">
-                    <span class="badge fs-6 text-bg-danger d-inline-flex align-items-center gap-2">
-                      Desaprobada
-                      <span class="badge bg-white text-danger rounded-pill">
-                        {{ entrega.correccion?.nota }}
-                      </span>
+                  </td>
+                  <td>
+                    <a *ngIf="entrega.archivoUrl" [href]="'http://localhost:3000' + entrega.archivoUrl" target="_blank"
+                      class="btn btn-outline-secondary btn-sm">
+                      📎 Ver archivo
+                    </a>
+                    <span *ngIf="!entrega.archivoUrl" class="text-muted">Sin archivo</span>
+                  </td>
+                  <td>
+                    <span class="badge bg-light text-dark px-2 py-1">
+                      {{ entrega.fechaEntrega ? (entrega.fechaEntrega | date:'short') : 'Sin fecha' }}
                     </span>
-                
-                    <ng-container *ngIf="proyecto?.estado !== 'cancelado' && !estaArchivada">
-                      <button class="btn btn-sm btn-warning" (click)="verDetalle(entrega._id)" title="Editar corrección">
-                        <i class="bi bi-pencil-square"></i>
+                  </td>
+                  <td class="text-center" [ngSwitch]="entrega.estado">
+
+                    <div *ngSwitchCase="'pendiente'" class="d-flex align-items-center justify-content-center gap-2">
+
+                      <button *ngIf="proyecto?.estado !== 'cancelado' && !estaArchivada"
+                        class="btn btn-sm btn-primary shadow-sm" (click)="verDetalle(entrega._id)">
+                        <i class="bi bi-pencil-fill me-1"></i> Corregir
                       </button>
-                      <button class="btn btn-sm btn-danger" (click)="eliminarCorreccion(entrega)" title="Eliminar corrección">
-                        <i class="bi bi-trash"></i>
-                      </button>
-                    </ng-container>
-                
-                    <i *ngIf="proyecto?.estado === 'cancelado' || estaArchivada" class="bi bi-lock text-muted" title="Proyecto cancelado o clase archivada"></i>
-                  </div>
-                
-                </td>
-              </tr>
-              <tr *ngIf="entregas.length === 0">
-                <td colspan="5" class="text-center text-muted py-4">
-                  No hay entregas para este proyecto.
-                </td>
-              </tr>
-            </tbody>
-          </table>
+
+                      <ng-container *ngIf="proyecto?.estado === 'cancelado' || estaArchivada">
+                        <span class="badge fs-6 bg-secondary">Pendiente</span>
+                        <i class="bi bi-lock text-muted"
+                          title="estaArchivada ? 'Clase archivada' : 'Proyecto cancelado'"></i>
+                      </ng-container>
+
+                    </div>
+
+                    <div *ngSwitchCase="'aprobada'" class="d-flex align-items-center justify-content-center gap-2">
+                      <span class="badge fs-6 text-bg-success d-inline-flex align-items-center gap-2">
+                        Aprobada
+                        <span class="badge bg-white text-success rounded-pill">
+                          {{ entrega.correccion?.nota }}
+                        </span>
+                      </span>
+
+                      <ng-container *ngIf="proyecto?.estado !== 'cancelado' && !estaArchivada">
+                        <button class="btn btn-sm btn-warning" (click)="verDetalle(entrega._id)"
+                          title="Editar corrección">
+                          <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" (click)="eliminarCorreccion(entrega)"
+                          title="Eliminar corrección">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </ng-container>
+
+                      <i *ngIf="proyecto?.estado === 'cancelado' || estaArchivada" class="bi bi-lock text-muted"
+                        title="Proyecto cancelado o clase archivada"></i>
+                    </div>
+
+                    <div *ngSwitchCase="'desaprobada'" class="d-flex align-items-center justify-content-center gap-2">
+                      <span class="badge fs-6 text-bg-danger d-inline-flex align-items-center gap-2">
+                        Desaprobada
+                        <span class="badge bg-white text-danger rounded-pill">
+                          {{ entrega.correccion?.nota }}
+                        </span>
+                      </span>
+
+                      <ng-container *ngIf="proyecto?.estado !== 'cancelado' && !estaArchivada">
+                        <button class="btn btn-sm btn-warning" (click)="verDetalle(entrega._id)"
+                          title="Editar corrección">
+                          <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" (click)="eliminarCorreccion(entrega)"
+                          title="Eliminar corrección">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </ng-container>
+
+                      <i *ngIf="proyecto?.estado === 'cancelado' || estaArchivada" class="bi bi-lock text-muted"
+                        title="Proyecto cancelado o clase archivada"></i>
+                    </div>
+
+                  </td>
+                </tr>
+                <tr *ngIf="entregas.length === 0">
+                  <td colspan="5" class="text-center text-muted py-4">
+                    No hay entregas para este proyecto.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

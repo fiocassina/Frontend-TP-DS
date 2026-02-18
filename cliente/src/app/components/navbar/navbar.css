@@ -34,3 +34,34 @@ nav {
   font-weight: 600;
   background-color: #e9ecef;
 }
+
+/* Media query para dispositivos móviles (tablets y celulares) */
+@media (max-width: 768px) {
+  :host {
+    height: auto;
+    width: 100%;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  nav {
+    flex-direction: row;
+    /* Cambia de columna a fila */
+    overflow-x: auto;
+    gap: 10px;
+    padding-bottom: 5px;
+    scrollbar-width: none;
+  }
+
+  nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-item {
+    width: auto;
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+}

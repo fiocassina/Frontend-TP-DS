@@ -1,4 +1,17 @@
 .sidebar {
-  min-width: 180px;
-  max-width: 220px;
+  /* Reglas móvil por defecto*/
+  width: 100%;
+  min-height: auto;
+  border-bottom: 1px solid #dee2e6;
+}
+
+/* Reglas para escritorio */
+@media (min-width: 768px) {
+  .sidebar {
+    min-width: 180px;
+    max-width: 220px;
+    min-height: 100vh;
+    border-bottom: none;
+    border-right: 1px solid #dee2e6;
+  }
 }
