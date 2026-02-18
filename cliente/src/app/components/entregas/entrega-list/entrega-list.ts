@@ -23,6 +23,8 @@ export class EntregaListComponent implements OnInit {
   nombreProyecto: string = ''; 
   proyecto: any; 
   estaArchivada: boolean = false;
+  
+  loading: boolean = true; 
 
   serverUrl = environment.serverUrl;
 
@@ -40,15 +42,21 @@ export class EntregaListComponent implements OnInit {
   }
 
   cargarDatos(): void {
+    this.loading = true; 
+
     this.entregaService.obtenerEntregas(this.proyectoId)
       .subscribe({
         next: (data) => {
           this.entregas = data;
+          this.loading = false;
           this.cdr.detectChanges();
         },
-        error: (err) => console.error('Error al cargar entregas:', err)
+        error: (err) => {
+          console.error('Error al cargar entregas:', err);
+          this.loading = false; 
+          this.cdr.detectChanges();
+        }
       });
-
 
     this.proyectoService.getProyectoById(this.proyectoId).subscribe({
       next: (proyecto: any) => {
