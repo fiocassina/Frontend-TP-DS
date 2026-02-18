@@ -4,8 +4,9 @@ import { Proyecto } from '../../models/proyecto-interface';
 import { FormsModule } from '@angular/forms';
 import { EntregaService } from '../../services/entrega.service';
 import { Router, RouterModule } from '@angular/router';
-import { ProyectoService } from '../../services/proyecto.service.js';
+import { ProyectoService } from '../../services/proyecto.service';
 import { Correccion } from '../../models/correccion-interface';
+import { environment } from '../../../environments/environment'; 
 
 declare var bootstrap: any;
 
@@ -24,6 +25,8 @@ export class ListaProyectosComponent implements AfterViewInit {
   @Input() claseArchivada: boolean = false;
 
   @ViewChild('editarModal') editarModalElement!: ElementRef;
+
+  serverUrl = environment.serverUrl;
 
   proyectoExpandidoId: string | null = null;
   comentario: string = '';
@@ -68,35 +71,35 @@ export class ListaProyectosComponent implements AfterViewInit {
     }
   }
 
-deleteProyecto(proyectoId: string) {
-  if (!confirm('¿Estás seguro de que quieres eliminar este proyecto? Si tiene entregas, sólo se cancelará.')) {
-    return;
-  }
+  deleteProyecto(proyectoId: string) {
+    if (!confirm('¿Estás seguro de que quieres eliminar este proyecto? Si tiene entregas, sólo se cancelará.')) {
+      return;
+    }
 
-  this.proyectoService.deleteProyecto(proyectoId).subscribe({
-    next: (res: any) => {
-        
-        if (res.tipo === 'CANCELADO') {
-          const proyecto = this.proyectos.find(p => p._id === proyectoId);
-          if (proyecto) {
-            proyecto.estado = 'cancelado';
-          }
-          alert(res.mensaje);
+    this.proyectoService.deleteProyecto(proyectoId).subscribe({
+      next: (res: any) => {
           
-        } else {
-          this.proyectos = this.proyectos.filter(p => p._id !== proyectoId);
-          alert('Proyecto eliminado permanentemente.');
-        }
+          if (res.tipo === 'CANCELADO') {
+            const proyecto = this.proyectos.find(p => p._id === proyectoId);
+            if (proyecto) {
+              proyecto.estado = 'cancelado';
+            }
+            alert(res.mensaje);
+            
+          } else {
+            this.proyectos = this.proyectos.filter(p => p._id !== proyectoId);
+            alert('Proyecto eliminado permanentemente.');
+          }
 
-        this.cd.detectChanges();
-      },
-      error: (err) => {
-        console.error('Error al eliminar proyecto:', err);
-        const mensajeBackend = err.error?.message || 'Error al eliminar.';
-        alert(mensajeBackend);
-      }
-  });
-}
+          this.cd.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error al eliminar proyecto:', err);
+          const mensajeBackend = err.error?.message || 'Error al eliminar.';
+          alert(mensajeBackend);
+        }
+    });
+  }
 
   abrirModalEditar(proyecto: Proyecto): void {
     this.proyectoSeleccionado = { ...proyecto };
@@ -155,9 +158,9 @@ deleteProyecto(proyectoId: string) {
 
   entregarProyecto(proyectoId: string) {
     if (this.claseArchivada) {
-    this.errorMessage = 'La clase está archivada. No se pueden realizar o editar entregas.';
-    return;
-  }
+      this.errorMessage = 'La clase está archivada. No se pueden realizar o editar entregas.';
+      return;
+    }
     if (!this.comentario && !this.archivoSeleccionado) {
       this.errorMessage = 'Debes agregar un comentario o un archivo.';
       return;
@@ -177,7 +180,6 @@ deleteProyecto(proyectoId: string) {
 
       this.entregaService.editarEntrega(entregaId, formData).subscribe({
         next: (res: any) => {
-          // Actualizamos vista
           const index = this.proyectos.findIndex(p => p._id === proyectoId);
           if (index !== -1) {
             this.proyectos[index].entrega = res.data; // Actualizamos datos nuevos

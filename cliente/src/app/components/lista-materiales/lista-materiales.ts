@@ -1,9 +1,10 @@
 import { Component, OnInit, signal, Input } from '@angular/core';
-import { MaterialService } from '../../services/material.service.js';
+import { MaterialService } from '../../services/material.service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Material } from '../../models/material-interface';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-lista-materiales',
@@ -51,8 +52,12 @@ export class ListaMaterialesComponent implements OnInit {
   }
 
   getMaterialUrl(relativePath: string): string {
-    const baseUrl = 'http://localhost:3000/';
-    const urlPath = relativePath.replace(/\\/g, '/');
+    if (relativePath.startsWith('http')) return relativePath;
+    
+    const baseUrl = environment.serverUrl; 
+    
+    const urlPath = relativePath.startsWith('/') ? relativePath : '/' + relativePath.replace(/\\/g, '/');
+    
     return `${baseUrl}${urlPath}`;
   }
 
@@ -93,12 +98,11 @@ export class ListaMaterialesComponent implements OnInit {
           return [...lista];
         });
         
-        // Cierra el modal de Bootstrap usando una API global de window
+        // Cierra el modal de Bootstrap
         const modalElement = document.getElementById('editarMaterialModal');
         if (modalElement) {
             const modal = new (window as any).bootstrap.Modal(modalElement);
             modal.hide();
-            // Esto es necesario para remover el fondo oscuro del modal
             document.body.classList.remove('modal-open');
             const backdrop = document.querySelector('.modal-backdrop');
             if (backdrop) {

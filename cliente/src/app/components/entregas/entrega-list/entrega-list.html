@@ -41,7 +41,7 @@
                     </span>
                   </td>
                   <td>
-                    <a *ngIf="entrega.archivoUrl" [href]="'http://localhost:3000' + entrega.archivoUrl" target="_blank"
+                    <a *ngIf="entrega.archivoUrl" [href]="serverUrl + entrega.archivoUrl" target="_blank"
                       class="btn btn-outline-secondary btn-sm">
                       📎 Ver archivo
                     </a>

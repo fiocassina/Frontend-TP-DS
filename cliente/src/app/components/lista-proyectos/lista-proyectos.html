@@ -6,9 +6,7 @@
     </a>
   </li>
   <li class="nav-item">
-    <a class="nav-link text-danger" 
-      [class.active]="tabActual === 'cancelados'" 
-      (click)="tabActual = 'cancelados'"
+    <a class="nav-link text-danger" [class.active]="tabActual === 'cancelados'" (click)="tabActual = 'cancelados'"
       style="cursor: pointer;">
       <i class></i>Cancelados
     </a>
@@ -49,8 +47,9 @@
             <button class="btn btn-primary btn-sm w-100" (click)="verEntregas(proyecto._id)">
               <i class="bi bi-folder2-open me-2"></i>Ver todas las entregas
             </button>
-          
-            <a *ngIf="proyecto.estado !== 'cancelado' && !claseArchivada" [routerLink]="['/reporte-aprobadas', proyecto._id]"
+
+            <a *ngIf="proyecto.estado !== 'cancelado' && !claseArchivada"
+              [routerLink]="['/reporte-aprobadas', proyecto._id]"
               class="d-block text-center mt-2 text-success fw-bold text-decoration-underline cursor-pointer small">
               Ver listado de alumnos aprobados
             </a>
@@ -297,7 +296,7 @@
               <h6 class="mb-0 fw-bold text-primary">Archivo Adjunto</h6>
               <small class="text-primary text-opacity-75">Click para descargar</small>
             </div>
-            <a [href]="'http://localhost:3000' + entregaSeleccionada?.archivoUrl" target="_blank"
+            <a [href]="serverUrl + entregaSeleccionada?.archivoUrl" target="_blank"
               class="btn btn-sm btn-primary rounded-pill px-3">
               <i class="bi bi-download me-1"></i> Descargar
             </a>
