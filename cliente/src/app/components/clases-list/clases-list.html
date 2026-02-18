@@ -13,7 +13,7 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3">
 
-          <ul *ngIf="clasesComoProfe.length > 0 && clasesComoAlumno.length > 0" class="nav nav-tabs border-0">
+          <ul *ngIf="(clasesComoProfe.length > 0 || archivadasProfe.length > 0) && (clasesComoAlumno.length > 0 || archivadasAlumno.length > 0)" class="nav nav-tabs border-0">
             <li class="nav-item">
               <a class="nav-link" [class.active]="!esVistaProfesor" (click)="cambiarVista()" style="cursor: pointer;">
                 Alumno
