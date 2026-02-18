@@ -14,11 +14,12 @@ import { NuevoUsuario } from '../../../models/usuario-interface';
 })
 export class RegistroComponent implements OnInit {
 
-  registroForm!: FormGroup; 
+  registroForm!: FormGroup;
   loading = false;
   errorMessage: string | null = null; 
 
   mostrarPassword = false;
+  mostrarConfirmPassword = false; 
 
   constructor(private formBuilder: FormBuilder, private usuarioService: UsuarioService, private router: Router) { }
 
@@ -27,8 +28,8 @@ export class RegistroComponent implements OnInit {
       nombreCompleto: ['', [Validators.required, Validators.minLength(6)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/(?=.*[A-Z])(?=.*[0-9])/)]],
-      confirmPassword: ['', [Validators.required]] 
-    }, { validators: this.passwordsMatchValidator }); 
+      confirmPassword: ['', [Validators.required]]
+    }, { validators: this.passwordsMatchValidator });
   }
 
   passwordsMatchValidator(group: AbstractControl): { [key: string]: boolean } | null {
@@ -40,7 +41,7 @@ export class RegistroComponent implements OnInit {
   get nombreCompleto() { return this.registroForm.get('nombreCompleto'); }
   get email() { return this.registroForm.get('email'); }
   get password() { return this.registroForm.get('password'); }
-  get confirmPassword() { return this.registroForm.get('confirmPassword'); }  
+  get confirmPassword() { return this.registroForm.get('confirmPassword'); }
 
   get faltaMayuscula(): boolean {
     if (!this.password?.value) return false; 
@@ -54,6 +55,10 @@ export class RegistroComponent implements OnInit {
   
   togglePassword() {
     this.mostrarPassword = !this.mostrarPassword;
+  }
+
+  toggleConfirmPassword() {
+    this.mostrarConfirmPassword = !this.mostrarConfirmPassword;
   }
 
   registrar() {

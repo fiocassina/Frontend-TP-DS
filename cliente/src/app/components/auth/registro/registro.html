@@ -57,11 +57,12 @@
       <div class="mb-3">
         <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
         <div class="input-group">
-          <input [type]="mostrarPassword ? 'text' : 'password'" id="confirmPassword" formControlName="confirmPassword"
-            class="form-control border-end-0">
-          <span class="input-group-text bg-white border-start-0 text-muted">
-            <i class="bi" [ngClass]="mostrarPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
-          </span>
+          <input [type]="mostrarConfirmPassword ? 'text' : 'password'" id="confirmPassword"
+            formControlName="confirmPassword" class="form-control border-end-0">
+
+          <button class="btn bg-white border border-start-0 text-muted" type="button" (click)="toggleConfirmPassword()">
+            <i class="bi" [ngClass]="mostrarConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </button>
         </div>
 
         <div *ngIf="(confirmPassword?.touched || confirmPassword?.dirty)" class="text-danger small mt-1">
