@@ -1,8 +1,8 @@
 <app-encabezado></app-encabezado>
 
 <div class="container-fluid">
-<div class="row">
-  <div class="col-12 col-md-3 col-lg-2 bg-light p-3 sidebar">
+  <div class="row">
+    <div class="col-12 col-md-3 col-lg-2 bg-light p-3 sidebar">
       <app-navbar></app-navbar>
     </div>
 
@@ -16,7 +16,7 @@
           <p><strong>Comentario del alumno:</strong> {{ entrega.comentario }}</p>
           <p *ngIf="entrega.archivoUrl">
             <strong>Archivo:</strong>
-            <a [href]="'http://localhost:3000' + entrega.archivoUrl" target="_blank" class="text-primary">
+            <a [href]="serverUrl + entrega.archivoUrl" target="_blank" class="text-primary">
               <i class="bi bi-download me-1"></i> Descargar o ver Archivo
             </a>
           </p>
@@ -30,7 +30,13 @@
           {{ esEdicion ? 'Editar corrección existente' : 'Nueva Corrección' }}
         </h5>
 
-        <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+        <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorMessage }}
+        </div>
+
+        <div *ngIf="successMessage" class="alert alert-success" role="alert">
+          <i class="bi bi-check-circle-fill me-2"></i> {{ successMessage }}
+        </div>
 
         <form class="row g-3 align-items-center">
           <div class="col-md-4">

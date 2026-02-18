@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { EstadoEntrega } from '../../../models/entrega-interface';
 import { NavbarComponent } from '../../navbar/navbar';
 import { EncabezadoComponent } from '../../encabezado/encabezado.component';
+import { environment } from '../../../../environments/environment'; 
 
 @Component({
   selector: 'app-entrega-detalle',
@@ -19,10 +20,11 @@ export class EntregaDetalleComponent implements OnInit {
   entrega: Entrega | null = null;
   nota: number | null = null;
   comentarioCorreccion: string = ''; 
-  errorMessage: string | null = null; 
+  errorMessage: string | null = null;
+  successMessage: string | null = null; 
   
-  // Variable para controlar si es Edición o Creación
   esEdicion: boolean = false;
+  serverUrl = environment.serverUrl; 
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -48,6 +50,7 @@ export class EntregaDetalleComponent implements OnInit {
 
   guardarCorreccion(): void {
     this.errorMessage = null;
+    this.successMessage = null;
 
     // Validación de la nota
     if (this.entrega === null || this.nota === null || this.nota < 1 || this.nota > 10) {
@@ -65,8 +68,7 @@ export class EntregaDetalleComponent implements OnInit {
             this.comentarioCorreccion
         ).subscribe({
             next: (response) => {
-                alert('Corrección actualizada con éxito');
-                this.volver();
+                this.successMessage = 'La corrección se guardó correctamente.';
             },
             error: (err) => {
                 console.error('Error al editar:', err);
@@ -81,7 +83,7 @@ export class EntregaDetalleComponent implements OnInit {
             this.comentarioCorreccion
         ).subscribe({
             next: (response) => {
-                alert('Corrección creada con éxito');
+                this.successMessage = 'La corrección se guardó correctamente.';
                 
                 if (this.entrega) {
                     this.entrega = {
@@ -94,9 +96,8 @@ export class EntregaDetalleComponent implements OnInit {
                             fechaCorreccion: new Date() 
                         }
                     };
-                    this.esEdicion = true; // Pasamos a modo edición
+                    this.esEdicion = true; 
                 }
-                this.volver();
             },
             error: (err) => {
                 console.error('Error al guardar:', err);
@@ -107,9 +108,6 @@ export class EntregaDetalleComponent implements OnInit {
   }
 
   volver(): void {
-    
-    // Si vino de "Reporte de Aprobadas", vuelve ahí
-    // Si vino de "Lista de Entregas", vuelve ahí
     window.history.back();
   }
 
