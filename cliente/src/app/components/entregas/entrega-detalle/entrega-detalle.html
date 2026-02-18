@@ -57,9 +57,14 @@
 
           <div class="col-12 text-end mt-4">
             <button type="button" (click)="guardarCorreccion()" class="btn px-4"
+              [disabled]="!!successMessage"
               [ngClass]="esEdicion ? 'btn-warning' : 'btn-success'">
               <i class="bi" [ngClass]="esEdicion ? 'bi-arrow-clockwise' : 'bi-save'"></i>
               {{ esEdicion ? 'Actualizar corrección' : 'Guardar corrección' }}
+            </button>
+            
+            <button type="button" *ngIf="esEdicion" (click)="eliminarCorreccion()" class="btn btn-danger ms-2" [disabled]="!!successMessage">
+                <i class="bi bi-trash"></i> Eliminar
             </button>
           </div>
         </form>

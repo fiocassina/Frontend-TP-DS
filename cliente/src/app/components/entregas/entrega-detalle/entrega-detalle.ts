@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { Entrega } from '../../../models/entrega-interface';
 import { EntregaService } from '../../../services/entrega.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -29,6 +29,7 @@ export class EntregaDetalleComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private entregaService = inject(EntregaService);
+  private cdr = inject(ChangeDetectorRef);
 
   constructor() {
     this.entrega = this.route.snapshot.data['entrega'] || null;
@@ -50,7 +51,7 @@ export class EntregaDetalleComponent implements OnInit {
 
   guardarCorreccion(): void {
     this.errorMessage = null;
-    this.successMessage = null;
+    this.successMessage = null; 
 
     // Validación de la nota
     if (this.entrega === null || this.nota === null || this.nota < 1 || this.nota > 10) {
@@ -68,11 +69,17 @@ export class EntregaDetalleComponent implements OnInit {
             this.comentarioCorreccion
         ).subscribe({
             next: (response) => {
-                this.successMessage = 'La corrección se guardó correctamente.';
+                this.successMessage = 'La corrección se actualizó correctamente. Volviendo...';
+                this.cdr.detectChanges(); 
+                
+                setTimeout(() => {
+                    this.volver();
+                }, 2000);
             },
             error: (err) => {
                 console.error('Error al editar:', err);
                 this.errorMessage = 'Error al editar la corrección.';
+                this.cdr.detectChanges();
             }
         });
 
@@ -83,7 +90,7 @@ export class EntregaDetalleComponent implements OnInit {
             this.comentarioCorreccion
         ).subscribe({
             next: (response) => {
-                this.successMessage = 'La corrección se guardó correctamente.';
+                this.successMessage = 'La corrección se guardó correctamente. Volviendo...';
                 
                 if (this.entrega) {
                     this.entrega = {
@@ -98,10 +105,16 @@ export class EntregaDetalleComponent implements OnInit {
                     };
                     this.esEdicion = true; 
                 }
+                this.cdr.detectChanges(); 
+
+                setTimeout(() => {
+                    this.volver();
+                }, 2000);
             },
             error: (err) => {
                 console.error('Error al guardar:', err);
                 this.errorMessage = 'Error al guardar la corrección.';
+                this.cdr.detectChanges();
             }
         });
     }
@@ -112,6 +125,9 @@ export class EntregaDetalleComponent implements OnInit {
   }
 
   eliminarCorreccion(): void {
+    this.errorMessage = null;
+    this.successMessage = null;
+
     if (!this.entrega?.correccion?._id) {
       this.errorMessage = 'No hay corrección que eliminar.';
       return;
@@ -123,12 +139,26 @@ export class EntregaDetalleComponent implements OnInit {
 
     this.entregaService.eliminarCorreccion(this.entrega.correccion._id).subscribe({
       next: () => {
-        alert('Corrección eliminada con éxito');
-        this.volver();
+        this.successMessage = 'Corrección eliminada correctamente. Volviendo...';
+        
+        if (this.entrega) {
+            this.entrega.correccion = undefined;
+            this.entrega.estado = 'pendiente';
+            this.esEdicion = false;
+            this.nota = null;
+            this.comentarioCorreccion = '';
+        }
+        
+        this.cdr.detectChanges(); 
+
+        setTimeout(() => {
+            this.volver();
+        }, 2000);
       },
       error: (err) => {
         console.error('Error al eliminar:', err);
         this.errorMessage = 'Error al eliminar la corrección.';
+        this.cdr.detectChanges();
       }
     });
   }
