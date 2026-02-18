@@ -215,7 +215,7 @@ deleteProyecto(proyectoId: string) {
             this.errorMessage = err.error.message || 'Ya has entregado este proyecto.';
           } else if (err.status === 403) {
             this.errorMessage = err.error.message || 'No puedes entregar: La clase está archivada.';
-           }
+          }
           else {
             this.errorMessage = 'Error al entregar el proyecto.';
           }

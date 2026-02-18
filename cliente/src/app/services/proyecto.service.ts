@@ -57,6 +57,6 @@ export class ProyectoService {
   }
 
   getTiposProyecto(): Observable<TipoProyecto[]> {
-    return this.http.get<TipoProyecto[]>(`http://localhost:3000/api/tipo-proyectos`, { headers: this.getAuthHeaders() });
-  }
+  return this.http.get<TipoProyecto[]>(`${environment.apiUrl}/tipo-proyectos`, { headers: this.getAuthHeaders() });
+}
 }
