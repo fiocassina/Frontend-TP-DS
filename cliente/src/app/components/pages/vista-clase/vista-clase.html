@@ -165,7 +165,7 @@
                       <label class="form-label">Tipo de proyecto</label>
                   
                       <input type="text" class="form-control" name="tipoProyectoBusqueda" [(ngModel)]="tipoProyectoBusqueda"
-                        (input)="onBusquedaChange()" (blur)="onBlurInput()" placeholder="Escribí para buscar (ej: Web)" required>
+                        (input)="onBusquedaChange()" (blur)="onBlurInput()" placeholder="Escribí para buscar (ej: Informe)" required>
                   
                       <ul *ngIf="mostrarSugerencias" class="sugerencias-lista">
                         <li *ngFor="let tipo of sugerenciasFiltradas" class="sugerencia-item" (click)="seleccionarSugerencia(tipo)">
