@@ -19,26 +19,27 @@
       <div class="mb-3">
         <label for="nombre" class="form-label">Nombre completo</label>
         <input id="nombre" formControlName="nombreCompleto" type="text" class="form-control">
-        <div *ngIf="nombreCompleto.invalid && (nombreCompleto.touched || nombreCompleto.dirty)"
+        <div *ngIf="nombreCompleto?.invalid && (nombreCompleto?.touched || nombreCompleto?.dirty)"
           class="text-danger small mt-1">
-          <div *ngIf="nombreCompleto.errors?.['required']">El nombre es obligatorio</div>
-          <div *ngIf="nombreCompleto.errors?.['minlength']">Debe tener al menos 6 caracteres</div>
+          <div *ngIf="nombreCompleto?.errors?.['required']">El nombre es obligatorio</div>
+          <div *ngIf="nombreCompleto?.errors?.['minlength']">Debe tener al menos 6 caracteres</div>
         </div>
       </div>
 
       <div class="mb-3">
         <label for="email" class="form-label">Email</label>
         <input id="email" formControlName="email" type="email" class="form-control">
-        <div *ngIf="email.invalid && (email.touched || email.dirty)" class="text-danger small mt-1">
-          <div *ngIf="email.errors?.['required']">El email es obligatorio</div>
-          <div *ngIf="email.errors?.['email']">Formato de email incorrecto</div>
+        <div *ngIf="email?.invalid && (email?.touched || email?.dirty)" class="text-danger small mt-1">
+          <div *ngIf="email?.errors?.['required']">El email es obligatorio</div>
+          <div *ngIf="email?.errors?.['email']">Formato de email incorrecto</div>
         </div>
       </div>
 
       <div class="mb-3">
         <label for="password" class="form-label">Contraseña</label>
         <div class="input-group">
-          <input [type]="mostrarPassword ? 'text' : 'password'" id="password" formControlName="password" class="form-control border-end-0">
+          <input [type]="mostrarPassword ? 'text' : 'password'" id="password" formControlName="password"
+            class="form-control border-end-0">
           <button class="btn bg-white border border-start-0 text-muted" type="button" (click)="togglePassword()">
             <i class="bi" [ngClass]="mostrarPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
           </button>
@@ -46,9 +47,28 @@
 
         <div *ngIf="password?.touched || password?.dirty" class="text-danger small mt-1">
           <div *ngIf="password?.hasError('required')">La contraseña es obligatoria.</div>
-          <div *ngIf="password?.hasError('minlength') && !password?.hasError('required')">• Debe tener al menos 6 caracteres.</div>
+          <div *ngIf="password?.hasError('minlength') && !password?.hasError('required')">• Debe tener al menos 6
+            caracteres.</div>
           <div *ngIf="faltaMayuscula && !password?.hasError('required')">• Falta al menos una letra mayúscula.</div>
           <div *ngIf="faltaNumero && !password?.hasError('required')">• Falta al menos un número.</div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+        <div class="input-group">
+          <input [type]="mostrarPassword ? 'text' : 'password'" id="confirmPassword" formControlName="confirmPassword"
+            class="form-control border-end-0">
+          <span class="input-group-text bg-white border-start-0 text-muted">
+            <i class="bi" [ngClass]="mostrarPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </span>
+        </div>
+
+        <div *ngIf="(confirmPassword?.touched || confirmPassword?.dirty)" class="text-danger small mt-1">
+          <div *ngIf="confirmPassword?.hasError('required')">Confirmar la contraseña es obligatorio.</div>
+          <div *ngIf="registroForm.hasError('passwordsMismatch') && !confirmPassword?.hasError('required')">
+            Las contraseñas no coinciden.
+          </div>
         </div>
       </div>
 
@@ -70,6 +90,7 @@
       opacity: 0;
       transform: translateY(-10px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
