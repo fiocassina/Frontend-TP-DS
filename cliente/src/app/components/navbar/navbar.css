@@ -24,6 +24,7 @@ nav {
   text-decoration: none;
   transition: all 0.2s ease-in-out;
 }
+
 .nav-item:hover {
   transform: translateY(-3px);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
@@ -35,33 +36,35 @@ nav {
   background-color: #e9ecef;
 }
 
-/* Media query para dispositivos móviles (tablets y celulares) */
+/* Media query para dispositivos móviles */
 @media (max-width: 768px) {
   :host {
     height: auto;
     width: 100%;
     display: block;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
 
   nav {
-    flex-direction: row;
-    /* Cambia de columna a fila */
-    overflow-x: auto;
-    gap: 10px;
-    padding-bottom: 5px;
-    scrollbar-width: none;
-  }
-
-  nav::-webkit-scrollbar {
-    display: none;
+    /* En móvil, se comporta como dropdown */
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    margin-top: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    height: auto;
   }
 
   .nav-item {
-    width: auto;
-    flex-shrink: 0;
-    white-space: nowrap;
-    font-size: 0.9rem;
-    padding: 0.5rem 1rem;
+    width: 100%;
+    height: 3rem;
+    border-radius: 4px;
+  }
+
+  /* sin hover porque es táctil */
+  .nav-item:hover {
+    transform: none;
+    background-color: #f8f9fa;
   }
 }

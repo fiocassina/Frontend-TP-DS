@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { Router, NavigationEnd, Event, RouterModule } from '@angular/router'; // Importamos Router y eventos
+import { Router, NavigationEnd, Event, RouterModule } from '@angular/router'; 
 import { CommonModule } from '@angular/common'; 
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
@@ -16,6 +16,7 @@ import { ClaseService } from '../../services/clase.service';
 export class NavbarComponent implements OnInit, OnDestroy {
 
   esAlumno: boolean = false;
+  menuAbierto: boolean = false; // Variable para controlar el menú en móvil
   private routerSubscription!: Subscription;
 
   constructor(
@@ -39,6 +40,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
     }
+  }
+
+  // Método para abrir/cerrar el menú
+  toggleMenu() {
+    this.menuAbierto = !this.menuAbierto;
   }
 
   verificarEstado() {
@@ -68,10 +74,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   cerrarSesion() {
     if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-    if (typeof localStorage !== 'undefined') {
-      localStorage.removeItem('esAlumno');
-    }
-    this.loginService.logout();
+      if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem('esAlumno');
+      }
+      this.loginService.logout();
     }
   }
 }
