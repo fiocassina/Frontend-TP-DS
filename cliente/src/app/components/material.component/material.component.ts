@@ -19,11 +19,12 @@ export class MaterialComponent implements OnInit {
 
   nuevoMaterialNombre: string = '';
   nuevoMaterialTipoId: string = '';
-  subiendoMaterial = false;
   nuevoMaterialUrl: string = '';
   selectedFile: File | null = null;
   errorMessage: string = '';
   mensajeExito: string = '';
+  
+  subiendoMaterial: boolean = false; 
 
   private materialesService = inject(MaterialService);
   private tipoMaterialesService = inject(TipoMaterialService);
@@ -62,6 +63,9 @@ export class MaterialComponent implements OnInit {
   }
 
   async agregarMaterial(): Promise<void> {
+    this.errorMessage = '';
+    this.mensajeExito = '';
+
     if (!this.nuevoMaterialNombre || !this.nuevoMaterialTipoId || !this.claseId) {
       this.errorMessage = 'Por favor, completa todos los campos requeridos.';
       return;
@@ -87,6 +91,7 @@ export class MaterialComponent implements OnInit {
     } else if (this.tipoRequiereUrl()) {
       formData.append('url', this.nuevoMaterialUrl);
     }
+
     this.subiendoMaterial = true;
 
     this.materialesService.createMaterial(formData).subscribe({
@@ -105,13 +110,13 @@ export class MaterialComponent implements OnInit {
       },
       error: (err: any) => {
         console.error('Error subiendo material:', err);
+        this.subiendoMaterial = false; 
         
-        if (err.status === 400 && err.error && err.error.message) {
-            this.errorMessage = err.error.message;
+        if (err.status === 400) {
+            this.errorMessage = err.error?.message || 'Error en los datos enviados.';
         } else {
             this.errorMessage = 'Ocurrió un error al subir el material. Intenta nuevamente.';
         }
-        this.subiendoMaterial = false;
       }
     });
   }

@@ -1,55 +1,63 @@
-<div *ngIf="esProfesor" class="card border-0 shadow-sm mb-4 rounded-4">
-  <div class="card-header bg-primary text-white">
-    <h5 class="mb-0">Agregar Material</h5>
-  </div>
-  <div class="card-body">
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+  <div class="card-body bg-light rounded-4">
+    <h5 class="card-title text-primary mb-3">
+      <i class="bi bi-cloud-upload me-2"></i>Agregar Nuevo Material
+    </h5>
 
-    <form #materialForm="ngForm" (ngSubmit)="agregarMaterial()">
+    <form (ngSubmit)="agregarMaterial()">
 
       <div class="mb-3">
-        <label class="form-label">Nombre del material</label>
-        <input type="text" class="form-control" [(ngModel)]="nuevoMaterialNombre" name="nombreMaterial"
-          placeholder="Ej: Apunte PDF, Guía de ejercicios" required>
+        <label for="nombreMaterial" class="form-label fw-bold">Nombre del material</label>
+        <input type="text" class="form-control" id="nombreMaterial" [(ngModel)]="nuevoMaterialNombre" name="nombre"
+          placeholder="Ej: Guía de ejercicios, Video clase 1..." required>
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Tipo de material</label>
-        <select class="form-select" [(ngModel)]="nuevoMaterialTipoId" name="tipoMaterial" required>
-          <option value="">Selecciona un tipo</option>
+        <label for="tipoMaterial" class="form-label fw-bold">Tipo de material</label>
+        <select class="form-select" id="tipoMaterial" [(ngModel)]="nuevoMaterialTipoId" name="tipo" required>
+          <option value="" disabled selected>Selecciona un tipo...</option>
           <option *ngFor="let tipo of tiposMaterial" [value]="tipo._id">
-            {{ tipo.nombre }} - {{ tipo.descripcion }}
+            {{ tipo.nombre }}
           </option>
         </select>
       </div>
 
-      <div class="mb-3" *ngIf="tipoRequiereUrl()">
-        <label class="form-label">URL del material</label>
-        <input type="url" class="form-control" [(ngModel)]="nuevoMaterialUrl" name="urlMaterial"
-          placeholder="https://..." required>
-      </div>
-
       <div class="mb-3" *ngIf="tipoRequiereArchivo()">
-        <label class="form-label">Subir archivo</label>
-        <input type="file" class="form-control" (change)="onFileSelected($event)" name="archivoMaterial"
-          [accept]="getAcceptExtension()" required>
+        <label for="archivoMaterial" class="form-label fw-bold">Subir archivo</label>
+        <input type="file" class="form-control" id="archivoMaterial" (change)="onFileSelected($event)"
+          [accept]="getAcceptExtension()">
+        <div class="form-text text-muted">
+          Formato permitido: {{ getAcceptExtension() }}
+        </div>
       </div>
 
-      <button type="submit" class="btn btn-primary" [disabled]="subiendoMaterial">
-        <span *ngIf="subiendoMaterial" class="spinner-border spinner-border-sm me-1"></span>
-        {{ subiendoMaterial ? 'Subiendo...' : 'Subir Material' }}
-      </button>
-      <div *ngIf="mensajeExito" class="alert alert-success mt-4" role="alert">
-        {{ mensajeExito }}
+      <div class="mb-3" *ngIf="tipoRequiereUrl()">
+        <label for="urlMaterial" class="form-label fw-bold">Enlace (URL)</label>
+        <input type="url" class="form-control" id="urlMaterial" [(ngModel)]="nuevoMaterialUrl" name="url"
+          placeholder="https://example.com">
       </div>
-      
-      <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{ errorMessage }}
-        <button type="button" class="btn-close" (click)="errorMessage = ''" aria-label="Close"></button>
+
+      <div *ngIf="errorMessage" class="alert alert-danger py-2" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorMessage }}
       </div>
-      
+
+      <div *ngIf="mensajeExito" class="alert alert-success py-2" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i> {{ mensajeExito }}
+      </div>
+
+      <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary" [disabled]="subiendoMaterial">
+          <ng-container *ngIf="!subiendoMaterial">
+            <i class="bi bi-plus-lg me-1"></i> Publicar Material
+          </ng-container>
+
+          <ng-container *ngIf="subiendoMaterial">
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Publicando...
+          </ng-container>
+        </button>
+      </div>
 
     </form>
   </div>
 </div>
-
-<div class="mt-5"></div>
