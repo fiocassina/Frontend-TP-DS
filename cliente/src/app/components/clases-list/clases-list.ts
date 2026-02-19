@@ -40,7 +40,7 @@ export class ClasesListComponent implements OnInit {
     this.loadClases();
   }
 
-  // Carga las clases ACTIVAS 
+  // Carga las clases ACTIVAS y luego las ARCHIVADAS para decidir la vista correcta
   loadClases(): void {
     this.loading = true;
     this.claseService.getMisClases().subscribe({
@@ -48,15 +48,36 @@ export class ClasesListComponent implements OnInit {
         this.clasesComoProfe = data.clasesComoProfe || [];
         this.clasesComoAlumno = data.clasesComoAlumno || [];
         
-        if (this.clasesComoProfe.length > 0) {
-          this.esVistaProfesor = true;
-        } else {
-          this.esVistaProfesor = false;
-        }
-        
-        this.actualizarListaVisible();
-        this.loading = false; 
-        this.cd.detectChanges();
+
+        this.claseService.getClasesArchivadas().subscribe({
+          next: (archivedData: any) => {
+            this.archivadasProfe = archivedData.clasesComoProfe || [];
+            this.archivadasAlumno = archivedData.clasesComoAlumno || [];
+
+
+            if (this.clasesComoProfe.length > 0 || (this.archivadasProfe.length > 0 && this.clasesComoAlumno.length === 0 && this.archivadasAlumno.length === 0)) {
+              this.esVistaProfesor = true;
+            } else {
+              this.esVistaProfesor = false;
+            }
+            
+            this.actualizarListaVisible();
+            this.loading = false; 
+            this.cd.detectChanges();
+          },
+          error: (err) => {
+            console.error('Error al cargar archivadas (en carga inicial):', err);
+
+            if (this.clasesComoProfe.length > 0) {
+              this.esVistaProfesor = true;
+            } else {
+              this.esVistaProfesor = false;
+            }
+            this.actualizarListaVisible();
+            this.loading = false; 
+            this.cd.detectChanges();
+          }
+        });
       },
       error: (err) => {
         console.error('Error al cargar clases:', err);
