@@ -47,6 +47,7 @@ export class VistaClase implements OnInit {
   mostrarTiposProyecto: boolean = false;
   mostrarFormularioMaterial: boolean = false; 
   mostrarModalAlumnos: boolean = false;
+  creandoProyecto: boolean = false;
   mensajeErrorFormulario: string | null = null;
   tipoProyectoBusqueda: string = '';
   sugerenciasFiltradas: TipoProyecto[] = [];
@@ -252,7 +253,7 @@ export class VistaClase implements OnInit {
     }
 
     if (!this.nuevoProyecto.nombre || !this.nuevoProyecto.tipoProyecto?._id || !this.nuevoProyecto.fechaEntrega) return;
-    
+    this.creandoProyecto = true;
     const fechaInput = this.nuevoProyecto.fechaEntrega; 
     const [year, month, day] = fechaInput.split('-').map(Number);
     const fechaLocal = new Date(year, month - 1, day);
@@ -269,6 +270,7 @@ export class VistaClase implements OnInit {
         this.nuevoProyecto = { nombre: '', descripcion: '', tipoProyecto: null, claseId: this.clase?._id || '', fechaEntrega: '' };
         
         this.tipoProyectoBusqueda = ''; 
+        this.creandoProyecto = false;
         this.mensajeExito = 'Proyecto creado correctamente';
         
         this.mostrarFormularioProyecto = false;
@@ -279,6 +281,7 @@ export class VistaClase implements OnInit {
       },
       error: (err) => {
           console.error(err);
+          this.creandoProyecto = false;
           this.mensajeErrorFormulario = err.error?.error || 'Ocurrió un error al guardar el proyecto.';
           this.cd.detectChanges();
       }

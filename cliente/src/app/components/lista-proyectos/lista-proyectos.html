@@ -135,13 +135,21 @@
                   <small class="text-muted d-block mb-2" *ngIf="proyectoEnEdicionId === proyecto._id">
                     Si no desea seleccionar un archivo nuevo, se mantendrá el anterior.
                   </small>
+
                   <div class="d-flex gap-2">
-                    <button class="btn btn-primary btn-sm flex-grow-1" (click)="entregarProyecto(proyecto._id)">
-                      {{ proyectoEnEdicionId === proyecto._id ? 'Guardar Cambios' : 'Entregar Proyecto' }}
+                    <button class="btn btn-primary btn-sm flex-grow-1" (click)="entregarProyecto(proyecto._id)"
+                      [disabled]="loadingEntrega">
+                      <ng-container *ngIf="!loadingEntrega">
+                        {{ proyectoEnEdicionId === proyecto._id ? 'Guardar Cambios' : 'Entregar Proyecto' }}
+                      </ng-container>
+                      <ng-container *ngIf="loadingEntrega">
+                        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                        Subiendo...
+                      </ng-container>
                     </button>
 
                     <button *ngIf="proyectoEnEdicionId === proyecto._id" class="btn btn-secondary btn-sm"
-                      (click)="cancelarEdicion()">
+                      (click)="cancelarEdicion()" [disabled]="loadingEntrega">
                       Cancelar
                     </button>
                   </div>
@@ -163,9 +171,16 @@
             <input type="file" class="form-control" (change)="onFileSelected($event)"
               accept=".pdf,.png,.jpg,.jpeg,.gif">
           </div>
-          <button class="btn btn-primary btn-sm mt-2 w-100" (click)="entregarProyecto(proyecto._id)">
-            Entregar
+
+          <button class="btn btn-primary btn-sm mt-2 w-100" (click)="entregarProyecto(proyecto._id)"
+            [disabled]="loadingEntrega">
+            <ng-container *ngIf="!loadingEntrega">Entregar</ng-container>
+            <ng-container *ngIf="loadingEntrega">
+              <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+              Subiendo...
+            </ng-container>
           </button>
+
           <div *ngIf="errorMessage" class="text-danger mt-2 small">{{ errorMessage }}</div>
         </div>
 

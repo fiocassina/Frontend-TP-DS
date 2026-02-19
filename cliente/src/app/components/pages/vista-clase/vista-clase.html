@@ -192,8 +192,14 @@
                       <i class="bi bi-exclamation-circle-fill me-2"></i> {{ mensajeErrorFormulario }}
                     </div>
                   
-                    <button type="submit" class="btn btn-success btn-sm mt-2">Guardar Proyecto</button>
-                  </form>
+                <button type="submit" class="btn btn-success btn-sm mt-2" [disabled]="creandoProyecto">
+                  <ng-container *ngIf="!creandoProyecto">Guardar Proyecto</ng-container>
+                  <ng-container *ngIf="creandoProyecto">
+                    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                    Publicando...
+                  </ng-container>
+                </button>                
+                </form>
                 </div>
 
                 <div *ngIf="mensajeExito" class="alert alert-success mt-3" role="alert">

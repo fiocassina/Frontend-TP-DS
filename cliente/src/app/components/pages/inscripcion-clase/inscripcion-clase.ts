@@ -24,7 +24,7 @@ export class InscripcionClase implements OnInit {
   inscripcionForm: FormGroup;
   isLoading = false;
   errorMessage: string | null = null;
-  successMessage: string | null = null; // <--- 1. AGREGADO
+  successMessage: string | null = null; 
 
   constructor(
     private fb: FormBuilder,
@@ -41,7 +41,7 @@ export class InscripcionClase implements OnInit {
 
   onSubmit(): void {
     this.errorMessage = null;
-    this.successMessage = null; // <--- Limpiar éxito previo
+    this.successMessage = null;
 
     if (this.inscripcionForm.invalid) return;
 
@@ -51,26 +51,33 @@ export class InscripcionClase implements OnInit {
 
     this.claseService.inscribirse(clave).subscribe({
       next: (res) => {
-        // --- 2. CAMBIO AQUÍ ---
         this.isLoading = false;
         this.successMessage = '¡Te has unido a la clase correctamente! Redirigiendo...';
         this.cd.detectChanges();
 
-        // Esperamos 2 segundos
         setTimeout(() => {
           this.router.navigate(['/inicio']);
         }, 2000);
-        // ----------------------
       },
       error: (err) => {
         console.error('Error de inscripción:', err);
       
         if (err.status === 403) {
-          this.errorMessage = err.error?.mensaje || 'No puede ingresar a esta clase porque es el profesor.';
+          // El backend puede enviar distintos mensajes en el 403
+          const msgBackend = err.error?.mensaje || '';
+          
+          if (msgBackend.includes('archivada')) {
+            this.errorMessage = 'No es posible unirse a esta clase porque se encuentra archivada.';
+          } else {
+            this.errorMessage = msgBackend || 'No tienes permiso para unirte a esta clase.';
+          }
+
         } else if (err.status === 404) {
-          this.errorMessage = err.error?.mensaje || 'Clase no encontrada con esa clave.';
+          this.errorMessage = 'No existe ninguna clase con esa clave. Verificala e intenta nuevamente.';
+        } else if (err.status === 400) {
+          this.errorMessage = err.error?.mensaje || 'Error en los datos de inscripción.';
         } else {
-          this.errorMessage = err.error?.mensaje || 'Error al inscribirse en la clase.';
+          this.errorMessage = 'Ocurrió un problema al intentar unirse. Intenta más tarde.';
         }
 
         this.isLoading = false;

@@ -19,6 +19,7 @@ export class MaterialComponent implements OnInit {
 
   nuevoMaterialNombre: string = '';
   nuevoMaterialTipoId: string = '';
+  subiendoMaterial = false;
   nuevoMaterialUrl: string = '';
   selectedFile: File | null = null;
   errorMessage: string = '';
@@ -86,10 +87,12 @@ export class MaterialComponent implements OnInit {
     } else if (this.tipoRequiereUrl()) {
       formData.append('url', this.nuevoMaterialUrl);
     }
+    this.subiendoMaterial = true;
 
     this.materialesService.createMaterial(formData).subscribe({
       next: (response) => {
         console.log('Material creado', response);
+        this.subiendoMaterial = false;
         this.mensajeExito = 'El material se cargó correctamente';
         
         this.nuevoMaterialNombre = '';
@@ -108,6 +111,7 @@ export class MaterialComponent implements OnInit {
         } else {
             this.errorMessage = 'Ocurrió un error al subir el material. Intenta nuevamente.';
         }
+        this.subiendoMaterial = false;
       }
     });
   }

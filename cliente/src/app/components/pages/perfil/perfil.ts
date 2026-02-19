@@ -81,10 +81,11 @@ export class PerfilComponent implements OnInit {
     });
   }
   cerrarSesion(): void {
-    // Borrar token
-    localStorage.removeItem('token');
-    this.usuario = null;
-    this.router.navigate(['/login']);
+    if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+      localStorage.removeItem('token');
+      this.usuario = null;
+      this.router.navigate(['/login']);
+    }
   }
 
 
