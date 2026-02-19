@@ -24,7 +24,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       
-      if (!req.url.includes('/login')) { 
+      const excludedUrls = ['/login', '/clases/inscribir']; { 
         if (error.status === 403 || error.status === 401) {
           if (isPlatformBrowser(platformId)) {
             alert(' ACCESO DENEGADO: No tienes permiso para realizar esta acción.');
