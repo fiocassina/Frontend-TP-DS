@@ -24,7 +24,7 @@ export class InscripcionClase implements OnInit {
   inscripcionForm: FormGroup;
   isLoading = false;
   errorMessage: string | null = null;
-  successMessage: string | null = null; 
+  successMessage: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -62,22 +62,23 @@ export class InscripcionClase implements OnInit {
       error: (err) => {
         console.error('Error de inscripción:', err);
       
+        const msgBackend = err.error?.mensaje || err.error?.message || '';
+        
         if (err.status === 403) {
-          // El backend puede enviar distintos mensajes en el 403
-          const msgBackend = err.error?.mensaje || '';
-          
-          if (msgBackend.includes('archivada')) {
-            this.errorMessage = 'No es posible unirse a esta clase porque se encuentra archivada.';
+          // Si el mensaje dice explícitamente archivada, O si recibimos un "Acceso Denegado" genérico
+          if (msgBackend.toLowerCase().includes('archivada') || msgBackend.toUpperCase().includes('ACCESO DENEGADO')) {
+            this.errorMessage = 'No es posible unirse: La clase está archivada o no tienes permisos.';
           } else {
+            //(ej: eres el profesor)
             this.errorMessage = msgBackend || 'No tienes permiso para unirte a esta clase.';
           }
 
         } else if (err.status === 404) {
           this.errorMessage = 'No existe ninguna clase con esa clave. Verificala e intenta nuevamente.';
         } else if (err.status === 400) {
-          this.errorMessage = err.error?.mensaje || 'Error en los datos de inscripción.';
+          this.errorMessage = msgBackend || 'Error en los datos de inscripción.';
         } else {
-          this.errorMessage = 'Ocurrió un problema al intentar unirse. Intenta más tarde.';
+          this.errorMessage = msgBackend || 'Ocurrió un problema al intentar unirse. Intenta más tarde.';
         }
 
         this.isLoading = false;
