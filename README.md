@@ -114,7 +114,7 @@ ng serve
 ## Tests y calidad
 El proyecto cuenta con testing para asegurar la estabilidad del código:
 - **Backend:** Ejecuta `pnpm test` para correr las pruebas unitarias y de integración.
-- **Frontend:** Se utiliza **Cypress** para pruebas End-to-End (E2E), como el flujo de login y ng test para test unitarios.
+- **Frontend:** Se utiliza **Cypress** para pruebas End-to-End (E2E), como el flujo de login y ng test para test unitarios. Ejecuta `npx cypress open` para abrir la interfaz de Cypress.
 
 ## Problemas frecuentes
 - **Error de CORS al intentar loguearse:** Asegúrate de que tu `.env` del backend tenga la variable `FRONTEND_URL=http://localhost:4200` correctamente configurada.
