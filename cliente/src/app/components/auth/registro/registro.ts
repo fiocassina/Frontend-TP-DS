@@ -73,7 +73,7 @@ export class RegistroComponent implements OnInit {
 
     this.loading = true;
 
-    this.usuarioService.registrarUsuario(nuevoUsuario).subscribe({
+    this.usuarioService.register(nuevoUsuario).subscribe({
       next: (res) => {
         console.log('Usuario registrado:', res);
         this.loading = false;

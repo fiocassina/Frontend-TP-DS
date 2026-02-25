@@ -27,7 +27,7 @@ export class TipoProyectoService {
     return this.http.put<TipoProyecto>(this.apiUrl + '/' + id, tipoProyecto);
   }
   
-  eliminarTipoProyecto(id: string): Observable<void> { 
+  deleteTipoProyecto(id: string): Observable<void> { 
     return this.http.delete<void>(this.apiUrl + '/' + id);
   }
 }

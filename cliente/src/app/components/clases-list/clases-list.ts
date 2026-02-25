@@ -135,12 +135,12 @@ export class ClasesListComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  onArchivarClase(claseId: string): void {
+  onArchiveClase(claseId: string): void {
     if (!confirm('¿Estás seguro de que quieres archivar esta clase? Ya no podrás crear proyectos ni agregar alumnos.')) {
       return;
     }
   
-    this.claseService.archivarClase(claseId).subscribe({
+    this.claseService.archiveClase(claseId).subscribe({
       next: (res) => {
         this.clasesComoProfe = this.clasesComoProfe.filter(c => c._id !== claseId);
         this.clasesComoAlumno = this.clasesComoAlumno.filter(c => c._id !== claseId);

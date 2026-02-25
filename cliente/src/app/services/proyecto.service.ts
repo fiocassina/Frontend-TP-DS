@@ -36,7 +36,7 @@ export class ProyectoService {
     return this.http.get<any>(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
   }
 
-  crearProyecto(proyecto: { 
+  createProyecto(proyecto: { 
       nombre: string; 
       descripcion?: string; 
       tipoProyecto: TipoProyecto;

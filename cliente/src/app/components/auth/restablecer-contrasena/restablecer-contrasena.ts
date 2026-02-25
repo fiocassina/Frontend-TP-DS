@@ -21,7 +21,7 @@ export function contrasenaMatchValidator(control: AbstractControl): ValidationEr
   templateUrl: './restablecer-contrasena.html',
   styleUrls: ['./restablecer-contrasena.css']
 })
-export class RestablecerContrasenaComponent implements OnInit {
+export class ResetPasswordComponent implements OnInit {
 
   emailForm!: FormGroup;
   passwordForm!: FormGroup;
@@ -88,7 +88,7 @@ export class RestablecerContrasenaComponent implements OnInit {
     this.loading = true;
     const email = this.emailForm.value.email;
 
-    this.loginService.solicitarCodigo(email).subscribe({
+    this.loginService.requestCode(email).subscribe({
       next: () => {
         this.loading = false;
         this.emailEnviado = email;
@@ -122,7 +122,7 @@ export class RestablecerContrasenaComponent implements OnInit {
     const codigo = this.passwordForm.value.codigo.trim();
     const password = this.passwordForm.value.password;
 
-    this.loginService.restablecerPassword(this.emailEnviado, codigo, password).subscribe({
+    this.loginService.resetPassword(this.emailEnviado, codigo, password).subscribe({
       next: (res) => {
         this.loading = false;
         alert('¡Contraseña restablecida con éxito! Iniciá sesión con tu nueva clave.'); 

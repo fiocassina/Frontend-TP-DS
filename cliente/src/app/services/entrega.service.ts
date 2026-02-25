@@ -32,49 +32,49 @@ export class EntregaService {
     return null;
   }
 
-  crearEntrega(formData: FormData): Observable<Entrega> {
+  createEntrega(formData: FormData): Observable<Entrega> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.post<Entrega>(this.baseUrl, formData, { headers });
   }
 
-  editarEntrega(entregaId: string, entregaData: FormData): Observable<any> {
+  updateEntrega(entregaId: string, entregaData: FormData): Observable<any> {
       const token = this.getToken();
       return this.http.put(`${this.baseUrl}/${entregaId}`, entregaData);
     }
 
-  eliminarEntrega(entregaId: string): Observable<any> {
+  deleteEntrega(entregaId: string): Observable<any> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.delete(`${this.baseUrl}/${entregaId}`, { headers });
   }
   
-  obtenerEntregas(proyectoId: string): Observable<Entrega[]> {
+  getEntregas(proyectoId: string): Observable<Entrega[]> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.get<Entrega[]>(`${this.baseUrl}/proyecto/${proyectoId}`, { headers });
   }
 
-  obtenerEntregasPorAlumno(): Observable<Entrega[]> {
+  getEntregasPorAlumno(): Observable<Entrega[]> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.get<Entrega[]>(`${this.baseUrl}/alumno/mis-entregas`, { headers });
   }
 
-  obtenerEntregaPorId(entregaId: string): Observable<Entrega> {
+  getEntregaPorId(entregaId: string): Observable<Entrega> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.get<Entrega>(`${this.baseUrl}/${entregaId}`, { headers });
   }
 
-  crearCorreccion(entregaId: string, nota: number, comentario: string): Observable<any> {
+  createCorreccion(entregaId: string, nota: number, comentario: string): Observable<any> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     const body = { entrega: entregaId, nota, comentario };
     return this.http.post(this.correccionesUrl, body, { headers });
   }
 
-  obtenerCorrecciones(entregaId: string): Observable<any> {
+  getCorrecciones(entregaId: string): Observable<any> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.get(`${this.correccionesUrl}/entrega/${entregaId}`, { headers });
@@ -87,19 +87,20 @@ export class EntregaService {
     return this.http.get<ReporteEntrega[]>(`${this.baseUrl}/reporte-aprobadas`, { headers, params });  
 }
 
-obtenerProyectosPendientes(): Observable<Proyecto[]> {
-  const token = this.getToken();
-  const headers = { Authorization: `Bearer ${token}` };
-  return this.http.get<Proyecto[]>(`${this.baseUrl}/pendientes/alumno`, { headers });
-}
-editarCorreccion(correccionId: string, nota: number, comentario: string): Observable<any> {
+  getProyectosPendientes(): Observable<Proyecto[]> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
-    const body = { nota, comentario };
-    return this.http.put(`${this.correccionesUrl}/${correccionId}`, body, { headers });  
+    return this.http.get<Proyecto[]>(`${this.baseUrl}/pendientes/alumno`, { headers });
   }
 
-  eliminarCorreccion(correccionId: string): Observable<any> {
+  updateCorreccion(correccionId: string, nota: number, comentario: string): Observable<any> {
+      const token = this.getToken();
+      const headers = { Authorization: `Bearer ${token}` };
+      const body = { nota, comentario };
+      return this.http.put(`${this.correccionesUrl}/${correccionId}`, body, { headers });  
+    }
+
+  deleteCorreccion(correccionId: string): Observable<any> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.delete(`${this.correccionesUrl}/${correccionId}`, { headers });

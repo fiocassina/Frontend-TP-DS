@@ -129,7 +129,7 @@ export class VistaClase implements OnInit {
           this.cd.detectChanges();
           return;
         }
-        this.entregaService.obtenerEntregasPorAlumno().subscribe({
+        this.entregaService.getEntregasPorAlumno().subscribe({
           next: (entregas) => {
             const listaEntregas = Array.isArray(entregas) ? entregas : [];
             this.proyectos = this.proyectos.map(proyecto => {
@@ -232,7 +232,7 @@ export class VistaClase implements OnInit {
     this.nuevoProyecto.tipoProyecto = coincidenciaExacta || null;
   }
 
-  crearProyecto(form?: NgForm): void {
+  createProyecto(form?: NgForm): void {
     this.validarSeleccionFinal();
     this.mensajeErrorFormulario = null;
     this.mensajeExito = '';
@@ -258,7 +258,7 @@ export class VistaClase implements OnInit {
     const [year, month, day] = fechaInput.split('-').map(Number);
     const fechaLocal = new Date(year, month - 1, day);
 
-    this.proyectoService.crearProyecto({
+    this.proyectoService.createProyecto({
       nombre: this.nuevoProyecto.nombre,
       descripcion: this.nuevoProyecto.descripcion,
       claseId: this.nuevoProyecto.claseId,
@@ -301,7 +301,7 @@ export class VistaClase implements OnInit {
       this.saliendo = true;
       this.cd.detectChanges(); 
 
-      this.claseService.salirDeClase(this.clase._id).subscribe({
+      this.claseService.disenroll(this.clase._id).subscribe({
         next: (res) => {
           this.mensajeSalida = 'Te diste de baja de la clase exitosamente. Redirigiendo al inicio...';
           this.cd.detectChanges(); 
@@ -338,7 +338,7 @@ export class VistaClase implements OnInit {
 
   guardarCambios(): void {
     if (!this.clase || !this.clase._id) return;
-    this.claseService.actualizarClase(this.clase._id, this.claseEditada).subscribe({
+    this.claseService.updateClase(this.clase._id, this.claseEditada).subscribe({
       next: (response) => {
         this.clase = response.data;
         this.modoEdicion = false;
@@ -369,14 +369,14 @@ export class VistaClase implements OnInit {
     }, 3000);
   }
 
-  expulsarAlumno(alumnoId: string): void {
+  expelAlumno(alumnoId: string): void {
     if (this.estaArchivada) {
     alert('No se pueden expulsar alumnos de una clase archivada.');
     return;
     }
     if(!confirm('¿Estás seguro de que querés eliminar a este alumno de la clase?')) return;
     if (this.clase && this.clase._id) {
-      this.claseService.expulsarAlumno(this.clase._id, alumnoId).subscribe({
+      this.claseService.expelAlumno(this.clase._id, alumnoId).subscribe({
         next: () => {
           this.alumnos = this.alumnos.filter(a => a._id !== alumnoId);
           if(this.clase && this.clase.alumnos) {

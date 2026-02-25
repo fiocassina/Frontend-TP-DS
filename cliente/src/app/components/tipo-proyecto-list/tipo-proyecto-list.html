@@ -2,7 +2,7 @@
 
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Listado de Tipos de Proyecto</h2>
-    <button class="btn btn-primary" (click)="crearTipoProyecto()">
+    <button class="btn btn-primary" (click)="createTipoProyecto()">
       <i class="bi bi-plus-circle"></i> Nuevo Tipo de Proyecto
     </button>
   </div>
@@ -48,10 +48,10 @@
           <td class="text-muted">{{ tipo.descripcion }}</td>
           <td class="text-center">
             <div class="btn-group" role="group">
-              <button class="btn btn-outline-primary btn-sm" (click)="editarTipoProyecto(tipo._id!)" title="Editar">
+              <button class="btn btn-outline-primary btn-sm" (click)="updateTipoProyecto(tipo._id!)" title="Editar">
                 <i class="bi bi-pencil-square"></i>
               </button>
-              <button class="btn btn-outline-danger btn-sm" (click)="eliminarTipoProyecto(tipo._id!)" title="Eliminar">
+              <button class="btn btn-outline-danger btn-sm" (click)="deleteTipoProyecto(tipo._id!)" title="Eliminar">
                 <i class="bi bi-trash"></i>
               </button>
             </div>

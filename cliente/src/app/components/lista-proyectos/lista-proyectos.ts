@@ -180,7 +180,7 @@ export class ListaProyectosComponent implements AfterViewInit {
          return;
       }
 
-      this.entregaService.editarEntrega(entregaId, formData).subscribe({
+      this.entregaService.updateEntrega(entregaId, formData).subscribe({
         next: (res: any) => {
           const index = this.proyectos.findIndex(p => p._id === proyectoId);
           if (index !== -1) {
@@ -201,7 +201,7 @@ export class ListaProyectosComponent implements AfterViewInit {
     }
     else { 
       formData.append('proyectoId', proyectoId); 
-      this.entregaService.crearEntrega(formData).subscribe({
+      this.entregaService.createEntrega(formData).subscribe({
         next: (res: any) => {
           console.log('Entrega realizada:', res);
           const index = this.proyectos.findIndex(p => p._id === proyectoId);
@@ -242,12 +242,12 @@ export class ListaProyectosComponent implements AfterViewInit {
     }
   }
 
-  eliminarEntrega(proyectoId: string, entregaId: string): void {
+  deleteEntrega(proyectoId: string, entregaId: string): void {
     if (!confirm('¿Está seguro de que desea eliminar su entrega? Esta acción no se puede deshacer.')) {
       return;
     }
       
-    this.entregaService.eliminarEntrega(entregaId).subscribe({
+    this.entregaService.deleteEntrega(entregaId).subscribe({
       next: () => {
         const index = this.proyectos.findIndex(p => p._id === proyectoId);
         if (index !== -1) {

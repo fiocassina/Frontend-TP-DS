@@ -28,12 +28,12 @@ export class ListadoProyectosPendientesComponent implements OnInit {
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.obtenerProyectosPendientes();
+      this.getProyectosPendientes();
     }
   }
 
-  obtenerProyectosPendientes(): void {
-    this.proyectoService.obtenerProyectosPendientes().subscribe({
+  getProyectosPendientes(): void {
+    this.proyectoService.getProyectosPendientes().subscribe({
       next: (res: any[]) => {
         this.proyectosPendientes = res.map(p => ({
           _id: p._id, 

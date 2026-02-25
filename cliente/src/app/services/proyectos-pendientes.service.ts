@@ -25,7 +25,7 @@ export class ProyectosPendientesService {
     return null;
   }
 
-  obtenerProyectosPendientes(): Observable<Proyecto[]> {
+  getProyectosPendientes(): Observable<Proyecto[]> {
     const token = this.getToken();
 
     // Si el token no está disponible todavía, no lanzamos error,

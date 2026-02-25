@@ -95,7 +95,7 @@ export class PerfilComponent implements OnInit {
     );
 
     if (confirmacion) {
-      this.usuarioService.desactivarPerfil().subscribe({
+      this.usuarioService.deactivatePerfil().subscribe({
         next: () => {
           alert('Tu cuenta ha sido dada de baja. Serás redirigido a la página de inicio.');
           localStorage.removeItem('token');
@@ -118,7 +118,7 @@ export class PerfilComponent implements OnInit {
     this.errorPassword = null;
   }
 
-  cambiarPassword() {
+  changePassword() {
     if (this.passwords.nueva !== this.passwords.confirmar) {
       this.errorPassword = 'Las contraseñas nuevas no coinciden.';
       return;
@@ -145,7 +145,7 @@ export class PerfilComponent implements OnInit {
       newPassword: this.passwords.nueva       
     };
 
-    this.usuarioService.cambiarPasswordAutenticado(datosParaBack).subscribe({
+    this.usuarioService.changePasswordAuthenticated(datosParaBack).subscribe({
       next: (res) => {
         this.messagePassword = res.mensaje || 'Contraseña actualizada con éxito';
         this.cd.detectChanges();

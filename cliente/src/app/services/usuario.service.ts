@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { NuevoUsuario, Usuario } from '../models/usuario-interface';
 import { environment } from '../../environments/environment';
 
-export interface RestablecerContrasenaPayload {
+export interface ResetPasswordPayload {
   email: string;
   contrasenaActual: string;
   contrasenaNueva: string; 
@@ -27,12 +27,12 @@ export class UsuarioService {
     });
   }
 
-  registrarUsuario(usuario: NuevoUsuario): Observable<any> {
+  register(usuario: NuevoUsuario): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/registrar`, usuario);
   }
 
 
-  restablecerContrasena(payload: RestablecerContrasenaPayload): Observable<any> { 
+  resetPassword(payload: ResetPasswordPayload): Observable<any> { 
     return this.http.post<any>(`${this.apiUrl}/restablecer-contrasena`, payload); 
   }
 
@@ -47,11 +47,11 @@ export class UsuarioService {
   return this.http.put(`${this.apiUrl}/perfil`, data, { headers: this.getAuthHeaders() });
   }
 
-cambiarPasswordAutenticado(datos: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/cambiar-password-autenticado`, datos, { headers: this.getAuthHeaders() });
-}
+  changePasswordAuthenticated(datos: any): Observable<any> {
+      return this.http.put(`${this.apiUrl}/cambiar-password-autenticado`, datos, { headers: this.getAuthHeaders() });
+  }
 
-  desactivarPerfil(): Observable<any> {
+  deactivatePerfil(): Observable<any> {
     return this.http.delete(`${this.apiUrl}/perfil`, { headers: this.getAuthHeaders() });
   }
 }

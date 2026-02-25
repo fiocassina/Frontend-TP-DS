@@ -16,7 +16,7 @@ import { entregaResolver } from './resolvers/entrega-resolver.js';
 import { ReporteAprobadasComponent } from './components/reporte-aprobadas/reporte-aprobadas.component.js';
 import { ListadoProyectosPendientesComponent } from './components/listado-proyectos-pendientes/listado-proyectos-pendientes.js';
 import { PerfilComponent } from './components/pages/perfil/perfil.js';
-import { RestablecerContrasenaComponent } from './components/auth/restablecer-contrasena/restablecer-contrasena.js';
+import { ResetPasswordComponent } from './components/auth/restablecer-contrasena/restablecer-contrasena.js';
 
 export const routes: Routes = [
     { path: 'tipo-proyecto-list', component: TipoProyectoList },
@@ -31,7 +31,7 @@ export const routes: Routes = [
     { path: 'inscripcion', component: InscripcionClase },
     { path: 'clase/:id', component: VistaClase },
     { path: 'listadoProyPend', component: ListadoProyectosPendientesComponent },
-    { path: 'restablecer-contrasena', component: RestablecerContrasenaComponent },
+    { path: 'restablecer-contrasena', component: ResetPasswordComponent },
     { path: 'entregas/proyecto/:proyectoId', component: EntregaListComponent, canActivate: [authGuard] },
     { path: 'entregas/:id', component: EntregaDetalleComponent, canActivate: [authGuard],
         resolve: {

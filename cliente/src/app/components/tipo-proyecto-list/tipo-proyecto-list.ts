@@ -62,9 +62,9 @@ export class TipoProyectoList implements OnInit {
     }
   }
 
-  eliminarTipoProyecto(id: string): void {
+  deleteTipoProyecto(id: string): void {
     if (confirm('¿Estás seguro de que quieres eliminar este tipo de proyecto?')) {
-      this.tipoProyectoService.eliminarTipoProyecto(id).subscribe({
+      this.tipoProyectoService.deleteTipoProyecto(id).subscribe({
         next: () => {
           this.tiposProyecto = this.tiposProyecto.filter(tipo => tipo._id !== id);
           this.filtrar(); 
@@ -76,11 +76,11 @@ export class TipoProyectoList implements OnInit {
     }
   }
 
-  editarTipoProyecto(id: string): void {
+  updateTipoProyecto(id: string): void {
     this.router.navigate(['/tipo-proyecto-form', id], { queryParams: { claseId: this.claseId } });
   }
 
-  crearTipoProyecto(): void {
+  createTipoProyecto(): void {
     this.router.navigate(['/tipo-proyecto-form'], { queryParams: { claseId: this.claseId } });
   }
 }

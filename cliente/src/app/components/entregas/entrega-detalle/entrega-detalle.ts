@@ -63,7 +63,7 @@ export class EntregaDetalleComponent implements OnInit {
 
     if (this.esEdicion && this.entrega.correccion) {
         
-        this.entregaService.editarCorreccion(
+        this.entregaService.updateCorreccion(
             this.entrega.correccion._id!, 
             this.nota,
             this.comentarioCorreccion
@@ -84,7 +84,7 @@ export class EntregaDetalleComponent implements OnInit {
         });
 
     } else {
-        this.entregaService.crearCorreccion(
+        this.entregaService.createCorreccion(
             this.entrega._id!,
             this.nota,
             this.comentarioCorreccion
@@ -124,7 +124,7 @@ export class EntregaDetalleComponent implements OnInit {
     window.history.back();
   }
 
-  eliminarCorreccion(): void {
+  deleteCorreccion(): void {
     this.errorMessage = null;
     this.successMessage = null;
 
@@ -137,7 +137,7 @@ export class EntregaDetalleComponent implements OnInit {
       return;
     }
 
-    this.entregaService.eliminarCorreccion(this.entrega.correccion._id).subscribe({
+    this.entregaService.deleteCorreccion(this.entrega.correccion._id).subscribe({
       next: () => {
         this.successMessage = 'Corrección eliminada correctamente. Volviendo...';
         

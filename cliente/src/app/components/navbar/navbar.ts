@@ -48,7 +48,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   verificarEstado() {
-    if (this.loginService.estaLogueado()) {
+    if (this.loginService.isLoggedIn()) {
       if (typeof localStorage !== 'undefined') {
         const guardado = localStorage.getItem('esAlumno');
         if (guardado === 'true') this.esAlumno = true;
@@ -60,7 +60,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   chequearSiEsAlumno() {
-    this.claseService.verificarSoyAlumno().subscribe({
+    this.claseService.verifyAlumno().subscribe({
       next: (resultado) => {
         this.esAlumno = resultado;
         if (typeof localStorage !== 'undefined') {

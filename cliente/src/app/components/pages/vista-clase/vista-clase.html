@@ -135,7 +135,7 @@
                 </div>
 
                 <div *ngIf="mostrarFormularioProyecto && esProfesor" class="mb-3 p-3 border rounded-3 bg-light">
-                  <form #proyectoForm="ngForm" (ngSubmit)="crearProyecto(proyectoForm)" autocomplete="off">
+                  <form #proyectoForm="ngForm" (ngSubmit)="createProyecto(proyectoForm)" autocomplete="off">
                   
                     <div class="mb-2">
                       <label class="form-label">Nombre del proyecto</label>
@@ -271,7 +271,7 @@
                 <i class="bi bi-envelope me-2"></i> Enviar mail
               </a>
 
-              <button (click)="expulsarAlumno(alumno._id)" class="btn btn-outline-danger btn-sm"
+              <button (click)="expelAlumno(alumno._id)" class="btn btn-outline-danger btn-sm"
                 title="Expulsar de la clase">
                 <i class="bi bi-trash"></i>
               </button>

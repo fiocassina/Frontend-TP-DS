@@ -44,7 +44,7 @@ export class EntregaListComponent implements OnInit {
   cargarDatos(): void {
     this.loading = true; 
 
-    this.entregaService.obtenerEntregas(this.proyectoId)
+    this.entregaService.getEntregas(this.proyectoId)
       .subscribe({
         next: (data) => {
           this.entregas = data;
@@ -92,7 +92,7 @@ export class EntregaListComponent implements OnInit {
     }
   }
 
-  eliminarCorreccion(entrega: Entrega): void {
+  deleteCorreccion(entrega: Entrega): void {
     if (this.proyecto?.estado === 'cancelado'|| this.estaArchivada) {
       alert('Las acciones en clases archivadas o proyectos cancelados están bloqueadas.');
       return;
@@ -106,7 +106,7 @@ export class EntregaListComponent implements OnInit {
       return;
     }
 
-    this.entregaService.eliminarCorreccion(entrega.correccion._id).subscribe({
+    this.entregaService.deleteCorreccion(entrega.correccion._id).subscribe({
       next: () => {
         alert('Corrección eliminada con éxito');
         this.cargarDatos();

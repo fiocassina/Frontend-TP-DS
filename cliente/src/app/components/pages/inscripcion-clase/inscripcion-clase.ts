@@ -49,7 +49,7 @@ export class InscripcionClase implements OnInit {
     this.cd.detectChanges();
     const clave = this.inscripcionForm.value.clave;
 
-    this.claseService.inscribirse(clave).subscribe({
+    this.claseService.enroll(clave).subscribe({
       next: (res) => {
         this.isLoading = false;
         this.successMessage = '¡Te has unido a la clase correctamente! Redirigiendo...';

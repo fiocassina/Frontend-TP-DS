@@ -63,7 +63,7 @@
               {{ esEdicion ? 'Actualizar corrección' : 'Guardar corrección' }}
             </button>
             
-            <button type="button" *ngIf="esEdicion" (click)="eliminarCorreccion()" class="btn btn-danger ms-2" [disabled]="!!successMessage">
+            <button type="button" *ngIf="esEdicion" (click)="deleteCorreccion()" class="btn btn-danger ms-2" [disabled]="!!successMessage">
                 <i class="bi bi-trash"></i> Eliminar
             </button>
           </div>

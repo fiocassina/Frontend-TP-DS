@@ -57,7 +57,7 @@ export class CreateClassForm implements OnInit {
     
     const nuevaClase = this.claseForm.value as Omit<Clase, 'clave' | '_id'>;
 
-    this.claseService.crearClase(nuevaClase).subscribe({
+    this.claseService.createClase(nuevaClase).subscribe({
       next: (response) => {
         if (response && response.data) {
           

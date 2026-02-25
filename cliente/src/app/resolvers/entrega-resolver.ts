@@ -20,7 +20,7 @@ export const entregaResolver: ResolveFn<Entrega | null> = (
     return of(null); 
   }
 
-  return entregaService.obtenerEntregaPorId(entregaId).pipe(
+  return entregaService.getEntregaPorId(entregaId).pipe(
     map((entrega) => {
       
       return entrega;

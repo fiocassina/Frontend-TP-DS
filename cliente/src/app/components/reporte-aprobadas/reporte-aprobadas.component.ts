@@ -91,7 +91,7 @@ export class ReporteAprobadasComponent implements OnInit {
       });
   }
 
-  editarCorreccion(entregaId: string): void {
+  updateCorreccion(entregaId: string): void {
       this.router.navigate(['/entrega', entregaId]);
   }
 }

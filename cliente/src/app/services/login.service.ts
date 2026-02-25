@@ -17,7 +17,7 @@ export class LoginService {
   login(credentials: Usuario): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, credentials);
   }
-  estaLogueado(): boolean {
+  isLoggedIn(): boolean {
     if (typeof localStorage !== 'undefined') {
       return !!localStorage.getItem('token'); // Devuelve true si hay token
     }
@@ -31,11 +31,11 @@ export class LoginService {
     this.router.navigate(['/login']);
   }
 
-  solicitarCodigo(email: string): Observable<any> {
+  requestCode(email: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/olvide-contrasena`, { email });
   }
 
-  restablecerPassword(email: string, codigo: string, nuevaPassword: string): Observable<any> {
+  resetPassword(email: string, codigo: string, nuevaPassword: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/nueva-contrasena`, { 
       email, 
       codigo, 

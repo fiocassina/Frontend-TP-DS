@@ -25,13 +25,13 @@ export class ClaseService {
     return null;
   }
 
-  inscribirse(clave: string): Observable<any> {
+  enroll(clave: string): Observable<any> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.post<any>(`${this.apiUrl}/inscribir`, { clave }, { headers });
   }
 
-  crearClase(clase: Omit<Clase, '_id' | 'clave'>): Observable<any> {
+  createClase(clase: Omit<Clase, '_id' | 'clave'>): Observable<any> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.post<any>(this.apiUrl, clase, { headers });
@@ -43,7 +43,7 @@ export class ClaseService {
     return this.http.get<ClasesResponse>(`${this.apiUrl}/`, { headers });
   }
 
-getClasesArchivadas(): Observable<{ clasesComoProfe: any[], clasesComoAlumno: any[] }> {
+  getClasesArchivadas(): Observable<{ clasesComoProfe: any[], clasesComoAlumno: any[] }> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.get<any>(`${this.apiUrl}/archivadas`, { headers });
@@ -55,32 +55,32 @@ getClasesArchivadas(): Observable<{ clasesComoProfe: any[], clasesComoAlumno: an
     return this.http.get<Clase>(`${this.apiUrl}/${id}`, { headers });
   }
 
-  archivarClase(id: string): Observable<any> {
+  archiveClase(id: string): Observable<any> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.delete<any>(`${this.apiUrl}/${id}`, { headers });
   }
 
-  actualizarClase(id: string, claseData: Partial<Clase>): Observable<any> {
+  updateClase(id: string, claseData: Partial<Clase>): Observable<any> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.put(`${this.apiUrl}/${id}`, claseData, { headers });
   }
 
-  expulsarAlumno(claseId: string, alumnoId: string): Observable<any> {
+  expelAlumno(claseId: string, alumnoId: string): Observable<any> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.delete(`${this.apiUrl}/${claseId}/alumnos/${alumnoId}`, { headers });
   }
 
-  verificarSoyAlumno(): Observable<boolean> {
+  verifyAlumno(): Observable<boolean> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.get<{ esAlumno: boolean }>(`${this.apiUrl}/verificar-alumno`, { headers })
       .pipe(map(response => response.esAlumno));
   }
 
-  salirDeClase(claseId: string): Observable<any> {
+  disenroll(claseId: string): Observable<any> {
     const token = this.getToken();
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.delete(`${this.apiUrl}/${claseId}/salir`, { headers });
