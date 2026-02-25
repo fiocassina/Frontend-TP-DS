@@ -14,13 +14,12 @@ describe('Prueba de Flujo de Login (E2E)', () => {
     // usuario existente en BD
     const usuarioValido = {
       email: 'alumno@frro.utn.edu.ar', 
-      password: 'password123'
+      password: 'Password123'
     };
 
     cy.get('input#email').type(usuarioValido.email, { delay: 100 });
     cy.get('input#password').type(usuarioValido.password, { delay: 100 });
-    cy.get('button[type="submit"]').click();
-
+    cy.get('button[type="submit"]').should('not.be.disabled').click();
     cy.url().should('include', '/inicio');
     cy.wait(2000);
   });
