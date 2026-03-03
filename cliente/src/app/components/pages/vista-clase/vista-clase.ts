@@ -113,7 +113,7 @@ export class VistaClase implements OnInit {
         console.error('Error al cargar clase:', err);
         this.errorMessage = 'No se pudo cargar la clase.';
         this.cargando = false; 
-      
+        this.cd.detectChanges(); // AGREGADO
       }
     });
   }
@@ -124,6 +124,7 @@ export class VistaClase implements OnInit {
         this.proyectos = proyectos; 
         if (this.esProfesor) {
           this.cargando = false;
+          this.cd.detectChanges(); // AGREGADO
           return;
         }
         this.entregaService.getEntregasPorAlumno().subscribe({
@@ -138,9 +139,11 @@ export class VistaClase implements OnInit {
               };
             });
             this.cargando = false;
+            this.cd.detectChanges(); // AGREGADO
           },
           error: (err) => {
             this.cargando = false;
+            this.cd.detectChanges(); // AGREGADO
           }
         });
       },
@@ -150,6 +153,7 @@ export class VistaClase implements OnInit {
             this.errorMessage = 'No se pudieron cargar los proyectos.';
         }
         this.cargando = false;
+        this.cd.detectChanges(); // AGREGADO
       }
     });
   }
