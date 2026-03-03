@@ -5,7 +5,6 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NavbarComponent } from '../navbar/navbar';
-import { EncabezadoComponent } from '../encabezado/encabezado.component';
 import { ProyectoService } from '../../services/proyecto.service';
 
 interface ReporteEntrega {
@@ -21,7 +20,7 @@ interface ReporteEntrega {
 @Component({
   selector: 'app-reporte-aprobadas',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe, NavbarComponent, EncabezadoComponent, RouterModule], // <--- IMPORTANTE: RouterModule para que ande routerLink
+  imports: [CommonModule, FormsModule, DatePipe, NavbarComponent, RouterModule], // <--- IMPORTANTE: RouterModule para que ande routerLink
   templateUrl: './reporte-aprobadas.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./reporte-aprobadas.component.css']

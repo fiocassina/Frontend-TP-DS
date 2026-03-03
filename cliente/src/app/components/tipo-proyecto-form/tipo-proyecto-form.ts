@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { TipoProyectoService } from '../../services/tipo-proyecto.service';
 import { TipoProyecto } from '../../models/tipo-proyecto-interface';
-import { EncabezadoComponent } from '../encabezado/encabezado.component';
 import { NavbarComponent } from '../navbar/navbar';
 
 @Component({
@@ -13,7 +12,6 @@ import { NavbarComponent } from '../navbar/navbar';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    EncabezadoComponent,
     NavbarComponent
   ],
   templateUrl: './tipo-proyecto-form.html',

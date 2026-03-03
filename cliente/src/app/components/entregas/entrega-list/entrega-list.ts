@@ -5,14 +5,13 @@ import { Entrega } from '../../../models/entrega-interface';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe, NgFor, NgIf, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { EncabezadoComponent } from '../../encabezado/encabezado.component';
 import { NavbarComponent } from '../../navbar/navbar';
 import { environment } from '../../../../environments/environment'; 
 
 @Component({
   selector: 'app-entrega-list',
   standalone: true, 
-  imports: [NgIf, NgFor, DatePipe, FormsModule, EncabezadoComponent, NavbarComponent, CommonModule],
+  imports: [NgIf, NgFor, DatePipe, FormsModule, NavbarComponent, CommonModule],
   templateUrl: './entrega-list.html',
   styleUrls: ['./entrega-list.css']
 })

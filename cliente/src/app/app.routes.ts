@@ -17,28 +17,38 @@ import { ReporteAprobadasComponent } from './components/reporte-aprobadas/report
 import { ListadoProyectosPendientesComponent } from './components/listado-proyectos-pendientes/listado-proyectos-pendientes.js';
 import { PerfilComponent } from './components/pages/perfil/perfil.js';
 import { ResetPasswordComponent } from './components/auth/restablecer-contrasena/restablecer-contrasena.js';
+import { MainLayoutComponent } from './components/main-layout/main-layout.component.js';
 
 export const routes: Routes = [
-    { path: 'tipo-proyecto-list', component: TipoProyectoList },
-    { path: 'tipo-proyecto-form', component: TipoProyectoForm },
-    { path: 'tipo-proyecto-form/:id', component: TipoProyectoForm },
+    // --- RUTAS SIN ENCABEZADO ---
     { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
-    { path: 'inicio', component: DashboardComponent, canActivate: [authGuard] },
     { path: 'registro', component: RegistroComponent },
-    { path: 'crear-clase', component: CreateClassForm },
-    { path: 'lista-clases', component: ClasesListComponent },
-    { path: 'inscripcion', component: InscripcionClase },
-    { path: 'clase/:id', component: VistaClase },
-    { path: 'listadoProyPend', component: ListadoProyectosPendientesComponent },
     { path: 'restablecer-contrasena', component: ResetPasswordComponent },
-    { path: 'entregas/proyecto/:proyectoId', component: EntregaListComponent, canActivate: [authGuard] },
-    { path: 'entregas/:id', component: EntregaDetalleComponent, canActivate: [authGuard],
-        resolve: {
-            entrega: entregaResolver // El resolver se ejecuta antes de cargar el componente
-        }},
-    { path: 'reporte-aprobadas/:proyectoId', component: ReporteAprobadasComponent,},
-    { path: 'perfil', component: PerfilComponent, canActivate: [authGuard] }, 
-
     
+    // --- RUTAS CON ENCABEZADO (Layout) ---
+    { 
+        path: '', 
+        component: MainLayoutComponent,
+        children: [
+            { path: 'inicio', component: DashboardComponent, canActivate: [authGuard] },
+            { path: 'tipo-proyecto-list', component: TipoProyectoList },
+            { path: 'tipo-proyecto-form', component: TipoProyectoForm },
+            { path: 'tipo-proyecto-form/:id', component: TipoProyectoForm },
+            { path: 'crear-clase', component: CreateClassForm },
+            { path: 'lista-clases', component: ClasesListComponent },
+            { path: 'inscripcion', component: InscripcionClase },
+            { path: 'clase/:id', component: VistaClase },
+            { path: 'listadoProyPend', component: ListadoProyectosPendientesComponent },
+            { path: 'entregas/proyecto/:proyectoId', component: EntregaListComponent, canActivate: [authGuard] },
+            { 
+                path: 'entregas/:id', 
+                component: EntregaDetalleComponent, 
+                canActivate: [authGuard],
+                resolve: { entrega: entregaResolver }
+            },
+            { path: 'reporte-aprobadas/:proyectoId', component: ReporteAprobadasComponent },
+            { path: 'perfil', component: PerfilComponent, canActivate: [authGuard] }, 
+        ]
+    }
 ];

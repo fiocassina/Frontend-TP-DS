@@ -1,58 +1,46 @@
-<app-encabezado></app-encabezado>
+<div class="d-flex justify-content-center align-items-center">
+  <div class="card p-4 shadow-lg w-100" style="max-width: 28rem;">
+    <div class="card-body">
+      <h3 class="card-title text-center mb-4">Unirme a una clase</h3>
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-12 col-md-3 col-lg-2 bg-light p-3 sidebar">
-      <app-navbar></app-navbar>
-    </div>
-
-    <div class="col py-3 d-flex justify-content-center align-items-center">
-
-      <div class="card p-4 shadow-lg w-100" style="max-width: 28rem;">
-        <div class="card-body">
-          <h3 class="card-title text-center mb-4">Unirme a una clase</h3>
-
-          <div *ngIf="isLoading" class="text-center mb-3">
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Cargando...</span>
-            </div>
-            <p class="mt-2 text-muted">Verificando la clave...</p>
-          </div>
-
-          <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorMessage }}
-          </div>
-
-          <div *ngIf="successMessage" class="alert alert-success text-center" role="alert">
-            <i class="bi bi-check-circle-fill me-2"></i> {{ successMessage }}
-          </div>
-
-          <form [formGroup]="inscripcionForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading && !successMessage">
-
-            <div class="mb-3">
-              <label for="claveClase" class="form-label">Clave de la clase <span class="text-danger">*</span></label>
-              <input type="text" id="claveClase" class="form-control" formControlName="clave"
-                placeholder="Ingresa el código aquí">
-
-              <div
-                *ngIf="inscripcionForm.get('clave')?.invalid && (inscripcionForm.get('clave')?.touched || inscripcionForm.get('clave')?.dirty)"
-                class="form-text text-danger">
-                La clave de la clase es obligatoria.
-              </div>
-            </div>
-
-            <div class="d-grid gap-2">
-              <button type="submit" class="btn btn-primary" [disabled]="inscripcionForm.invalid">
-                Unirme
-              </button>
-              <button type="button" class="btn btn-secondary" (click)="goBack()">
-                Cancelar
-              </button>
-            </div>
-          </form>
+      <div *ngIf="isLoading" class="text-center mb-3">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
         </div>
+        <p class="mt-2 text-muted">Verificando la clave...</p>
       </div>
 
+      <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorMessage }}
+      </div>
+
+      <div *ngIf="successMessage" class="alert alert-success text-center" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i> {{ successMessage }}
+      </div>
+
+      <form [formGroup]="inscripcionForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading && !successMessage">
+
+        <div class="mb-3">
+          <label for="claveClase" class="form-label">Clave de la clase <span class="text-danger">*</span></label>
+          <input type="text" id="claveClase" class="form-control" formControlName="clave"
+            placeholder="Ingresa el código aquí">
+
+          <div
+            *ngIf="inscripcionForm.get('clave')?.invalid && (inscripcionForm.get('clave')?.touched || inscripcionForm.get('clave')?.dirty)"
+            class="form-text text-danger">
+            La clave de la clase es obligatoria.
+          </div>
+        </div>
+
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-primary" [disabled]="inscripcionForm.invalid">
+            Unirme
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="goBack()">
+            Cancelar
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

@@ -4,7 +4,6 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router } from '@angular/router';
 import { ClaseService } from '../../../services/clase.service';
 import { FormsModule } from '@angular/forms';
-import { EncabezadoComponent } from '../../encabezado/encabezado.component';
 import { NavbarComponent } from '../../navbar/navbar';
 
 @Component({
@@ -14,7 +13,6 @@ import { NavbarComponent } from '../../navbar/navbar';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    EncabezadoComponent,
     NavbarComponent
   ],
   templateUrl: './inscripcion-clase.html',

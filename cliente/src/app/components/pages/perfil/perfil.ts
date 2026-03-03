@@ -4,14 +4,13 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Usuario } from '../../../models/usuario-interface';
 import { UsuarioService } from '../../../services/usuario.service';
-import { EncabezadoComponent } from '../../encabezado/encabezado.component';
 import { NavbarComponent } from '../../navbar/navbar';
 
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, FormsModule, EncabezadoComponent, NavbarComponent],
+  imports: [CommonModule, FormsModule, NavbarComponent],
   templateUrl: './perfil.html',
   styleUrls: ['./perfil.css']
 })

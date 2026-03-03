@@ -4,7 +4,6 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Clase } from '../../../models/clase-interface';
 import { ClaseService } from '../../../services/clase.service';
-import { EncabezadoComponent } from '../../encabezado/encabezado.component';
 import { MaterialComponent } from '../../material.component/material.component';
 import { TipoMaterial } from '../../../models/tipo-material-interface';
 import { TipoMaterialService } from '../../../services/tipo-material.service';
@@ -23,7 +22,6 @@ import { EntregaService } from '../../../services/entrega.service';
   imports: [
     CommonModule,
     FormsModule,
-    EncabezadoComponent,
     MaterialComponent,
     ListaMaterialesComponent,
     TipoProyectoList,

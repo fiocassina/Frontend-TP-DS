@@ -1,233 +1,223 @@
-<app-encabezado></app-encabezado>
+<div *ngIf="cargando" class="text-center my-5">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Cargando...</span>
+  </div>
+  <p class="mt-3">Cargando clase...</p>
+</div>
 
-<div class="container-fluid">
-<div class="row">
-  <div class="col-12 col-md-3 col-lg-2 bg-light p-3 sidebar">
-      <app-navbar></app-navbar>
+<div *ngIf="errorMessage && !cargando" class="alert alert-danger text-center">
+  {{ errorMessage }}
+</div>
+
+<div *ngIf="!cargando && !errorMessage">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 p-4 rounded-bottom-4 bg-primary text-white shadow">
+    <div>
+      <h1 class="display-5 fw-bold">{{ clase?.nombre }}</h1>
+      <h2 class="lead">{{ clase?.materia }}</h2>
     </div>
+  </div>
 
-    <div class="col py-3">
+  <div class="row">
 
-      <div *ngIf="cargando" class="text-center my-5">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Cargando...</span>
-        </div>
-        <p class="mt-3">Cargando clase...</p>
-      </div>
+    <div class="col-lg-4 mb-4">
 
-      <div *ngIf="errorMessage && !cargando" class="alert alert-danger text-center">
-        {{ errorMessage }}
-      </div>
+      <div class="card border-0 shadow-sm mb-4 rounded-4">
+        <div class="card-body">
+          <h5 class="card-title text-muted text-center">CLAVE DE LA CLASE</h5>
+          <p class="h1 text-center fw-bold text-primary">{{ clase?.clave }}</p>
 
-      <div *ngIf="!cargando && !errorMessage">
-
-        <div
-          class="d-flex justify-content-between align-items-center mb-4 p-4 rounded-bottom-4 bg-primary text-white shadow">
-          <div>
-            <h1 class="display-5 fw-bold">{{ clase?.nombre }}</h1>
-            <h2 class="lead">{{ clase?.materia }}</h2>
+          <div class="text-center mt-3">
+            <button *ngIf="esProfesor" (click)="abrirModal()" class="btn btn-outline-primary btn-sm rounded-pill px-4">
+              <i class="bi bi-people-fill me-2"></i> Ver Alumnos
+            </button>
           </div>
         </div>
+      </div>
 
-        <div class="row">
+      <div class="card border-0 shadow-sm mb-4 rounded-4">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title text-muted">INFORMACION DE CLASE</h5>
+            <button *ngIf="esProfesor && !estaArchivada && !modoEdicion" (click)="activarModoEdicion()"
+              class="btn btn-outline-primary btn-sm">
+              <i class="bi bi-pencil-square"></i> Editar clase
+            </button>
+          </div>
 
-          <div class="col-lg-4 mb-4">
+          <div *ngIf="!modoEdicion">
+            <div class="mb-3 mt-3">
+              <p class="mb-1">
+                <strong>Profesor:</strong>
+                {{ clase?.profesorId?.nombreCompleto || 'No asignado' }}
 
-            <div class="card border-0 shadow-sm mb-4 rounded-4">
-              <div class="card-body">
-                <h5 class="card-title text-muted text-center">CLAVE DE LA CLASE</h5>
-                <p class="h1 text-center fw-bold text-primary">{{ clase?.clave }}</p>
-
-                <div class="text-center mt-3">
-                  <button *ngIf="esProfesor" (click)="abrirModal()"
-                    class="btn btn-outline-primary btn-sm rounded-pill px-4">
-                    <i class="bi bi-people-fill me-2"></i> Ver Alumnos
-                  </button>
-                </div>
-              </div>
+                <span *ngIf="clase?.profesorId?.activo === false" class="badge bg-danger ms-2"
+                  title="Este usuario ya no tiene acceso al sistema">
+                  (Inactivo)
+                </span>
+              </p>
+              <p class="mb-1"><strong>Alumnos inscritos:</strong> {{ alumnos.length }}</p>
             </div>
-
-            <div class="card border-0 shadow-sm mb-4 rounded-4">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                  <h5 class="card-title text-muted">INFORMACION DE CLASE</h5>
-                  <button *ngIf="esProfesor && !estaArchivada && !modoEdicion" (click)="activarModoEdicion()"
-                    class="btn btn-outline-primary btn-sm">
-                    <i class="bi bi-pencil-square"></i> Editar clase
-                  </button>
-                </div>
-
-                <div *ngIf="!modoEdicion">
-                  <div class="mb-3 mt-3">
-                    <p class="mb-1">
-                      <strong>Profesor:</strong>
-                      {{ clase?.profesorId?.nombreCompleto || 'No asignado' }}
-                  
-                      <span *ngIf="clase?.profesorId?.activo === false" class="badge bg-danger ms-2"
-                        title="Este usuario ya no tiene acceso al sistema">
-                        (Inactivo)
-                      </span>
-                    </p>
-                    <p class="mb-1"><strong>Alumnos inscritos:</strong> {{ alumnos.length }}</p>
-                  </div>
-                  <div>
-                    <h6 class="fw-bold">Descripción:</h6>
-                    <p>{{ clase?.descripcion || 'Sin descripción' }}</p>
-                  </div>
-                </div>
-
-                <div *ngIf="modoEdicion">
-                  <div class="mb-3 mt-3">
-                    <label for="nombreClase" class="form-label fw-bold">Nombre de la Clase</label>
-                    <input type="text" id="nombreClase" class="form-control" [(ngModel)]="claseEditada.nombre">
-                  </div>
-                  <div class="mb-3">
-                    <label for="materiaClase" class="form-label fw-bold">Materia</label>
-                    <input type="text" id="materiaClase" class="form-control" [(ngModel)]="claseEditada.materia">
-                  </div>
-                  <div class="mb-3">
-                    <label for="descripcionClase" class="form-label fw-bold">Descripción</label>
-                    <textarea id="descripcionClase" class="form-control" rows="3"
-                      [(ngModel)]="claseEditada.descripcion"></textarea>
-                  </div>
-                  <div class="d-flex justify-content-end">
-                    <button class="btn btn-secondary me-2" (click)="cancelarEdicion()">Cancelar</button>
-                    <button class="btn btn-success" (click)="guardarCambios()">Guardar Cambios</button>
-                  </div>
-                </div>
-                <div *ngIf="!esProfesor" class="mt-4 text-center border-top pt-3">
-                    <button (click)="salirDeLaClase()" class="btn btn-outline-danger btn-sm rounded-pill px-4" [disabled]="saliendo">
-                      <i class="bi bi-box-arrow-right me-2"></i> Darme de baja de la clase
-                    </button>
-                    
-                    <div *ngIf="mensajeSalida" class="alert alert-success mt-3 mb-0 small text-center" style="animation: fadeIn 0.3s;" role="alert">
-                      <i class="bi bi-check-circle-fill me-2"></i> {{ mensajeSalida }}
-                    </div>
-                  </div>
-              </div>
+            <div>
+              <h6 class="fw-bold">Descripción:</h6>
+              <p>{{ clase?.descripcion || 'Sin descripción' }}</p>
             </div>
+          </div>
 
-            <button *ngIf="esProfesor && !estaArchivada" class="btn btn-primary mb-3 w-100"
-              (click)="mostrarFormularioMaterial = !mostrarFormularioMaterial">
-              {{ mostrarFormularioMaterial ? 'Cerrar agregar material' : 'Agregar nuevo material' }}
+          <div *ngIf="modoEdicion">
+            <div class="mb-3 mt-3">
+              <label for="nombreClase" class="form-label fw-bold">Nombre de la Clase</label>
+              <input type="text" id="nombreClase" class="form-control" [(ngModel)]="claseEditada.nombre">
+            </div>
+            <div class="mb-3">
+              <label for="materiaClase" class="form-label fw-bold">Materia</label>
+              <input type="text" id="materiaClase" class="form-control" [(ngModel)]="claseEditada.materia">
+            </div>
+            <div class="mb-3">
+              <label for="descripcionClase" class="form-label fw-bold">Descripción</label>
+              <textarea id="descripcionClase" class="form-control" rows="3"
+                [(ngModel)]="claseEditada.descripcion"></textarea>
+            </div>
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-secondary me-2" (click)="cancelarEdicion()">Cancelar</button>
+              <button class="btn btn-success" (click)="guardarCambios()">Guardar Cambios</button>
+            </div>
+          </div>
+          <div *ngIf="!esProfesor" class="mt-4 text-center border-top pt-3">
+            <button (click)="salirDeLaClase()" class="btn btn-outline-danger btn-sm rounded-pill px-4"
+              [disabled]="saliendo">
+              <i class="bi bi-box-arrow-right me-2"></i> Darme de baja de la clase
             </button>
 
-            <app-material *ngIf="mostrarFormularioMaterial" [claseId]="clase?._id || ''" [esProfesor]="esProfesor"
-              [tiposMaterial]="tiposMaterial" (materialAgregado)="refrescarMateriales()">
-            </app-material>
-            <div class="mt-4">
-              <h5 class="text-muted mb-3">MATERIALES</h5>
-              <app-lista-materiales [claseId]="clase?._id || ''" [esProfesor]="esProfesor && !estaArchivada"></app-lista-materiales>
+            <div *ngIf="mensajeSalida" class="alert alert-success mt-3 mb-0 small text-center"
+              style="animation: fadeIn 0.3s;" role="alert">
+              <i class="bi bi-check-circle-fill me-2"></i> {{ mensajeSalida }}
             </div>
+          </div>
+        </div>
+      </div>
 
+      <button *ngIf="esProfesor && !estaArchivada" class="btn btn-primary mb-3 w-100"
+        (click)="mostrarFormularioMaterial = !mostrarFormularioMaterial">
+        {{ mostrarFormularioMaterial ? 'Cerrar agregar material' : 'Agregar nuevo material' }}
+      </button>
+
+      <app-material *ngIf="mostrarFormularioMaterial" [claseId]="clase?._id || ''" [esProfesor]="esProfesor"
+        [tiposMaterial]="tiposMaterial" (materialAgregado)="refrescarMateriales()">
+      </app-material>
+      <div class="mt-4">
+        <h5 class="text-muted mb-3">MATERIALES</h5>
+        <app-lista-materiales [claseId]="clase?._id || ''"
+          [esProfesor]="esProfesor && !estaArchivada"></app-lista-materiales>
+      </div>
+
+    </div>
+
+    <div class="col-lg-8 mb-4">
+      <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body d-flex flex-column">
+
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title text-muted mb-0">PROYECTOS</h5>
+            <button *ngIf="esProfesor && !estaArchivada" class="btn btn-primary btn-sm"
+              (click)="mostrarFormularioProyecto = !mostrarFormularioProyecto">
+              {{ mostrarFormularioProyecto ? 'Ocultar formulario' : 'Crear Proyecto' }}
+            </button>
           </div>
 
-          <div class="col-lg-8 mb-4">
-            <div class="card border-0 shadow-sm rounded-4">
-              <div class="card-body d-flex flex-column">
+          <div *ngIf="mostrarFormularioProyecto && esProfesor" class="mb-3 p-3 border rounded-3 bg-light">
+            <form #proyectoForm="ngForm" (ngSubmit)="createProyecto(proyectoForm)" autocomplete="off">
 
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                  <h5 class="card-title text-muted mb-0">PROYECTOS</h5>
-                  <button *ngIf="esProfesor && !estaArchivada" class="btn btn-primary btn-sm"
-                    (click)="mostrarFormularioProyecto = !mostrarFormularioProyecto">
-                    {{ mostrarFormularioProyecto ? 'Ocultar formulario' : 'Crear Proyecto' }}
-                  </button>
+              <div class="mb-2">
+                <label class="form-label">Nombre del proyecto</label>
+                <input type="text" class="form-control" name="nombre" [(ngModel)]="nuevoProyecto.nombre"
+                  #nombre="ngModel" required minlength="3" maxlength="50">
+
+                <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched || proyectoForm.submitted)"
+                  class="text-danger small mt-1">
+                  <div *ngIf="nombre.errors?.['required']">El nombre es obligatorio.</div>
+                  <div *ngIf="nombre.errors?.['minlength']">Mínimo 3 caracteres.</div>
                 </div>
-
-                <div *ngIf="mostrarFormularioProyecto && esProfesor" class="mb-3 p-3 border rounded-3 bg-light">
-                  <form #proyectoForm="ngForm" (ngSubmit)="createProyecto(proyectoForm)" autocomplete="off">
-                  
-                    <div class="mb-2">
-                      <label class="form-label">Nombre del proyecto</label>
-                      <input type="text" class="form-control" name="nombre" [(ngModel)]="nuevoProyecto.nombre" #nombre="ngModel" required
-                        minlength="3" maxlength="50">
-                  
-                      <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched || proyectoForm.submitted)"
-                        class="text-danger small mt-1">
-                        <div *ngIf="nombre.errors?.['required']">El nombre es obligatorio.</div>
-                        <div *ngIf="nombre.errors?.['minlength']">Mínimo 3 caracteres.</div>
-                      </div>
-                    </div>
-                  
-                    <div class="mb-2">
-                      <label class="form-label">Descripción</label>
-                      <textarea class="form-control" rows="2" name="descripcion" [(ngModel)]="nuevoProyecto.descripcion"
-                        #descripcion="ngModel" required minlength="5" maxlength="200"></textarea>
-                  
-                      <div *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched || proyectoForm.submitted)"
-                        class="text-danger small mt-1">
-                        <div *ngIf="descripcion.errors?.['required']">La descripción es obligatoria.</div>
-                        <div *ngIf="descripcion.errors?.['minlength']">Mínimo 5 caracteres.</div>
-                      </div>
-                    </div>
-                  
-                    <div class="mb-2 position-relative autocomplete-container">
-                      <label class="form-label">Tipo de proyecto</label>
-                  
-                      <input type="text" class="form-control" name="tipoProyectoBusqueda" [(ngModel)]="tipoProyectoBusqueda"
-                        (input)="onBusquedaChange()" (blur)="onBlurInput()" placeholder="Escribí para buscar (ej: Informe)" required>
-                  
-                      <ul *ngIf="mostrarSugerencias" class="sugerencias-lista">
-                        <li *ngFor="let tipo of sugerenciasFiltradas" class="sugerencia-item" (click)="seleccionarSugerencia(tipo)">
-                          <strong>{{ tipo.nombre }}</strong>
-                          <br><small class="text-muted">{{ tipo.descripcion | slice:0:40 }}...</small>
-                        </li>
-                      </ul>
-                  
-                      <div *ngIf="proyectoForm.submitted && !nuevoProyecto.tipoProyecto" class="text-danger small mt-1">
-                        Campo obligatorio. Seleccioná una opción de la lista.
-                      </div>
-                    </div>
-                  
-                    <div class="mb-2">
-                      <label class="form-label">Fecha de entrega</label>
-                      <input type="date" class="form-control" name="fechaEntrega" [(ngModel)]="nuevoProyecto.fechaEntrega"
-                        #fechaEntrega="ngModel" required>
-                      <div *ngIf="fechaEntrega.invalid && (fechaEntrega.dirty || fechaEntrega.touched)" class="text-danger small mt-1">
-                        La fecha es obligatoria.
-                      </div>
-                    </div>
-                  
-                    <div *ngIf="mensajeErrorFormulario" class="alert alert-danger mt-2 py-2 small" role="alert">
-                      <i class="bi bi-exclamation-circle-fill me-2"></i> {{ mensajeErrorFormulario }}
-                    </div>
-                  
-                <button type="submit" class="btn btn-success btn-sm mt-2" [disabled]="creandoProyecto">
-                  <ng-container *ngIf="!creandoProyecto">Guardar Proyecto</ng-container>
-                  <ng-container *ngIf="creandoProyecto">
-                    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                    Publicando...
-                  </ng-container>
-                </button>                
-                </form>
-                </div>
-
-                <div *ngIf="mensajeExito" class="alert alert-success mt-3" role="alert">
-                  <i class="bi bi-check-circle-fill me-2"></i> {{ mensajeExito }}
-                </div>
-
-                <app-lista-proyectos [proyectos]="proyectos" [esProfesor]="esProfesor" [claseArchivada]="estaArchivada"
-                  (entregaExitosa)="onEntregaRealizada()"> </app-lista-proyectos>
-
-                <div *ngIf="esProfesor && !estaArchivada" class="mt-4">
-                  <h5 class="card-title text-muted mb-3">GESTIÓN DE TIPOS DE PROYECTO</h5>
-                  <button class="btn btn-outline-primary btn-sm mb-3"
-                    (click)="mostrarTiposProyecto = !mostrarTiposProyecto">
-                    {{ mostrarTiposProyecto ? 'Ocultar tipos de proyecto' : 'Ver tipos de proyecto' }}
-                  </button>
-
-                  <div *ngIf="mostrarTiposProyecto">
-                    <app-tipo-proyecto-list *ngIf="clase" [claseId]="clase._id"></app-tipo-proyecto-list>
-                  </div>
-                </div>
-
               </div>
+
+              <div class="mb-2">
+                <label class="form-label">Descripción</label>
+                <textarea class="form-control" rows="2" name="descripcion" [(ngModel)]="nuevoProyecto.descripcion"
+                  #descripcion="ngModel" required minlength="5" maxlength="200"></textarea>
+
+                <div *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched || proyectoForm.submitted)"
+                  class="text-danger small mt-1">
+                  <div *ngIf="descripcion.errors?.['required']">La descripción es obligatoria.</div>
+                  <div *ngIf="descripcion.errors?.['minlength']">Mínimo 5 caracteres.</div>
+                </div>
+              </div>
+
+              <div class="mb-2 position-relative autocomplete-container">
+                <label class="form-label">Tipo de proyecto</label>
+
+                <input type="text" class="form-control" name="tipoProyectoBusqueda" [(ngModel)]="tipoProyectoBusqueda"
+                  (input)="onBusquedaChange()" (blur)="onBlurInput()" placeholder="Escribí para buscar (ej: Informe)"
+                  required>
+
+                <ul *ngIf="mostrarSugerencias" class="sugerencias-lista">
+                  <li *ngFor="let tipo of sugerenciasFiltradas" class="sugerencia-item"
+                    (click)="seleccionarSugerencia(tipo)">
+                    <strong>{{ tipo.nombre }}</strong>
+                    <br><small class="text-muted">{{ tipo.descripcion | slice:0:40 }}...</small>
+                  </li>
+                </ul>
+
+                <div *ngIf="proyectoForm.submitted && !nuevoProyecto.tipoProyecto" class="text-danger small mt-1">
+                  Campo obligatorio. Seleccioná una opción de la lista.
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <label class="form-label">Fecha de entrega</label>
+                <input type="date" class="form-control" name="fechaEntrega" [(ngModel)]="nuevoProyecto.fechaEntrega"
+                  #fechaEntrega="ngModel" required>
+                <div *ngIf="fechaEntrega.invalid && (fechaEntrega.dirty || fechaEntrega.touched)"
+                  class="text-danger small mt-1">
+                  La fecha es obligatoria.
+                </div>
+              </div>
+
+              <div *ngIf="mensajeErrorFormulario" class="alert alert-danger mt-2 py-2 small" role="alert">
+                <i class="bi bi-exclamation-circle-fill me-2"></i> {{ mensajeErrorFormulario }}
+              </div>
+
+              <button type="submit" class="btn btn-success btn-sm mt-2" [disabled]="creandoProyecto">
+                <ng-container *ngIf="!creandoProyecto">Guardar Proyecto</ng-container>
+                <ng-container *ngIf="creandoProyecto">
+                  <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                  Publicando...
+                </ng-container>
+              </button>
+            </form>
+          </div>
+
+          <div *ngIf="mensajeExito" class="alert alert-success mt-3" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> {{ mensajeExito }}
+          </div>
+
+          <app-lista-proyectos [proyectos]="proyectos" [esProfesor]="esProfesor" [claseArchivada]="estaArchivada"
+            (entregaExitosa)="onEntregaRealizada()"> </app-lista-proyectos>
+
+          <div *ngIf="esProfesor && !estaArchivada" class="mt-4">
+            <h5 class="card-title text-muted mb-3">GESTIÓN DE TIPOS DE PROYECTO</h5>
+            <button class="btn btn-outline-primary btn-sm mb-3" (click)="mostrarTiposProyecto = !mostrarTiposProyecto">
+              {{ mostrarTiposProyecto ? 'Ocultar tipos de proyecto' : 'Ver tipos de proyecto' }}
+            </button>
+
+            <div *ngIf="mostrarTiposProyecto">
+              <app-tipo-proyecto-list *ngIf="clase" [claseId]="clase._id"></app-tipo-proyecto-list>
             </div>
           </div>
 
         </div>
       </div>
     </div>
+
   </div>
 </div>
 

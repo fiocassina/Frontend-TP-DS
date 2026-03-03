@@ -3,14 +3,13 @@ import { ProyectosPendientesService } from '../../services/proyectos-pendientes.
 import { DatePipe, isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from "../navbar/navbar";
-import { EncabezadoComponent } from "../encabezado/encabezado.component";
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-listado-proyectosPendientes',
   templateUrl: './listado-proyectos-pendientes.html',
   styleUrls: ['./listado-proyectos-pendientes.css'],
-  imports: [CommonModule, NavbarComponent, EncabezadoComponent],
+  imports: [CommonModule, NavbarComponent],
   providers: [DatePipe]
 })
 export class ListadoProyectosPendientesComponent implements OnInit {

@@ -6,13 +6,12 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EstadoEntrega } from '../../../models/entrega-interface';
 import { NavbarComponent } from '../../navbar/navbar';
-import { EncabezadoComponent } from '../../encabezado/encabezado.component';
 import { environment } from '../../../../environments/environment'; 
 
 @Component({
   selector: 'app-entrega-detalle',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe, NavbarComponent, EncabezadoComponent],
+  imports: [CommonModule, FormsModule, DatePipe, NavbarComponent],
   templateUrl: './entrega-detalle.html', 
   styleUrls: ['./entrega-detalle.css'] 
 })

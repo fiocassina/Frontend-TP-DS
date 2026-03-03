@@ -1,78 +1,65 @@
-<app-encabezado></app-encabezado>
+<div class="d-flex justify-content-center align-items-center vh-100">
+  <div class="card p-4 shadow-lg w-100" style="max-width: 28rem;">
+    <div class="card-body">
+      <h3 class="card-title text-center mb-4">Crear clase</h3>
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-12 col-md-3 col-lg-2 bg-light p-3 sidebar">
-      <app-navbar></app-navbar>
-    </div>
-
-    <div class="col py-3 d-flex justify-content-center align-items-center vh-100">
-
-      <div class="card p-4 shadow-lg w-100" style="max-width: 28rem;">
-        <div class="card-body">
-          <h3 class="card-title text-center mb-4">Crear clase</h3>
-
-          <div *ngIf="isLoading" class="text-center mb-3">
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Cargando...</span>
-            </div>
-            <p class="mt-2 text-muted">Creando la clase...</p>
-          </div>
-
-          <div *ngIf="successMessage" class="alert alert-success text-center" role="alert">
-            <i class="bi bi-check-circle-fill me-2"></i> {{ successMessage }}
-          </div>
-
-          <form [formGroup]="claseForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading && !successMessage">
-
-            <div class="mb-3">
-              <label for="nombreClase" class="form-label">Nombre de la clase <span class="text-danger">*</span></label>
-
-              <input type="text" id="nombreClase" class="form-control" formControlName="nombre"
-                placeholder="Ej: Matemática Avanzada 2024 5to año"
-                [class.is-invalid]="(claseForm.get('nombre')?.invalid && (claseForm.get('nombre')?.touched || claseForm.get('nombre')?.dirty)) || errorMessage"
-                (input)="errorMessage = ''">
-
-              <div
-                *ngIf="claseForm.get('nombre')?.invalid && (claseForm.get('nombre')?.touched || claseForm.get('nombre')?.dirty)"
-                class="invalid-feedback">
-                El nombre de la clase es obligatorio.
-              </div>
-
-              <div *ngIf="errorMessage" class="invalid-feedback d-block">
-                <i class="bi bi-exclamation-triangle-fill me-1"></i> {{ errorMessage }}
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="materia" class="form-label">Materia <span class="text-danger">*</span></label>
-              <input type="text" id="materia" class="form-control" formControlName="materia"
-                placeholder="Ej: Matemática">
-              <div
-                *ngIf="claseForm.get('materia')?.invalid && (claseForm.get('materia')?.touched || claseForm.get('materia')?.dirty)"
-                class="form-text text-danger">
-                La materia es obligatoria.
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="descripcion" class="form-label">Descripción</label>
-              <textarea id="descripcion" class="form-control" formControlName="descripcion" rows="3"
-                placeholder="Breve descripción de la clase..."></textarea>
-            </div>
-
-            <div class="d-grid gap-2">
-              <button type="submit" class="btn btn-primary" [disabled]="claseForm.invalid">
-                Crear Clase
-              </button>
-              <button type="button" class="btn btn-secondary" (click)="goBack()">
-                Cancelar
-              </button>
-            </div>
-          </form>
-
+      <div *ngIf="isLoading" class="text-center mb-3">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
         </div>
+        <p class="mt-2 text-muted">Creando la clase...</p>
       </div>
+
+      <div *ngIf="successMessage" class="alert alert-success text-center" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i> {{ successMessage }}
+      </div>
+
+      <form [formGroup]="claseForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading && !successMessage">
+
+        <div class="mb-3">
+          <label for="nombreClase" class="form-label">Nombre de la clase <span class="text-danger">*</span></label>
+
+          <input type="text" id="nombreClase" class="form-control" formControlName="nombre"
+            placeholder="Ej: Matemática Avanzada 2024 5to año"
+            [class.is-invalid]="(claseForm.get('nombre')?.invalid && (claseForm.get('nombre')?.touched || claseForm.get('nombre')?.dirty)) || errorMessage"
+            (input)="errorMessage = ''">
+
+          <div
+            *ngIf="claseForm.get('nombre')?.invalid && (claseForm.get('nombre')?.touched || claseForm.get('nombre')?.dirty)"
+            class="invalid-feedback">
+            El nombre de la clase es obligatorio.
+          </div>
+
+          <div *ngIf="errorMessage" class="invalid-feedback d-block">
+            <i class="bi bi-exclamation-triangle-fill me-1"></i> {{ errorMessage }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="materia" class="form-label">Materia <span class="text-danger">*</span></label>
+          <input type="text" id="materia" class="form-control" formControlName="materia" placeholder="Ej: Matemática">
+          <div
+            *ngIf="claseForm.get('materia')?.invalid && (claseForm.get('materia')?.touched || claseForm.get('materia')?.dirty)"
+            class="form-text text-danger">
+            La materia es obligatoria.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="descripcion" class="form-label">Descripción</label>
+          <textarea id="descripcion" class="form-control" formControlName="descripcion" rows="3"
+            placeholder="Breve descripción de la clase..."></textarea>
+        </div>
+
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-primary" [disabled]="claseForm.invalid">
+            Crear Clase
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="goBack()">
+            Cancelar
+          </button>
+        </div>
+      </form>
 
     </div>
   </div>
