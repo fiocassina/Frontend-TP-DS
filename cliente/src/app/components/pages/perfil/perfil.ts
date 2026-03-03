@@ -39,7 +39,7 @@ export class PerfilComponent implements OnInit {
 
   cargarPerfil(): void {
     this.cargando = true; 
-    this.usuarioService.getPerfil().subscribe({
+    this.usuarioService.getProfile().subscribe({
       next: (data) => {
         this.usuario = data;
         this.cargando = false; 
@@ -68,7 +68,7 @@ export class PerfilComponent implements OnInit {
   }
 
   guardarCambios(): void {
-    this.usuarioService.updatePerfil(this.usuarioEditado).subscribe({
+    this.usuarioService.updateProfile(this.usuarioEditado).subscribe({
       next: (res) => {
         
         this.usuario = res.usuario;
@@ -95,7 +95,7 @@ export class PerfilComponent implements OnInit {
     );
 
     if (confirmacion) {
-      this.usuarioService.deactivatePerfil().subscribe({
+      this.usuarioService.deactivateProfile().subscribe({
         next: () => {
           alert('Tu cuenta ha sido dada de baja. Serás redirigido a la página de inicio.');
           localStorage.removeItem('token');
@@ -109,7 +109,7 @@ export class PerfilComponent implements OnInit {
     }
   }
 
-  limpiarFormularioPassword() {
+  clearPasswordForm() {
     if (this.passForm) {
       this.passForm.resetForm(); 
     }

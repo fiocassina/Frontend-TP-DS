@@ -19,13 +19,13 @@ export class UsuarioService {
 
   constructor(private http: HttpClient) {}
 
-  private getAuthHeaders(): HttpHeaders {
+  /*private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
       return new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     });
-  }
+  }*/
 
   register(usuario: NuevoUsuario): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/registrar`, usuario);
@@ -36,22 +36,22 @@ export class UsuarioService {
     return this.http.post<any>(`${this.apiUrl}/restablecer-contrasena`, payload); 
   }
 
-  getPerfil(): Observable<Usuario> {
+  getProfile(): Observable<Usuario> {
     return this.http.get<Usuario>(`${this.apiUrl}/perfil`, {
-    headers: this.getAuthHeaders(),
+    //headers: this.getAuthHeaders(),
     params: { _: new Date().getTime() } 
   });
   }
 
-  updatePerfil(data: { nombreCompleto?: string, email?: string }): Observable<any> {
-  return this.http.put(`${this.apiUrl}/perfil`, data, { headers: this.getAuthHeaders() });
+  updateProfile(data: { nombreCompleto?: string, email?: string }): Observable<any> {
+  return this.http.put(`${this.apiUrl}/perfil`, data, /*{ headers: this.getAuthHeaders() }*/);
   }
 
   changePasswordAuthenticated(datos: any): Observable<any> {
-      return this.http.put(`${this.apiUrl}/cambiar-password-autenticado`, datos, { headers: this.getAuthHeaders() });
+      return this.http.put(`${this.apiUrl}/cambiar-password-autenticado`, datos, /*{ headers: this.getAuthHeaders() }*/);
   }
 
-  deactivatePerfil(): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/perfil`, { headers: this.getAuthHeaders() });
+  deactivateProfile(): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/perfil`, /*{ headers: this.getAuthHeaders() }*/);
   }
 }

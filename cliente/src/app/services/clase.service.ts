@@ -18,71 +18,71 @@ export class ClaseService {
 
   constructor(private http: HttpClient) { }
 
-  private getToken(): string | null {
+  /*private getToken(): string | null {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('token');
     }
     return null;
-  }
+  }*/
 
   enroll(clave: string): Observable<any> {
-    const token = this.getToken();
-    const headers = { Authorization: `Bearer ${token}` };
-    return this.http.post<any>(`${this.apiUrl}/inscribir`, { clave }, { headers });
+    //const token = this.getToken();
+    //const headers = { Authorization: `Bearer ${token}` };
+    return this.http.post<any>(`${this.apiUrl}/inscribir`, { clave },/* { headers }*/);
   }
 
   createClase(clase: Omit<Clase, '_id' | 'clave'>): Observable<any> {
-    const token = this.getToken();
-    const headers = { Authorization: `Bearer ${token}` };
-    return this.http.post<any>(this.apiUrl, clase, { headers });
+    //const token = this.getToken();
+    //const headers = { Authorization: `Bearer ${token}` };
+    return this.http.post<any>(this.apiUrl, clase,/* { headers }*/);
   }
 
   getMisClases(): Observable<ClasesResponse> {
-    const token = this.getToken();
-    const headers = { Authorization: `Bearer ${token}` };
-    return this.http.get<ClasesResponse>(`${this.apiUrl}/`, { headers });
+    //const token = this.getToken();
+    //const headers = { Authorization: `Bearer ${token}` };
+    return this.http.get<ClasesResponse>(`${this.apiUrl}/`, /*{ headers }*/);
   }
 
   getClasesArchivadas(): Observable<{ clasesComoProfe: any[], clasesComoAlumno: any[] }> {
-    const token = this.getToken();
-    const headers = { Authorization: `Bearer ${token}` };
-    return this.http.get<any>(`${this.apiUrl}/archivadas`, { headers });
+    //const token = this.getToken();
+    //const headers = { Authorization: `Bearer ${token}` };
+    return this.http.get<any>(`${this.apiUrl}/archivadas`, /*{ headers }*/);
   }
 
   getClaseById(id: string): Observable<Clase> {
-    const token = this.getToken();
-    const headers = { Authorization: `Bearer ${token}` };
-    return this.http.get<Clase>(`${this.apiUrl}/${id}`, { headers });
+    //const token = this.getToken();
+    //const headers = { Authorization: `Bearer ${token}` };
+    return this.http.get<Clase>(`${this.apiUrl}/${id}`, /*{ headers }*/);
   }
 
   archiveClase(id: string): Observable<any> {
-    const token = this.getToken();
-    const headers = { Authorization: `Bearer ${token}` };
-    return this.http.delete<any>(`${this.apiUrl}/${id}`, { headers });
+    //const token = this.getToken();
+    //const headers = { Authorization: `Bearer ${token}` };
+    return this.http.delete<any>(`${this.apiUrl}/${id}`, /*{ headers }*/);
   }
 
   updateClase(id: string, claseData: Partial<Clase>): Observable<any> {
-    const token = this.getToken();
-    const headers = { Authorization: `Bearer ${token}` };
-    return this.http.put(`${this.apiUrl}/${id}`, claseData, { headers });
+    //const token = this.getToken();
+    //const headers = { Authorization: `Bearer ${token}` };
+    return this.http.put(`${this.apiUrl}/${id}`, claseData, /*{ headers }*/);
   }
 
   expelAlumno(claseId: string, alumnoId: string): Observable<any> {
-    const token = this.getToken();
-    const headers = { Authorization: `Bearer ${token}` };
-    return this.http.delete(`${this.apiUrl}/${claseId}/alumnos/${alumnoId}`, { headers });
+    //const token = this.getToken();
+    //const headers = { Authorization: `Bearer ${token}` };
+    return this.http.delete(`${this.apiUrl}/${claseId}/alumnos/${alumnoId}`, /*{ headers }*/);
   }
 
   verifyAlumno(): Observable<boolean> {
-    const token = this.getToken();
-    const headers = { Authorization: `Bearer ${token}` };
-    return this.http.get<{ esAlumno: boolean }>(`${this.apiUrl}/verificar-alumno`, { headers })
+    //const token = this.getToken();
+    //const headers = { Authorization: `Bearer ${token}` };
+    return this.http.get<{ esAlumno: boolean }>(`${this.apiUrl}/verificar-alumno`,/* { headers }*/)
       .pipe(map(response => response.esAlumno));
   }
 
   disenroll(claseId: string): Observable<any> {
-    const token = this.getToken();
-    const headers = { Authorization: `Bearer ${token}` };
-    return this.http.delete(`${this.apiUrl}/${claseId}/salir`, { headers });
+    //const token = this.getToken();
+    //const headers = { Authorization: `Bearer ${token}` };
+    return this.http.delete(`${this.apiUrl}/${claseId}/salir`, /*{ headers }*/);
   }
 }
