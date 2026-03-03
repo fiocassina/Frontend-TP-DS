@@ -48,12 +48,12 @@ export class EntregaListComponent implements OnInit {
         next: (data) => {
           this.entregas = data;
           this.loading = false;
-          this.cdr.detectChanges();
+       
         },
         error: (err) => {
           console.error('Error al cargar entregas:', err);
           this.loading = false; 
-          this.cdr.detectChanges();
+
         }
       });
 
@@ -68,7 +68,7 @@ export class EntregaListComponent implements OnInit {
           this.claseId = proyecto.clase;
           this.estaArchivada = proyecto.claseArchivada === true; 
         }
-        this.cdr.detectChanges();
+   
       },
       error: (err) => console.error('Error al cargar info del proyecto:', err)
     });

@@ -68,7 +68,7 @@ export class EntregaDetalleComponent{
         ).subscribe({
             next: (response) => {
                 this.successMessage = 'La corrección se actualizó correctamente. Volviendo...';
-                this.cdr.detectChanges(); 
+               
                 
                 setTimeout(() => {
                     this.volver();
@@ -77,7 +77,7 @@ export class EntregaDetalleComponent{
             error: (err) => {
                 console.error('Error al editar:', err);
                 this.errorMessage = 'Error al editar la corrección.';
-                this.cdr.detectChanges();
+                
             }
         });
 
@@ -103,7 +103,7 @@ export class EntregaDetalleComponent{
                     };
                     this.esEdicion = true; 
                 }
-                this.cdr.detectChanges(); 
+                
 
                 setTimeout(() => {
                     this.volver();
@@ -112,7 +112,7 @@ export class EntregaDetalleComponent{
             error: (err) => {
                 console.error('Error al guardar:', err);
                 this.errorMessage = 'Error al guardar la corrección.';
-                this.cdr.detectChanges();
+             
             }
         });
     }
@@ -147,7 +147,7 @@ export class EntregaDetalleComponent{
             this.comentarioCorreccion = '';
         }
         
-        this.cdr.detectChanges(); 
+        
 
         setTimeout(() => {
             this.volver();
@@ -156,7 +156,7 @@ export class EntregaDetalleComponent{
       error: (err) => {
         console.error('Error al eliminar:', err);
         this.errorMessage = 'Error al eliminar la corrección.';
-        this.cdr.detectChanges();
+
       }
     });
   }

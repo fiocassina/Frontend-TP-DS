@@ -103,7 +103,7 @@ export class VistaClase implements OnInit {
         
         this.cargarProyectosYEntregas(claseId);
         this.cargarTiposMaterial(); 
-        this.cd.detectChanges();
+        
       },
       error: (err) => {
         if (err.status === 403 || err.status === 401) {
@@ -113,7 +113,7 @@ export class VistaClase implements OnInit {
         console.error('Error al cargar clase:', err);
         this.errorMessage = 'No se pudo cargar la clase.';
         this.cargando = false; 
-        this.cd.detectChanges();
+      
       }
     });
   }
@@ -124,7 +124,6 @@ export class VistaClase implements OnInit {
         this.proyectos = proyectos; 
         if (this.esProfesor) {
           this.cargando = false;
-          this.cd.detectChanges();
           return;
         }
         this.entregaService.getEntregasPorAlumno().subscribe({
@@ -139,11 +138,9 @@ export class VistaClase implements OnInit {
               };
             });
             this.cargando = false;
-            this.cd.detectChanges();
           },
           error: (err) => {
             this.cargando = false;
-            this.cd.detectChanges();
           }
         });
       },
@@ -153,7 +150,6 @@ export class VistaClase implements OnInit {
             this.errorMessage = 'No se pudieron cargar los proyectos.';
         }
         this.cargando = false;
-        this.cd.detectChanges();
       }
     });
   }
@@ -246,7 +242,6 @@ export class VistaClase implements OnInit {
         this.mensajeErrorFormulario = 'Por favor, completa todos los campos obligatorios.';
       }
       
-      this.cd.detectChanges();
       return;
     }
 
@@ -275,13 +270,13 @@ export class VistaClase implements OnInit {
         if (form) {
           form.resetForm(); 
         }
-        this.cd.detectChanges();
+
       },
       error: (err) => {
           console.error(err);
           this.creandoProyecto = false;
           this.mensajeErrorFormulario = err.error?.error || 'Ocurrió un error al guardar el proyecto.';
-          this.cd.detectChanges();
+
       }
     });
   }
@@ -297,12 +292,12 @@ export class VistaClase implements OnInit {
     
     if (confirmacion && this.clase?._id) {
       this.saliendo = true;
-      this.cd.detectChanges(); 
+
 
       this.claseService.disenroll(this.clase._id).subscribe({
         next: (res) => {
           this.mensajeSalida = 'Te diste de baja de la clase exitosamente. Redirigiendo al inicio...';
-          this.cd.detectChanges(); 
+
           
 
           setTimeout(() => {
@@ -313,7 +308,7 @@ export class VistaClase implements OnInit {
           console.error(err);
           alert('Ocurrió un error al intentar salir de la clase.');
           this.saliendo = false;
-          this.cd.detectChanges(); 
+
         }
       });
     }
@@ -360,10 +355,10 @@ export class VistaClase implements OnInit {
   onEntregaRealizada(): void {
     this.mensajeExito = '¡Tu entrega se subió correctamente!';
     this.cargarProyectosYEntregas(this.clase?._id || '');
-    this.cd.detectChanges();
+
     setTimeout(() => {
       this.mensajeExito = '';
-      this.cd.detectChanges();
+
     }, 3000);
   }
 
@@ -381,7 +376,7 @@ export class VistaClase implements OnInit {
             this.clase.alumnos = this.alumnos;
           }
           alert('Alumno eliminado correctamente.');
-          this.cd.detectChanges();
+
         },
         error: (err) => {
           console.error(err);
