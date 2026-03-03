@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; 
+import { Component, ChangeDetectorRef } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -20,7 +20,7 @@ import { NavbarComponent } from '../../navbar/navbar';
   templateUrl: './inscripcion-clase.html',
   styleUrl: './inscripcion-clase.css'
 })
-export class InscripcionClase implements OnInit {
+export class InscripcionClase  {
   inscripcionForm: FormGroup;
   isLoading = false;
   errorMessage: string | null = null;
@@ -37,7 +37,6 @@ export class InscripcionClase implements OnInit {
     });
   }
 
-  ngOnInit(): void { }
 
   onSubmit(): void {
     this.errorMessage = null;

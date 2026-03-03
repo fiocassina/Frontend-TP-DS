@@ -13,28 +13,16 @@ export class ProyectoService {
   private apiUrl = `${environment.apiUrl}/proyectos`;
   private http = inject(HttpClient);
   
-  //private platformId = inject(PLATFORM_ID);
   constructor() {}
 
-  /*private getAuthHeaders(): HttpHeaders {
-    if (!isPlatformBrowser(this.platformId)) {
-        return new HttpHeaders(); 
-    }
-    
-    const token = localStorage.getItem('token');
-    if (!token) {
-        console.error('No se encontró el token de autenticación en el navegador.');
-        return new HttpHeaders();
-    }
-    return new HttpHeaders({ 'Authorization': `Bearer ${token}` });
-  }*/
+  
 
   getProyectosClase(claseId: string): Observable<Proyecto[]> {
-    return this.http.get<Proyecto[]>(`${this.apiUrl}/clase/${claseId}`, /*{ headers: this.getAuthHeaders() }*/);
+    return this.http.get<Proyecto[]>(`${this.apiUrl}/clase/${claseId}`, );
   }
   
   getProyectoById(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`, /*{ headers: this.getAuthHeaders() }*/);
+    return this.http.get<any>(`${this.apiUrl}/${id}`, );
   }
 
   createProyecto(proyecto: { 
@@ -44,20 +32,20 @@ export class ProyectoService {
       fechaEntrega: string; 
       claseId: string; 
   }): Observable<Proyecto> {
-    return this.http.post<Proyecto>(this.apiUrl, proyecto,/* { headers: this.getAuthHeaders() }*/);
+    return this.http.post<Proyecto>(this.apiUrl, proyecto,);
   }
 
 
   updateProyecto(proyectoId: string, proyectoData: Partial<Proyecto>): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${proyectoId}`, proyectoData,/* { headers: this.getAuthHeaders() }*/);
+    return this.http.put(`${this.apiUrl}/${proyectoId}`, proyectoData,);
   }
 
 
   deleteProyecto(proyectoId: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${proyectoId}`, /*{ headers: this.getAuthHeaders() }*/);
+    return this.http.delete(`${this.apiUrl}/${proyectoId}`,);
   }
 
   getTiposProyecto(): Observable<TipoProyecto[]> {
-  return this.http.get<TipoProyecto[]>(`${environment.apiUrl}/tipo-proyectos`,/* { headers: this.getAuthHeaders() }*/);
+  return this.http.get<TipoProyecto[]>(`${environment.apiUrl}/tipo-proyectos`,);
 }
 }

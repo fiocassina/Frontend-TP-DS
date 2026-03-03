@@ -32,7 +32,6 @@ export class ResetPasswordComponent implements OnInit {
   successMessage: string | null = null;
   emailEnviado: string = ''; 
 
-  // VARIABLES DE LOS OJITOS
   mostrarPassword = false;
   mostrarConfirmarPassword = false;
 
@@ -61,7 +60,6 @@ export class ResetPasswordComponent implements OnInit {
   get passwordControl() { return this.passwordForm.get('password'); }
   get confirmarControl() { return this.passwordForm.get('confirmarPassword'); }
 
-  // Detectores para la lista de validación visual
   get faltaMayuscula(): boolean {
     if (!this.passwordControl?.value) return false; 
     return !/[A-Z]/.test(this.passwordControl.value);
@@ -72,7 +70,6 @@ export class ResetPasswordComponent implements OnInit {
     return !/[0-9]/.test(this.passwordControl.value);
   }
 
-  // FUNCIONES DE LOS OJITOS
   togglePassword() { this.mostrarPassword = !this.mostrarPassword; }
   toggleConfirmarPassword() { this.mostrarConfirmarPassword = !this.mostrarConfirmarPassword; }
 

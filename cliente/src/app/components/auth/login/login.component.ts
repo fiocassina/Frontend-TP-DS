@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-// Agregamos NgClass acá
 import { NgIf, CommonModule, NgClass } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LoginService } from '../../../services/login.service';
@@ -11,7 +10,6 @@ import { HttpClientModule } from '@angular/common/http';
 @Component({
   selector: 'app-login',
   standalone: true,
-  // Agregamos NgClass a los imports
   imports: [ReactiveFormsModule, NgIf, RouterModule, HttpClientModule, CommonModule, NgClass],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
@@ -21,7 +19,6 @@ export class LoginComponent implements OnInit {
   mostrarRegistroExitoso: boolean = false;
   mostrarRestablecimientoExitoso: boolean = false;
 
-  // VARIABLE DEL OJITO
   mostrarPassword = false;
 
   constructor(
@@ -60,7 +57,6 @@ export class LoginComponent implements OnInit {
   }
 }
 
-  // FUNCIÓN DEL OJITO
   togglePassword() {
     this.mostrarPassword = !this.mostrarPassword;
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { Entrega } from '../../../models/entrega-interface';
 import { EntregaService } from '../../../services/entrega.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,7 +16,7 @@ import { environment } from '../../../../environments/environment';
   templateUrl: './entrega-detalle.html', 
   styleUrls: ['./entrega-detalle.css'] 
 })
-export class EntregaDetalleComponent implements OnInit {
+export class EntregaDetalleComponent{
   entrega: Entrega | null = null;
   nota: number | null = null;
   comentarioCorreccion: string = ''; 
@@ -47,7 +47,6 @@ export class EntregaDetalleComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {}
 
   guardarCorreccion(): void {
     this.errorMessage = null;

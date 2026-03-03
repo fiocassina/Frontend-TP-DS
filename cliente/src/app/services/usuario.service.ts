@@ -19,13 +19,6 @@ export class UsuarioService {
 
   constructor(private http: HttpClient) {}
 
-  /*private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
-      return new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    });
-  }*/
 
   register(usuario: NuevoUsuario): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/registrar`, usuario);
@@ -38,20 +31,19 @@ export class UsuarioService {
 
   getProfile(): Observable<Usuario> {
     return this.http.get<Usuario>(`${this.apiUrl}/perfil`, {
-    //headers: this.getAuthHeaders(),
     params: { _: new Date().getTime() } 
   });
   }
 
   updateProfile(data: { nombreCompleto?: string, email?: string }): Observable<any> {
-  return this.http.put(`${this.apiUrl}/perfil`, data, /*{ headers: this.getAuthHeaders() }*/);
+  return this.http.put(`${this.apiUrl}/perfil`, data,);
   }
 
   changePasswordAuthenticated(datos: any): Observable<any> {
-      return this.http.put(`${this.apiUrl}/cambiar-password-autenticado`, datos, /*{ headers: this.getAuthHeaders() }*/);
+      return this.http.put(`${this.apiUrl}/cambiar-password-autenticado`, datos, );
   }
 
   deactivateProfile(): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/perfil`, /*{ headers: this.getAuthHeaders() }*/);
+    return this.http.delete(`${this.apiUrl}/perfil`,);
   }
 }

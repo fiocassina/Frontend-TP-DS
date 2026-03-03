@@ -40,7 +40,6 @@ export class ListaProyectosComponent implements AfterViewInit {
   proyectoDeLaEntrega: any = null;
   tabActual: 'generales' | 'cancelados' = 'generales';
   
-  // NUEVA VARIABLE: Controla el estado de carga al entregar
   loadingEntrega: boolean = false; 
 
   private editarModal: any;
@@ -58,7 +57,6 @@ export class ListaProyectosComponent implements AfterViewInit {
     }
   }
 
-  // ... (get proyectosFiltrados, abrirModalCorreccion, deleteProyecto, etc. IGUAL QUE ANTES) ...
   get proyectosFiltrados(): Proyecto[] {
     if (!this.proyectos) return [];
     if (this.tabActual === 'generales') {

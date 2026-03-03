@@ -11,7 +11,7 @@ import { TipoMaterialService } from '../../services/tipo-material.service';
   templateUrl: './material.component.html',
   styleUrls: ['./material.component.css']
 })
-export class MaterialComponent implements OnInit {
+export class MaterialComponent  {
   @Input() claseId!: string;
   @Input() esProfesor!: boolean;
   @Input() tiposMaterial: any[] = [];
@@ -31,7 +31,6 @@ export class MaterialComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {}
 
   tipoRequiereUrl(): boolean {
     const tipo = this.tiposMaterial.find(t => t._id === this.nuevoMaterialTipoId);
