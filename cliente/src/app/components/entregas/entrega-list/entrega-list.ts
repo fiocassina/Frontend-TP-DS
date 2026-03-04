@@ -43,17 +43,16 @@ export class EntregaListComponent implements OnInit {
   cargarDatos(): void {
     this.loading = true; 
 
-    this.entregaService.getEntregas(this.proyectoId)
-      .subscribe({
+    this.entregaService.getEntregas(this.proyectoId).subscribe({
         next: (data) => {
           this.entregas = data;
           this.loading = false;
-       
+          this.cdr.detectChanges(); // <-- ¡ESTO APAGA LA RUEDITA DE CARGANDO!
         },
         error: (err) => {
           console.error('Error al cargar entregas:', err);
           this.loading = false; 
-
+          this.cdr.detectChanges(); // <-- Apaga la ruedita si hay error
         }
       });
 
@@ -68,7 +67,7 @@ export class EntregaListComponent implements OnInit {
           this.claseId = proyecto.clase;
           this.estaArchivada = proyecto.claseArchivada === true; 
         }
-   
+        this.cdr.detectChanges(); // <-- Actualiza el título del proyecto en la pantalla
       },
       error: (err) => console.error('Error al cargar info del proyecto:', err)
     });

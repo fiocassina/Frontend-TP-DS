@@ -333,21 +333,22 @@ export class VistaClase implements OnInit {
     this.claseEditada = {};
   }
 
-  guardarCambios(): void {
+guardarCambios(): void {
     if (!this.clase || !this.clase._id) return;
     this.claseService.updateClase(this.clase._id, this.claseEditada).subscribe({
       next: (response) => {
-        this.clase = response.data;
-        this.modoEdicion = false;
+        this.clase = response.data; // Se guardan los datos nuevos
+        this.modoEdicion = false;   // Se cierra el formulario de edición
         console.log('Clase actualizada con éxito');
+        this.cd.detectChanges(); // <-- ¡ESTO REEMPLAZA AL F5! Avisa a la pantalla que se actualice.
       },
       error: (err) => {
         console.error('Error al actualizar la clase', err);
         this.errorMessage = 'No se pudieron guardar los cambios.';
+        this.cd.detectChanges(); // Avisa a la pantalla si hay error
       }
     });
   }
-
   abrirModal(): void {
     this.mostrarModalAlumnos = true;
   }
