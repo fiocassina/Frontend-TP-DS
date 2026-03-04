@@ -101,24 +101,51 @@ export class ListaProyectosComponent implements AfterViewInit {
     this.proyectoSeleccionado = { ...proyecto };
   }
 
-  guardarCambios(): void {
+guardarCambios(): void {
     if (!this.proyectoSeleccionado || !this.proyectoSeleccionado._id) return;
+    
     const datosActualizados = {
       nombre: this.proyectoSeleccionado.nombre,
       descripcion: this.proyectoSeleccionado.descripcion,
       fechaEntrega: this.proyectoSeleccionado.fechaEntrega
     };
+
     this.proyectoService.updateProyecto(this.proyectoSeleccionado._id, datosActualizados).subscribe({
       next: () => {
+        // 1. Actualizamos la lista visualmente
         const index = this.proyectos.findIndex(p => p._id === this.proyectoSeleccionado!._id);
         if (index !== -1) {
           this.proyectos[index] = { ...this.proyectos[index], ...datosActualizados };
         }
-        this.cd.detectChanges();
-        this.editarModal.hide();
+        
+        // 2. Cerramos el modal de Bootstrap de forma segura
+        try {
+          if (this.editarModal) {
+            this.editarModal.hide();
+          }
+        } catch (e) {
+          console.log("Error al ocultar modal desde JS");
+        }
+
+        // Truco seguro: simulamos el clic en el botón de cerrar u ocultamos el fondo oscuro
+        const botonCerrar = document.querySelector('#editarModal [data-bs-dismiss="modal"]') as HTMLElement;
+        if (botonCerrar) {
+           botonCerrar.click();
+        } else {
+           const backdrop = document.querySelector('.modal-backdrop');
+           if (backdrop) backdrop.remove();
+           document.body.classList.remove('modal-open');
+           document.body.style.overflow = '';
+        }
+
+        // 3. Limpiamos y actualizamos pantalla
         this.proyectoSeleccionado = null;
+        this.cd.detectChanges(); 
       },
-      error: (err) => console.error('Error al actualizar el proyecto:', err)
+      error: (err) => {
+        console.error('Error al actualizar el proyecto:', err);
+        alert('Ocurrió un error al guardar los cambios.');
+      }
     });
   }
 
