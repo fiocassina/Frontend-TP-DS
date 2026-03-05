@@ -112,16 +112,15 @@ export class ListaProyectosComponent implements AfterViewInit {
 
     this.proyectoService.updateProyecto(this.proyectoSeleccionado._id, datosActualizados).subscribe({
       next: () => {
-        // 1. Actualizamos la lista local
+  
         const index = this.proyectos.findIndex(p => p._id === this.proyectoSeleccionado!._id);
         if (index !== -1) {
           this.proyectos[index] = { ...this.proyectos[index], ...datosActualizados };
         }
         
-        // 2. Avisamos a Angular para EVITAR EL F5
         this.cd.detectChanges();
 
-        // 3. Cerramos el modal de Bootstrap clickeando el boton de cerrar (es la forma mas segura)
+
         const botonCerrar = document.querySelector('#editarProyectoModal [data-bs-dismiss="modal"]') as HTMLElement;
         if (botonCerrar) {
            botonCerrar.click();

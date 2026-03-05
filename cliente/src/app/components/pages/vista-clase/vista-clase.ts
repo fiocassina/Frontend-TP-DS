@@ -340,12 +340,12 @@ export class VistaClase implements OnInit {
         this.clase = response.data;
         this.modoEdicion = false;
         console.log('Clase actualizada con éxito');
-        this.cd.detectChanges(); // <-- ¡AGREGADO PARA EVITAR EL F5 AL EDITAR LA CLASE!
+        this.cd.detectChanges(); 
       },
       error: (err) => {
         console.error('Error al actualizar la clase', err);
         this.errorMessage = 'No se pudieron guardar los cambios.';
-        this.cd.detectChanges(); // <-- Agregado por si hay un error, que la pantalla se entere
+        this.cd.detectChanges(); 
       }
     });
   }
