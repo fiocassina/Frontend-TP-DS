@@ -101,7 +101,7 @@ export class ListaProyectosComponent implements AfterViewInit {
     this.proyectoSeleccionado = { ...proyecto };
   }
 
-guardarCambios(): void {
+  guardarCambios(): void {
     if (!this.proyectoSeleccionado || !this.proyectoSeleccionado._id) return;
     
     const datosActualizados = {
@@ -112,35 +112,24 @@ guardarCambios(): void {
 
     this.proyectoService.updateProyecto(this.proyectoSeleccionado._id, datosActualizados).subscribe({
       next: () => {
-        // 1. Actualizamos la lista visualmente
+        // 1. Actualizamos la lista local
         const index = this.proyectos.findIndex(p => p._id === this.proyectoSeleccionado!._id);
         if (index !== -1) {
           this.proyectos[index] = { ...this.proyectos[index], ...datosActualizados };
         }
         
-        // 2. Cerramos el modal de Bootstrap de forma segura
-        try {
-          if (this.editarModal) {
-            this.editarModal.hide();
-          }
-        } catch (e) {
-          console.log("Error al ocultar modal desde JS");
-        }
+        // 2. Avisamos a Angular para EVITAR EL F5
+        this.cd.detectChanges();
 
-        // Truco seguro: simulamos el clic en el botón de cerrar u ocultamos el fondo oscuro
-        const botonCerrar = document.querySelector('#editarModal [data-bs-dismiss="modal"]') as HTMLElement;
+        // 3. Cerramos el modal de Bootstrap clickeando el boton de cerrar (es la forma mas segura)
+        const botonCerrar = document.querySelector('#editarProyectoModal [data-bs-dismiss="modal"]') as HTMLElement;
         if (botonCerrar) {
            botonCerrar.click();
         } else {
-           const backdrop = document.querySelector('.modal-backdrop');
-           if (backdrop) backdrop.remove();
-           document.body.classList.remove('modal-open');
-           document.body.style.overflow = '';
+           try { if (this.editarModal) this.editarModal.hide(); } catch(e) {}
         }
-
-        // 3. Limpiamos y actualizamos pantalla
+        
         this.proyectoSeleccionado = null;
-        this.cd.detectChanges(); 
       },
       error: (err) => {
         console.error('Error al actualizar el proyecto:', err);
@@ -176,7 +165,6 @@ guardarCambios(): void {
     this.router.navigate(['/entregas/proyecto', proyectoId]);
   }
 
-  // MODIFICADO: Agregado loadingEntrega
   entregarProyecto(proyectoId: string) {
     if (this.claseArchivada) {
       this.errorMessage = 'La clase está archivada. No se pueden realizar o editar entregas.';
@@ -187,8 +175,8 @@ guardarCambios(): void {
       return;
     }
 
-    this.loadingEntrega = true; // Activar spinner
-    this.errorMessage = ''; // Limpiar errores previos
+    this.loadingEntrega = true; 
+    this.errorMessage = ''; 
 
     const formData = new FormData();
     formData.append('comentario', this.comentario || '');
@@ -213,12 +201,12 @@ guardarCambios(): void {
             this.proyectos[index].entregado = true;   
           }
           this.cancelarEdicion(); 
-          this.loadingEntrega = false; // Desactivar spinner
+          this.loadingEntrega = false; 
           this.cd.detectChanges();
         },
         error: (err) => {
           this.errorMessage = err.error?.message || 'Error al editar la entrega.';
-          this.loadingEntrega = false; // Desactivar spinner
+          this.loadingEntrega = false; 
           this.cd.detectChanges();
         }
       });
@@ -240,7 +228,7 @@ guardarCambios(): void {
           this.archivoSeleccionado = null;
           this.errorMessage = '';
           this.proyectoExpandidoId = null;
-          this.loadingEntrega = false; // Desactivar spinner
+          this.loadingEntrega = false; 
           this.entregaExitosa.emit();
         },
         error: (err) => {
@@ -253,7 +241,7 @@ guardarCambios(): void {
           else {
             this.errorMessage = 'Error al entregar el proyecto.';
           }
-          this.loadingEntrega = false; // Desactivar spinner
+          this.loadingEntrega = false; 
           this.cd.detectChanges();
         }
       });

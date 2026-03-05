@@ -46,7 +46,6 @@ export class EntregaDetalleComponent{
     }
   }
 
-
   guardarCorreccion(): void {
     this.errorMessage = null;
     this.successMessage = null; 
@@ -69,7 +68,6 @@ export class EntregaDetalleComponent{
             next: (response) => {
                 this.successMessage = 'La corrección se actualizó correctamente. Volviendo...';
                
-                
                 setTimeout(() => {
                     this.volver();
                 }, 2000);
@@ -77,7 +75,6 @@ export class EntregaDetalleComponent{
             error: (err) => {
                 console.error('Error al editar:', err);
                 this.errorMessage = 'Error al editar la corrección.';
-                
             }
         });
 
@@ -103,7 +100,6 @@ export class EntregaDetalleComponent{
                     };
                     this.esEdicion = true; 
                 }
-                
 
                 setTimeout(() => {
                     this.volver();
@@ -112,7 +108,6 @@ export class EntregaDetalleComponent{
             error: (err) => {
                 console.error('Error al guardar:', err);
                 this.errorMessage = 'Error al guardar la corrección.';
-             
             }
         });
     }
@@ -146,8 +141,6 @@ export class EntregaDetalleComponent{
             this.nota = null;
             this.comentarioCorreccion = '';
         }
-        
-        
 
         setTimeout(() => {
             this.volver();
@@ -156,7 +149,6 @@ export class EntregaDetalleComponent{
       error: (err) => {
         console.error('Error al eliminar:', err);
         this.errorMessage = 'Error al eliminar la corrección.';
-
       }
     });
   }
