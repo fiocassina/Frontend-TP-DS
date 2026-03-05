@@ -103,7 +103,6 @@ export class VistaClase implements OnInit {
         
         this.cargarProyectosYEntregas(claseId);
         this.cargarTiposMaterial(); 
-        
       },
       error: (err) => {
         if (err.status === 403 || err.status === 401) {
@@ -113,7 +112,7 @@ export class VistaClase implements OnInit {
         console.error('Error al cargar clase:', err);
         this.errorMessage = 'No se pudo cargar la clase.';
         this.cargando = false; 
-        this.cd.detectChanges(); // AGREGADO
+        this.cd.detectChanges(); 
       }
     });
   }
@@ -124,7 +123,7 @@ export class VistaClase implements OnInit {
         this.proyectos = proyectos; 
         if (this.esProfesor) {
           this.cargando = false;
-          this.cd.detectChanges(); // AGREGADO
+          this.cd.detectChanges(); 
           return;
         }
         this.entregaService.getEntregasPorAlumno().subscribe({
@@ -139,11 +138,11 @@ export class VistaClase implements OnInit {
               };
             });
             this.cargando = false;
-            this.cd.detectChanges(); // AGREGADO
+            this.cd.detectChanges(); 
           },
           error: (err) => {
             this.cargando = false;
-            this.cd.detectChanges(); // AGREGADO
+            this.cd.detectChanges(); 
           }
         });
       },
@@ -153,7 +152,7 @@ export class VistaClase implements OnInit {
             this.errorMessage = 'No se pudieron cargar los proyectos.';
         }
         this.cargando = false;
-        this.cd.detectChanges(); // AGREGADO
+        this.cd.detectChanges(); 
       }
     });
   }
@@ -199,7 +198,6 @@ export class VistaClase implements OnInit {
       return;
     }
 
-    // Filtra por nombre
     this.sugerenciasFiltradas = this.tiposProyecto.filter(tipo => 
       tipo.nombre.toLowerCase().includes(termino)
     );
@@ -275,16 +273,21 @@ export class VistaClase implements OnInit {
           form.resetForm(); 
         }
 
+        this.cd.detectChanges(); 
+       
+        setTimeout(() => {
+          this.mensajeExito = '';
+          this.cd.detectChanges(); 
+        }, 3000);
+
       },
       error: (err) => {
           console.error(err);
           this.creandoProyecto = false;
           this.mensajeErrorFormulario = err.error?.error || 'Ocurrió un error al guardar el proyecto.';
-
       }
     });
   }
-
 
   nombreTipoProyecto(proyecto: Proyecto): string {
     const tipo = this.tiposProyecto.find(t => t._id === proyecto.tipoProyecto?._id);
@@ -297,13 +300,10 @@ export class VistaClase implements OnInit {
     if (confirmacion && this.clase?._id) {
       this.saliendo = true;
 
-
       this.claseService.disenroll(this.clase._id).subscribe({
         next: (res) => {
           this.mensajeSalida = 'Te diste de baja de la clase exitosamente. Redirigiendo al inicio...';
-
           
-
           setTimeout(() => {
             this.router.navigate(['/inicio']); 
           }, 1000);
@@ -312,11 +312,11 @@ export class VistaClase implements OnInit {
           console.error(err);
           alert('Ocurrió un error al intentar salir de la clase.');
           this.saliendo = false;
-
         }
       });
     }
   }
+
   activarModoEdicion(): void {
     if (this.clase) {
       this.claseEditada = {
@@ -333,22 +333,21 @@ export class VistaClase implements OnInit {
     this.claseEditada = {};
   }
 
-guardarCambios(): void {
+  guardarCambios(): void {
     if (!this.clase || !this.clase._id) return;
     this.claseService.updateClase(this.clase._id, this.claseEditada).subscribe({
       next: (response) => {
-        this.clase = response.data; // Se guardan los datos nuevos
-        this.modoEdicion = false;   // Se cierra el formulario de edición
+        this.clase = response.data;
+        this.modoEdicion = false;
         console.log('Clase actualizada con éxito');
-        this.cd.detectChanges(); // <-- ¡ESTO REEMPLAZA AL F5! Avisa a la pantalla que se actualice.
       },
       error: (err) => {
         console.error('Error al actualizar la clase', err);
         this.errorMessage = 'No se pudieron guardar los cambios.';
-        this.cd.detectChanges(); // Avisa a la pantalla si hay error
       }
     });
   }
+
   abrirModal(): void {
     this.mostrarModalAlumnos = true;
   }
@@ -360,10 +359,11 @@ guardarCambios(): void {
   onEntregaRealizada(): void {
     this.mensajeExito = '¡Tu entrega se subió correctamente!';
     this.cargarProyectosYEntregas(this.clase?._id || '');
+    this.cd.detectChanges();
 
     setTimeout(() => {
       this.mensajeExito = '';
-
+      this.cd.detectChanges();
     }, 3000);
   }
 
@@ -381,7 +381,6 @@ guardarCambios(): void {
             this.clase.alumnos = this.alumnos;
           }
           alert('Alumno eliminado correctamente.');
-
         },
         error: (err) => {
           console.error(err);
